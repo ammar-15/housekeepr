@@ -6,10 +6,10 @@ function LoginContainer() {
             </div>
             <div className="inputContainer">
                 <div className="userName">
-                    <input>Username</input>
+                    <p>Username</p>
                 </div>
                 <div className="Password">
-                    <input>Password</input>
+                    <p>Password</p>
                 </div>
             </div>
         </div>
