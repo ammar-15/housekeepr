@@ -1,17 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LoginSignup.css";
 import user_icon from "../assets/user_icon.svg";
 import password_icon from "../assets/password_icon.svg";
-// import { useNavigate } from 'react-router-dom';
-
 
 const LoginSignup = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     if (username === "admin" && password === "admin") {
       alert("Login successful!");
+      navigate("/dashboard"); 
     } else {
       alert("Invalid credentials. Please try again.");
     }

@@ -8,7 +8,6 @@ const AdminDashboard: React.FC = () => {
     <div className="dashboard-container">
       <nav className="navbar">
         <div className="navbar-left">
-          <img src="../assets/logo.png" alt="Logo" className="logo" />
         </div>
         <div className="navbar-right">
           <ul>
