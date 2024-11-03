@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./LoginSignup.css";
+import "./LoginPage.css";
 import user_icon from "../assets/user_icon.svg";
 import password_icon from "../assets/password_icon.svg";
 
-const LoginSignup = () => {
+const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="signupcontainer">
+    <div className="loginpagecontainer">
       <div className="header">
         <div className="text">Log in</div>
       </div>
@@ -61,4 +61,4 @@ const LoginSignup = () => {
   );
 };
 
-export default LoginSignup;
+export default LoginPage;
