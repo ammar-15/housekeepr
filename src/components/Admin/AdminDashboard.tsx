@@ -5,8 +5,8 @@ import './AdminDashboard.css';
 
 const AdminDashboard: React.FC = () => {
   return (
-    <div className="dashboard-container">
-      <nav className="navbar">
+    <div className="dashboard-container m-0 py-20">
+      <nav className="navbar fixed px-10 py-3 top-0 left-0 right-0 flex justify-between items-center bg-chocolate">
         <div className="navbar-left">
         </div>
         <div className="navbar-right">
@@ -18,7 +18,7 @@ const AdminDashboard: React.FC = () => {
           </ul>
         </div>
       </nav>
-      <div className="dashboard-header">
+      <div className="dashboard-header w-full flex items-center justify-between">
         <h1>Dashboard</h1>
         <div className="dashboard-stats">
           <div className="stats-box">
