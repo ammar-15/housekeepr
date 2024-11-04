@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminDashboardHsk from './AdminDashboardHsk';
 import AdminDashboardSup from './AdminDashboardSup';
 import './AdminDashboard.css';
 
-const AdminDashboard: React.FC = () => {
+const AdminDashboard = () => {
   return (
     <div className="dashboard-container m-0 py-20">
       <nav className="navbar fixed px-10 py-3 top-0 left-0 right-0 flex justify-between items-center bg-chocolate">
