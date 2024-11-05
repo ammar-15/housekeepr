@@ -26,17 +26,14 @@ const LoginPage = () => {
   return (
     <div className="
     loginpagecontainer
-    mt-40%
-    max-lg:mt-60% 
-    max-sm:mt-45% 
+    flex 
+    mt-40
+    max-lg:mt-80
+    max-sm:mt-80 
     p-2r
     max-lg:p-1r
-    flex 
     flex-col
     justify-self-center
-    justify-items-center
-    items-center
-    place-self-center 
     gap-3 
     rounded-lg
     drop-shadow-lg

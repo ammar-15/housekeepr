@@ -1,13 +1,10 @@
 import React from 'react';
 
-const AdminDashboardSup: React.FC = () => {
-  const helloWorld = () => {
-    console.log("Hello, World!");
-  };
+const AdminDashboardSup = () => {
 
   return (
     <div>
-      <h1 onClick={helloWorld}>Hello, SUP</h1>
+      <h1 className='SUPheader-admin pr-5'>Hello, SUP</h1>
     </div>
   );
 };
