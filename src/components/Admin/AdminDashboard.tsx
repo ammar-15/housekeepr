@@ -19,13 +19,13 @@ const AdminDashboard = () => {
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
         <h1 className="text-3xl text-wine">Dashboard</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-1">
+          <div className="stats-box px-2">
             <span>Dirty Rooms: 32</span>
           </div>
-          <div className="stats-box px-1">
+          <div className="stats-box px-2">
             <span>Clean Rooms: 20</span>
           </div>
-          <div className="stats-box px-1">
+          <div className="stats-box px-2">
             <span>Inspected Rooms: 15</span>
           </div>
         </div>
