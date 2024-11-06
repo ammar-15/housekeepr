@@ -1,18 +1,28 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AdminDashboardHsk from "./AdminDashboardHsk";
 import AdminDashboardSup from "./AdminDashboardSup";
-import "./AdminDashboard.css";
+
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+
+  const handleDashboard = () => {
+    navigate("../AdminDashboard");
+  };
+  const handleHousekeeper = () => {
+    navigate("../AdminHSK");
+  };
+
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <nav className="navbar fixed px-10 py-3 top-0 left-0 right-0 flex justify-end items-center bg-chocolate text-white">
         <div className="navbar-right">
           <ul className="flex flex-column gap-5 m-0">
-            <li>Dashboard</li>
-            <li>Housekeeper</li>
-            <li>Supervisors</li>
-            <li>Rooms</li>
+            <button onClick={handleDashboard}>Dashboard</button>
+            <button onClick={handleHousekeeper}>Housekeeper</button>
+            <button>Supervisors</button>
+            <button>Rooms</button>
           </ul>
         </div>
       </nav>
