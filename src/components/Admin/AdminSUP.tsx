@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminDashboardHsk from "./AdminDashboardHsk";
-import AdminDashboardSup from "./AdminDashboardSup";
 
-
-const AdminDashboard = () => {
+const AdminSUP = () => {
   const navigate = useNavigate();
+
+  const [message, setMessage] = useState('');
 
   const handleDashboard = () => {
     navigate("../AdminDashboard");
@@ -35,37 +34,24 @@ const AdminDashboard = () => {
         </div>
       </nav>
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
-        <h1 className="text-3xl text-wine">Dashboard</h1>
+        <h1 className="text-3xl text-wine">Supervisors</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
           <div className="stats-box px-2">
-            <span>Dirty Rooms: 32</span>
+            <span>Total Supervisors: 3</span>
           </div>
           <div className="stats-box px-2">
-            <span>Clean Rooms: 20</span>
-          </div>
-          <div className="stats-box px-2">
-            <span>Inspected Rooms: 15</span>
+            <span>Total Rooms to inspect: 50</span>
           </div>
         </div>
       </div>
       <div className="section-container ">
-        <h2 className="housekeeperheader-admin text-lg pb-5">Housekeepers</h2>
-        <div className="housekeepers-container flex pb-5">
-          {[...Array(6)].map((_, index) => (
-            <AdminDashboardHsk key={index} />
-          ))}
-        </div>
-      </div>
-      <div className="section-container">
-        <h2 className="supervisorheader-admin text-tg pb-5">Supervisors</h2>
-        <div className="supervisors-container flex pb-5">
-          {[...Array(4)].map((_, index) => (
-            <AdminDashboardSup key={index} />
-          ))}
+        <div>
+          <button onClick={() => setMessage("SUP ROOM")}>Assign room to supervisor</button>
+          <div>{message}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminSUP;
