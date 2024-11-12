@@ -6,6 +6,7 @@ import AdminHSK from './components/Admin/AdminHSK.tsx';
 import AdminSUP from './components/Admin/AdminSUP.tsx';
 import AdminRooms from './components/Admin/AdminRooms.tsx';
 import AdminNavbar from './components/Admin/AdminNavbar.tsx';
+import AdminUserSwitch from './components/Admin/AdminUserSwitch.tsx';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/AdminSUP" element={<AdminSUP />} />
           <Route path="/AdminRooms" element={<AdminRooms />} />
           <Route path="/AdminNavbar" element={<AdminNavbar />} />
+          <Route path="/AdminUserSwitch" element={<AdminUserSwitch />} />
         </Routes>
       </div>
     </Router>
