@@ -1,23 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import user_switch from "../assets/user_switch.svg";
-import AdminUserSwitch from "./AdminUserSwitch";
+import AdminUserSwitch from "../Admin/AdminUserSwitch";
 
-const AdminNavbar = () => {
+const HSKNavbar = () => {
   const navigate = useNavigate();
   const [showUserSwitch, setShowUserSwitch] = useState(false);
 
   const handleDashboard = () => {
-    navigate("../AdminDashboard");
+    navigate("/AdminDashboard");
   };
   const handleHousekeeper = () => {
-    navigate("../AdminHSK");
-  };
-  const handleSupervisor = () => {
-    navigate("../AdminSUP");
-  };
-  const handleRooms = () => {
-    navigate("../AdminRooms");
+    navigate("/HSKdashboard");
   };
 
   const toggleUserSwitch = () => {
@@ -29,7 +23,8 @@ const AdminNavbar = () => {
       <div className="relative">
         <button
           onClick={toggleUserSwitch}
-          className="user-switch-button focus:outline-none">
+          className="user-switch-button focus:outline-none"
+        >
           <img src={user_switch} alt="User Switch" className="w-8 h-8 invert" />
         </button>
         {showUserSwitch && (
@@ -40,20 +35,14 @@ const AdminNavbar = () => {
       </div>
       <div className="flex gap-5">
         <button onClick={handleDashboard} className="hover:underline">
-          Dashboard
+          Admin Dashboard
         </button>
         <button onClick={handleHousekeeper} className="hover:underline">
-          Housekeeper
-        </button>
-        <button onClick={handleSupervisor} className="hover:underline">
-          Supervisors
-        </button>
-        <button onClick={handleRooms} className="hover:underline">
-          Rooms
+          HSK Dashboard
         </button>
       </div>
     </nav>
   );
 };
 
-export default AdminNavbar;
+export default HSKNavbar;
