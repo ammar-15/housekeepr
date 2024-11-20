@@ -1,5 +1,3 @@
-import React from "react";
-
 const AdminDashboardHsk = () => {
   return (
     <div className="HSKcontainer-admin flex flex-col justify-center items-center py-2 px-4 outline outline-1 mr-5 rounded-md">

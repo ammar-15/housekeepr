@@ -35,10 +35,10 @@ const SUPNavbar = () => {
       </div>
       <div className="flex gap-5">
         <button onClick={handleDashboard} className="hover:underline">
-          Admin Dashboard
+          Dashboard
         </button>
         <button onClick={handleSupervisor} className="hover:underline">
-          SUP Dashboard
+          Rooms
         </button>
       </div>
     </nav>
