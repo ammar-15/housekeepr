@@ -1,12 +1,24 @@
 import { useState } from "react";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar.tsx";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "/Users/akuul15/repos/housekeepr/firebase";
 
 const AdminHSK = () => {
   const [roomContainers, setRoomContainers] = useState<number[]>([]);
 
-  const addRoomContainer = () => {
-    setRoomContainers((prev) => [...prev, prev.length]);
+  const addRoomContainer = async () => {
+    const newRoom = { id: roomContainers.length, status: "pending" }; 
+
+    try {
+      // Save to Firestore
+      await addDoc(collection(db, "roomContainers"), newRoom);
+      
+      // Update state
+      setRoomContainers((prev) => [...prev, prev.length]);
+    } catch (error) {
+      console.error("Error adding room container: ", error);
+    }
   };
 
   return (

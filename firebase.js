@@ -1,5 +1,6 @@
 
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import dotenv from 'dotenv'; 
 dotenv.config(); 
@@ -16,6 +17,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 let analytics;
 isSupported().then((supported) => {
@@ -24,4 +26,4 @@ isSupported().then((supported) => {
   }
 }).catch(console.error);
 
-export { app, analytics };
+export { app, analytics, db };
