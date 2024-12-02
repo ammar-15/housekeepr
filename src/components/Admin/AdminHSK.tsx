@@ -2,7 +2,7 @@ import { useState } from "react";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar.tsx";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "/Users/akuul15/repos/housekeepr/firebase";
+import { db } from "/Users/akuul15/repos/housekeepr/firebase.tsx";
 
 const AdminHSK = () => {
   const [roomContainers, setRoomContainers] = useState<number[]>([]);
