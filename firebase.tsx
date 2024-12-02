@@ -1,9 +1,10 @@
 
+
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import dotenv from 'dotenv'; 
-dotenv.config(); 
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
