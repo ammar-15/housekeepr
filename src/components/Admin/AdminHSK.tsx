@@ -1,29 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar.tsx";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "/Users/akuul15/repos/housekeepr/firebase.tsx";
 
 const AdminHSK = () => {
+  const navigate = useNavigate();
   const [roomContainers, setRoomContainers] = useState<number[]>([]);
-
-  const addRoomContainer = async () => {
-    const newRoom = { id: roomContainers.length, status: "pending" }; 
-
-    try {
-      // Save to Firestore
-      await addDoc(collection(db, "roomContainers"), newRoom);
-      
-      // Update state
-      setRoomContainers((prev) => [...prev, prev.length]);
-    } catch (error) {
-      console.error("Error adding room container: ", error);
-    }
+  const addRoomContainer = () => {
+    setRoomContainers((prev) => [...prev, prev.length]);
   };
-
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <div className="AdminHSKNav">
+      <div className="AdminSUPNav">
         <AdminNavbar />
       </div>
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
@@ -51,5 +39,4 @@ const AdminHSK = () => {
     </div>
   );
 };
-
 export default AdminHSK;
