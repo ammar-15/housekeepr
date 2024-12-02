@@ -8,7 +8,7 @@ import AdminRooms from './components/Admin/AdminRooms.tsx';
 import AdminNavbar from './components/Admin/AdminNavbar.tsx';
 import AdminUserSwitch from './components/Admin/AdminUserSwitch.tsx';
 import HSKdashboard from './components/Housekeeper/HSKdashboard.tsx';
-import SUPdashboard from './components/Supervisor/SUPdashboard.tsx'
+import SUPdashboard from './components/Supervisor/SUPdashboard.tsx';
 
 function App() {
   return (
