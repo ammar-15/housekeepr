@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar.tsx";
+import AdminStart from "./AdminStart.tsx";
 
 const AdminHSK = () => {
-  const navigate = useNavigate();
-  const [roomContainers, setRoomContainers] = useState<number[]>([]);
-  const addRoomContainer = () => {
-    setRoomContainers((prev) => [...prev, prev.length]);
+
+  const [roomNumbers, setRoomNumbers] = useState<string[]>([]); 
+
+  const handleAddRoom = (newRoomNumber: string) => {
+    setRoomNumbers((prev) => [...prev, newRoomNumber]);
   };
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
@@ -26,16 +27,11 @@ const AdminHSK = () => {
         </div>
       </div>
       <div className="section-container">
-        <button
-          className="bg-blue-500 text-black px-4 py-2 rounded-md mb-4"
-          onClick={addRoomContainer}
-        >
-          Add Room Container
-        </button>
-        {roomContainers.map((key) => (
-          <HSKRoomContainer key={key} />
+      {roomNumbers.map((roomNumber, index) => (
+          <HSKRoomContainer key={index} roomNumber={roomNumber} />
         ))}
       </div>
+      <AdminStart onAddRoom={handleAddRoom} /> 
     </div>
   );
 };
