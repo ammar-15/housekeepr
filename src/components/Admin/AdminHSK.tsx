@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar.tsx";
+import AdminStart from "./AdminStart.tsx";
 
 const AdminHSK = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const AdminHSK = () => {
           <HSKRoomContainer key={key} />
         ))}
       </div>
+      <AdminStart />
     </div>
   );
 };

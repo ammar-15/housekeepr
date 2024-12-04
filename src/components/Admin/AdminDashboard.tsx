@@ -1,6 +1,7 @@
 import AdminDashboardHsk from "./AdminDashboardHsk";
 import AdminDashboardSup from "./AdminDashboardSup";
 import AdminNavbar from "./AdminNavbar.tsx";
+import AdminStart from "./AdminStart.tsx";
 
 const AdminDashboard = () => {
   return (
@@ -25,19 +26,16 @@ const AdminDashboard = () => {
       <div className="section-container ">
         <h2 className="housekeeperheader-admin text-lg pb-5">Housekeepers</h2>
         <div className="housekeepers-container flex pb-5">
-          {[...Array(6)].map((_, index) => (
-            <AdminDashboardHsk key={index} />
-          ))}
+            <AdminDashboardHsk />
         </div>
       </div>
       <div className="section-container">
         <h2 className="supervisorheader-admin text-tg pb-5">Supervisors</h2>
         <div className="supervisors-container flex pb-5">
-          {[...Array(4)].map((_, index) => (
-            <AdminDashboardSup key={index} />
-          ))}
+            <AdminDashboardSup />
         </div>
       </div>
+      <AdminStart />
     </div>
   );
 };
