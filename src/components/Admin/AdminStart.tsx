@@ -1,28 +1,47 @@
 import { useState } from "react";
 
-const AdminStart = () => {
-  const [isModalVisible, setisModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setisModalVisible(!isModalVisible);
-  };
+interface AdminStartProps {
+    onAddRoom?: (roomNumber: string) => void; 
+  }
+  
+  const AdminStart = ({ onAddRoom }: AdminStartProps) => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [roomNumber, setRoomNumber] = useState("");
+  
+    const toggleModal = () => {
+      setIsModalVisible(!isModalVisible);
+      console.log("modal is toggle");
+    };
+  
+    const handleSave = () => {
+      if (roomNumber.trim() !== "") {
+        if (onAddRoom) onAddRoom(roomNumber); 
+        setRoomNumber("");
+        console.log("room entered");
+        toggleModal();
+      }
+    };
 
   return (
     <div>
-
       <button
-        className="fixed bottom-5 right-5 text-xl bg-chocolate text-white rounded-full px-5 py-3 shadow-md"
+        className="fixed bottom-5 right-5 text-xl bg-chocolate text-white rounded-full px-5 py-3 hover:bg-wine"
         onClick={toggleModal}
-      >+</button>
+        
+      >
+        +
+      </button>
 
       {isModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-md shadow-lg w-96">
             <h2 className="text-xl mb-4">Assign Rooms</h2>
- 
+
             <input
               type="text"
-              placeholder="Hello World 1"
+              placeholder="Room Number"
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
               className="w-full mb-3 p-2 border rounded-md"
             />
             <input
@@ -48,12 +67,15 @@ const AdminStart = () => {
 
             <div className="flex justify-end">
               <button
-                className="bg-gray-300 text-black rounded-md px-4 py-2 mr-2"
+                className="text-black rounded-md px-4 py-2 mr-2 hover:bg-mistysky"
                 onClick={toggleModal}
               >
                 Cancel
               </button>
-              <button className="bg-blue-600 text-black rounded-md px-4 py-2">
+              <button
+                className="text-black rounded-md px-4 py-2 hover:bg-mistysky"
+                onClick={handleSave}
+              >
                 Save
               </button>
             </div>
