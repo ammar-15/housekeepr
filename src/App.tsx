@@ -1,15 +1,15 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import LoginPage from './components/Login/LoginPage';
-import AdminDashboard from './components/Admin/AdminDashboard.tsx';
-import AdminHSK from './components/Admin/AdminHSK.tsx';
-import AdminSUP from './components/Admin/AdminSUP.tsx';
-import AdminRooms from './components/Admin/AdminRooms.tsx';
-import AdminNavbar from './components/Admin/AdminNavbar.tsx';
-import AdminUserSwitch from './components/Admin/AdminUserSwitch.tsx';
-import HSKdashboard from './components/Housekeeper/HSKdashboard.tsx';
-import SUPdashboard from './components/Supervisor/SUPdashboard.tsx';
-import AdminStart from './components/Admin/AdminStart.tsx'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import LoginPage from "./components/Login/LoginPage";
+import AdminDashboard from "./components/Admin/AdminDashboard.tsx";
+import AdminHSK from "./components/Admin/AdminHSK.tsx";
+import AdminSUP from "./components/Admin/AdminSUP.tsx";
+import AdminRooms from "./components/Admin/AdminRooms.tsx";
+import AdminNavbar from "./components/Admin/AdminNavbar.tsx";
+import AdminUserSwitch from "./components/Admin/AdminUserSwitch.tsx";
+import HSKdashboard from "./components/Housekeeper/HSKdashboard.tsx";
+import SUPdashboard from "./components/Supervisor/SUPdashboard.tsx";
+import AdminStart from "./components/Admin/Admin Button/AdminStart.tsx";
 
 function App() {
   return (

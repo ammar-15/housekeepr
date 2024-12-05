@@ -1,7 +1,7 @@
 import AdminDashboardHsk from "./AdminDashboardHsk";
 import AdminDashboardSup from "./AdminDashboardSup";
 import AdminNavbar from "./AdminNavbar.tsx";
-import AdminStart from "./AdminStart.tsx";
+import AdminStart from "./Admin Button/AdminStart.tsx";
 
 const AdminDashboard = () => {
   return (
@@ -26,13 +26,13 @@ const AdminDashboard = () => {
       <div className="section-container ">
         <h2 className="housekeeperheader-admin text-lg pb-5">Housekeepers</h2>
         <div className="housekeepers-container flex pb-5">
-            <AdminDashboardHsk />
+          <AdminDashboardHsk />
         </div>
       </div>
       <div className="section-container">
         <h2 className="supervisorheader-admin text-tg pb-5">Supervisors</h2>
         <div className="supervisors-container flex pb-5">
-            <AdminDashboardSup />
+          <AdminDashboardSup />
         </div>
       </div>
       <AdminStart />
