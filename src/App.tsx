@@ -10,6 +10,10 @@ import AdminUserSwitch from "./components/Admin/AdminUserSwitch.tsx";
 import HSKdashboard from "./components/Housekeeper/HSKdashboard.tsx";
 import SUPdashboard from "./components/Supervisor/SUPdashboard.tsx";
 import AdminStart from "./components/Admin/Admin Button/AdminStart.tsx";
+import AdminAutoAssign from "./components/Admin/Admin Button/AdminAutoAssign.tsx"
+import AdminHSKassign from "./components/Admin/Admin Button/AdminHSKassign.tsx";
+import AdminSUPassign from "./components/Admin/Admin Button/AdminSUPassign.tsx";
+
 
 function App() {
   return (
@@ -26,6 +30,9 @@ function App() {
           <Route path="/HSKdashboard" element={<HSKdashboard />} />
           <Route path="/SUPdashboard" element={<SUPdashboard />} />
           <Route path="/AdminStart" element={<AdminStart />} />
+          <Route path="/AdminAutoAssign" element={<AdminAutoAssign />} />
+          <Route path="/AdminHSKassign" element={<AdminHSKassign />} />
+          <Route path="/AdminSUPassign" element={<AdminSUPassign />} />
         </Routes>
       </div>
     </Router>
