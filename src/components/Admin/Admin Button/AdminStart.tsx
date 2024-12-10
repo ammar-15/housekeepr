@@ -20,7 +20,7 @@ const AdminStart = ({ onAddHSKroom, onAddSUProom }: AdminStartProps) => {
         onClick={toggleOptions}
         className="text-xl bg-chocolate text-white rounded-full px-5 py-3 hover:bg-wine"
       >
-        Admin Start
+        +
       </button>
       {showOptions && (
         <div className="absolute bottom-16 right-0 flex flex-col space-y-2">

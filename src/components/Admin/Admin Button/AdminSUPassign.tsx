@@ -8,12 +8,12 @@ const AdminSUPassign = ({ onAddSUProom }: AdminSUPassignProps) => {
   const [SUProomDescription, setSUProomDescription] = useState("");
 
   const handleSave = () => {
+    console.log('room passed in sup assign');
     if (SUProomDescription.trim() !== "") {
       if (onAddSUProom) onAddSUProom(SUProomDescription);
       setSUProomDescription("");
     }
   };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-md shadow-lg w-96">

@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../../../firebase";
+import RoomData from "../../RoomData"; 
 
 interface AdminHSKassignProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
@@ -7,10 +10,26 @@ interface AdminHSKassignProps {
 const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
   const [HSKroomNumber, setHSKRoomNumber] = useState("");
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    console.log("Room passed in HSK assign");
     if (HSKroomNumber.trim() !== "") {
-      if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
-      setHSKRoomNumber("");
+      const room = RoomData.find((r) => r.roomNumber === HSKroomNumber);
+
+      if (!room) {
+        console.error("Room not found in RoomData.");
+        return;
+      }
+
+      try {
+        await setDoc(doc(db, "AdminHSK", HSKroomNumber), room);
+
+        console.log("Room saved to Firebase:", room);
+
+        if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
+        setHSKRoomNumber("");
+      } catch (error) {
+        console.error("Error saving room to Firebase:", error);
+      }
     }
   };
 

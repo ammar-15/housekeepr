@@ -1,9 +1,15 @@
 import { useState } from "react";
-import AdminNavbar from "./AdminNavbar.tsx";
+import AdminNavbar from "./AdminNavbar";
+import AdminStart from "./Admin Button/AdminStart";
+import AdminSUPassign from "./Admin Button/AdminSUPassign";
+import HSKRoomContainer from "./HSKRoomContainer";
 
 const AdminSUP = () => {
+  const [SUProomNumbers, setSUProomNumbers] = useState<string[]>([]);
 
-  const [message, setMessage] = useState('');
+  const handleAddSUProom = (newSUProomNumber: string) => {
+    setSUProomNumbers((prev) => [...prev, newSUProomNumber]);
+  };
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
@@ -17,16 +23,18 @@ const AdminSUP = () => {
             <span>Total Supervisors: 3</span>
           </div>
           <div className="stats-box px-2">
-            <span>Total Rooms to inspect: 50</span>
+            <span>Total Rooms to Inspect: 50</span>
           </div>
         </div>
       </div>
-      <div className="section-container ">
-        <div>
-          <button onClick={() => setMessage("SUP ROOM")}>Assign room to supervisor</button>
-          <div>{message}</div>
-        </div>
+      <div className="section-container">
+        {SUProomNumbers.map((roomNumber, index) => (
+          <HSKRoomContainer key={index} roomNumber={roomNumber} />
+        ))}
       </div>
+      <AdminStart
+        onAddSUProom={handleAddSUProom}
+      />
     </div>
   );
 };
