@@ -4,10 +4,10 @@ import AdminNavbar from "./AdminNavbar";
 import AdminStart from "./Admin Button/AdminStart";
 
 const AdminHSK = () => {
-  const [roomNumbers, setRoomNumbers] = useState<string[]>([]);
+  const [HSKroomNumber, setHSKroomNumber] = useState<string[]>([]);
 
-  const handleAddRoom = (newRoomNumber: string) => {
-    setRoomNumbers((prev) => [...prev, newRoomNumber]);
+  const handleAddRoom = (newHSKroomNumber: string) => {
+    setHSKroomNumber((prev) => [...prev, newHSKroomNumber]);
   };
 
   return (
@@ -23,8 +23,8 @@ const AdminHSK = () => {
       </div>
 
       <div className="section-container">
-        {roomNumbers.map((roomNumber, index) => (
-          <HSKRoomContainer key={index} roomNumber={roomNumber} />
+        {HSKroomNumber.map((HSKroomNumber, index) => (
+          <HSKRoomContainer key={index} roomNumber={HSKroomNumber} />
         ))}
       </div>
       <AdminStart onAddHSKroom={handleAddRoom} />

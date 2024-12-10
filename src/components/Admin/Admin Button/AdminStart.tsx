@@ -4,7 +4,7 @@ import AdminHSKassign from "./AdminHSKassign";
 import AdminSUPassign from "./AdminSUPassign";
 
 interface AdminStartProps {
-  onAddHSKroom?: (roomNumber: string) => void;
+  onAddHSKroom?: (HSKroomNumber: string) => void;
   onAddSUProom?: (SUProom: string) => void;
 }
 
@@ -46,8 +46,8 @@ const AdminStart = ({ onAddHSKroom, onAddSUProom }: AdminStartProps) => {
       )}
       {activeModal === "HSK" && (
         <AdminHSKassign
-          onAddHSKroom={(roomNumber) => {
-            if (onAddHSKroom) onAddHSKroom(roomNumber);
+          onAddHSKroom={(HSKroomNumber) => {
+            if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
             setActiveModal(null);
           }}
         />

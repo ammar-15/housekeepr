@@ -1,16 +1,16 @@
 import { useState } from "react";
 
 interface AdminHSKassignProps {
-  onAddHSKroom?: (roomNumber: string) => void;
+  onAddHSKroom?: (HSKroomNumber: string) => void;
 }
 
 const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
-  const [roomNumber, setRoomNumber] = useState("");
+  const [HSKroomNumber, setHSKRoomNumber] = useState("");
 
   const handleSave = () => {
-    if (roomNumber.trim() !== "") {
-      if (onAddHSKroom) onAddHSKroom(roomNumber);
-      setRoomNumber("");
+    if (HSKroomNumber.trim() !== "") {
+      if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
+      setHSKRoomNumber("");
     }
   };
 
@@ -21,8 +21,8 @@ const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
         <input
           type="text"
           placeholder="Room Number"
-          value={roomNumber}
-          onChange={(e) => setRoomNumber(e.target.value)}
+          value={HSKroomNumber}
+          onChange={(e) => setHSKRoomNumber(e.target.value)}
           className="w-full mb-3 p-2 border rounded-md"
         />
         <div className="flex justify-end">
