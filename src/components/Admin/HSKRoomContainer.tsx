@@ -2,9 +2,9 @@ import RoomData from "../RoomData.tsx";
 
 const HSKRoomContainer = ({ roomNumber }: { roomNumber: string }) => {
   const room = RoomData.find((room) => room.roomNumber === roomNumber);
-  console.log(room);
   console.log("getting room ", room)
   if (!room) {
+    console.log('consoling the if statement in hskroomcontainer')
     return <div>Room not found</div>;
   }
   return (

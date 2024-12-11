@@ -1,87 +1,66 @@
 import { useState } from "react";
+import AdminAutoAssign from "./AdminAutoAssign";
+import AdminHSKassign from "./AdminHSKassign";
+import AdminSUPassign from "./AdminSUPassign";
 
 interface AdminStartProps {
-    onAddRoom?: (roomNumber: string) => void; 
-  }
-  
-  const AdminStart = ({ onAddRoom }: AdminStartProps) => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [roomNumber, setRoomNumber] = useState("");
-  
-    const toggleModal = () => {
-      setIsModalVisible(!isModalVisible);
-      console.log("modal is toggle");
-    };
-  
-    const handleSave = () => {
-      if (roomNumber.trim() !== "") {
-        if (onAddRoom) onAddRoom(roomNumber); 
-        setRoomNumber("");
-        console.log("room entered");
-        toggleModal();
-      }
-    };
+  onAddHSKroom?: (HSKroomNumber: string) => void;
+  onAddSUProom?: (SUProom: string) => void;
+}
+
+const AdminStart = ({ onAddHSKroom, onAddSUProom }: AdminStartProps) => {
+  const [showOptions, setShowOptions] = useState(false);
+  const [activeModal, setActiveModal] = useState<"HSK" | "SUP" | "AUTO" | null>(null);
+
+  const toggleOptions = () => setShowOptions(!showOptions);
 
   return (
-    <div>
+    <div className="fixed bottom-5 right-5">
       <button
-        className="fixed bottom-5 right-5 text-xl bg-chocolate text-white rounded-full px-5 py-3 hover:bg-wine"
-        onClick={toggleModal}
-        
+        onClick={toggleOptions}
+        className="text-xl bg-chocolate text-white rounded-full px-5 py-3 hover:bg-wine"
       >
         +
       </button>
-
-      {isModalVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-md shadow-lg w-96">
-            <h2 className="text-xl mb-4">Assign Rooms</h2>
-
-            <input
-              type="text"
-              placeholder="Room Number"
-              value={roomNumber}
-              onChange={(e) => setRoomNumber(e.target.value)}
-              className="w-full mb-3 p-2 border rounded-md"
-            />
-            <input
-              type="text"
-              placeholder="Hello World 2"
-              className="w-full mb-3 p-2 border rounded-md"
-            />
-            <input
-              type="text"
-              placeholder="Hello World 3"
-              className="w-full mb-3 p-2 border rounded-md"
-            />
-
-            <select className="w-full mb-3 p-2 border rounded-md">
-              <option>Hello World 1</option>
-            </select>
-            <select className="w-full mb-3 p-2 border rounded-md">
-              <option>Hello World 2</option>
-            </select>
-            <select className="w-full mb-3 p-2 border rounded-md">
-              <option>Hello World 3</option>
-            </select>
-
-            <div className="flex justify-end">
-              <button
-                className="text-black rounded-md px-4 py-2 mr-2 hover:bg-mistysky"
-                onClick={toggleModal}
-              >
-                Cancel
-              </button>
-              <button
-                className="text-black rounded-md px-4 py-2 hover:bg-mistysky"
-                onClick={handleSave}
-              >
-                Save
-              </button>
-            </div>
-          </div>
+      {showOptions && (
+        <div className="absolute bottom-16 right-0 flex flex-col space-y-2">
+          <button
+            onClick={() => setActiveModal("HSK")}
+            className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
+          >
+            AdminHSKassign
+          </button>
+          <button
+            onClick={() => setActiveModal("SUP")}
+            className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
+          >
+            AdminSUPassign
+          </button>
+          <button
+            onClick={() => setActiveModal("AUTO")}
+            className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
+          >
+            AdminAutoAssign
+          </button>
         </div>
       )}
+      {activeModal === "HSK" && (
+        <AdminHSKassign
+          onAddHSKroom={(HSKroomNumber) => {
+            if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
+            setActiveModal(null);
+          }}
+        />
+      )}
+      {activeModal === "SUP" && (
+        <AdminSUPassign
+          onAddSUProom={(SUProom) => {
+            if (onAddSUProom) onAddSUProom(SUProom);
+            setActiveModal(null);
+          }}
+        />
+      )}
+      {activeModal === "AUTO" && <AdminAutoAssign />}
     </div>
   );
 };
