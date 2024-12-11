@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar";
@@ -7,21 +7,14 @@ import AdminStart from "./Admin Button/AdminStart";
 
 const AdminHSK = () => {
   const [HSKroomNumbers, setHSKroomNumbers] = useState<string[]>([]);
-  
+
   useEffect(() => {
-    const fetchRooms = async () => {
-      const roomsCollectionRef = collection(db, "AdminHSK");
-      const snapshot = await getDocs(roomsCollectionRef);
-      const fetchedRooms = snapshot.docs.map((doc) => doc.data().roomNumber);
-      setHSKroomNumbers(fetchedRooms);
-    };
-    fetchRooms();
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const updatedRooms = snapshot.docs.map((doc) => doc.data().roomNumber);
       setHSKroomNumbers(updatedRooms);
     });
-    return () => unsubscribe();
+    return () => unsubscribe(); 
   }, []);
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
@@ -38,7 +31,7 @@ const AdminHSK = () => {
           <HSKRoomContainer key={index} roomNumber={roomNumber} />
         ))}
       </div>
-      <AdminStart onAddHSKroom={(newRoom) => setHSKroomNumbers((prev) => [...prev, newRoom])} />
+      <AdminStart />
     </div>
   );
 };
