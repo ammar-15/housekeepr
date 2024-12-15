@@ -1,34 +1,37 @@
 import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore"; 
 import { db } from "../../../../firebase";
-import RoomData from "../../RoomData"; 
+import RoomData from "../../RoomData";
 
 interface AdminHSKassignProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
 }
 
 const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
-  const [HSKroomNumber, setHSKRoomNumber] = useState("");
+  const [HSKroomNumber, setHSKRoomNumber] = useState(""); 
+  const [statusOption, setStatusOption] = useState("Dirty"); 
 
   const handleSave = async () => {
-    console.log("Room passed in HSK assign");
+    console.log("room sent to Firebase");
+
     if (HSKroomNumber.trim() !== "") {
-      const room = RoomData.find((r) => r.roomNumber === HSKroomNumber);
+      const room = RoomData.find((r) => r.roomNumber === HSKroomNumber); 
 
       if (!room) {
-        console.error("Room not found in RoomData.");
+        console.error("room not found in RoomData.");
         return;
       }
 
       try {
-        await setDoc(doc(db, "AdminHSK", HSKroomNumber), room);
-
-        console.log("Room saved to Firebase:", room);
+        const roomRef = doc(db, "AdminHSK", HSKroomNumber);
+        const updatedRoom = { ...room, roomStatus: statusOption };
+        await setDoc(roomRef, updatedRoom);
+        console.log(`room saved to Firebase with status "${statusOption}":`, updatedRoom);
 
         if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
-        setHSKRoomNumber("");
+        setHSKRoomNumber(""); 
       } catch (error) {
-        console.error("Error saving room to Firebase:", error);
+        console.error("firebase error", error);
       }
     }
   };
@@ -44,6 +47,14 @@ const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
           onChange={(e) => setHSKRoomNumber(e.target.value)}
           className="w-full mb-3 p-2 border rounded-md"
         />
+        <select
+          value={statusOption}
+          onChange={(e) => setStatusOption(e.target.value)}
+          className="w-full mb-3 p-2 border rounded-md"
+        >
+          <option value="Dirty">Dirty</option>
+          <option value="Clean">Clean</option>
+        </select>
         <div className="flex justify-end">
           <button
             onClick={handleSave}
