@@ -1,16 +1,15 @@
 import { useState } from "react";
 import AdminAutoAssign from "./AdminAutoAssign";
 import AdminHSKassign from "./AdminHSKassign";
-import AdminSUPassign from "./AdminSUPassign";
 
 interface AdminStartProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
   onAddSUProom?: (SUProom: string) => void;
 }
 
-const AdminStart = ({ onAddHSKroom, onAddSUProom }: AdminStartProps) => {
+const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
   const [showOptions, setShowOptions] = useState(false);
-  const [activeModal, setActiveModal] = useState<"HSK" | "SUP" | "AUTO" | null>(null);
+  const [activeModal, setActiveModal] = useState<"HSK" | "AUTO" | null>(null);
 
   const toggleOptions = () => setShowOptions(!showOptions);
 
@@ -31,12 +30,6 @@ const AdminStart = ({ onAddHSKroom, onAddSUProom }: AdminStartProps) => {
             AdminHSKassign
           </button>
           <button
-            onClick={() => setActiveModal("SUP")}
-            className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
-          >
-            AdminSUPassign
-          </button>
-          <button
             onClick={() => setActiveModal("AUTO")}
             className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
           >
@@ -48,14 +41,6 @@ const AdminStart = ({ onAddHSKroom, onAddSUProom }: AdminStartProps) => {
         <AdminHSKassign
           onAddHSKroom={(HSKroomNumber) => {
             if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
-            setActiveModal(null);
-          }}
-        />
-      )}
-      {activeModal === "SUP" && (
-        <AdminSUPassign
-          onAddSUProom={(SUProom) => {
-            if (onAddSUProom) onAddSUProom(SUProom);
             setActiveModal(null);
           }}
         />
