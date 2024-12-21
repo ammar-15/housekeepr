@@ -1,14 +1,7 @@
-import { useState } from "react";
-import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
+
 import SUPnavbar from "./SUPnavbar.tsx";
 
 const SUPdashboard = () => {
-  const [roomContainers, setRoomContainers] = useState<number[]>([]);
-
-  const addRoomContainer = () => {
-    setRoomContainers((prev) => [...prev, prev.length]);
-  };
-
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <SUPnavbar />
@@ -24,15 +17,7 @@ const SUPdashboard = () => {
         </div>
       </div>
       <div className="section-container">
-        <button
-          className="text-black"
-          onClick={addRoomContainer}
-        >
-          Add Room Container
-        </button>
-        {roomContainers.map((key) => (
-          <HSKRoomContainer key={key} />
-        ))}
+        
       </div>
     </div>
   );

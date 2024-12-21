@@ -7,9 +7,6 @@ const SUPNavbar = () => {
   const navigate = useNavigate();
   const [showUserSwitch, setShowUserSwitch] = useState(false);
 
-  const handleDashboard = () => {
-    navigate("/AdminDashboard");
-  };
   const handleSupervisor = () => {
     navigate("/SUPdashboard");
   };
@@ -34,9 +31,6 @@ const SUPNavbar = () => {
         )}
       </div>
       <div className="flex gap-5">
-        <button onClick={handleDashboard} className="hover:underline">
-          Dashboard
-        </button>
         <button onClick={handleSupervisor} className="hover:underline">
           Rooms
         </button>
