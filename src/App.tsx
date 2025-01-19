@@ -12,6 +12,7 @@ import SUPdashboard from "./components/Supervisor/SUPdashboard.tsx";
 import AdminStart from "./components/Admin/Admin Button/AdminStart.tsx";
 import AdminAutoAssign from "./components/Admin/Admin Button/AdminAutoAssign.tsx"
 import AdminHSKassign from "./components/Admin/Admin Button/AdminHSKassign.tsx";
+import SortButton from "./components/Admin/Admin Button/SortButton.tsx";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/AdminStart" element={<AdminStart />} />
           <Route path="/AdminAutoAssign" element={<AdminAutoAssign />} />
           <Route path="/AdminHSKassign" element={<AdminHSKassign />} />
+          <Route path="/SortButton" element={<SortButton />} />
         </Routes>
       </div>
     </Router>
