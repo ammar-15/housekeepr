@@ -6,12 +6,11 @@ const AdminAutoAssign = () => {
   const [roomNumbers, setRoomNumbers] = useState(""); 
   const [housekeepers, setHousekeepers] = useState<number>(1); 
 
-  const handleAutoAssign = async () => {
+  const handleAutoAssign = () => {
     if (!roomNumbers.trim()) {
       console.error("No room numbers provided.");
       return;
     }
-
     const roomList = roomNumbers.split(",").map((room) => room.trim());
     const totalRooms = roomList.length;
     const assignedRooms = Math.floor(totalRooms / housekeepers);
@@ -19,44 +18,45 @@ const AdminAutoAssign = () => {
 
     let currentHousekeeper = 1;
     let assignedCount = 0;
-//try promise for this
-    for (let i = 0; i < roomList.length; i++) {
-      const roomNumber = roomList[i];
+  
+    roomList.forEach((roomNumber) => {
       const room = RoomData.find((r) => r.roomNumber === roomNumber);
-
+  
       if (!room) {
         console.error(`Room ${roomNumber} not found in RoomData.`);
-        continue;
+        return;
       }
       const assignedto = `HSK${currentHousekeeper}`;
       const updatedRoom = { ...room, assignedto, roomStatus: "Dirty" };
-
-      try {
-        const roomRef = doc(db, "AdminHSK", roomNumber);
-        const docSnapshot = await getDoc(roomRef);
-
-        if (docSnapshot.exists()) {
-          await setDoc(roomRef, updatedRoom, { merge: true });
-        } else {
-          await setDoc(roomRef, updatedRoom);
-        }
-        console.log(`Room ${roomNumber} assigned to ${assignedto}`);
-        assignedCount++;
-        if (
-          assignedCount === assignedRooms + (currentHousekeeper <= remainder ? 1 : 0)
-        ) {
-          currentHousekeeper++;
-          assignedCount = 0;
-        }
-      } catch (error) {
-        console.error(`Error assigning room ${roomNumber}:`, error);
-      }
-    }
-
+      const roomRef = doc(db, "AdminHSK", roomNumber);
+  
+      getDoc(roomRef)
+        .then((docSnapshot) => {
+          if (docSnapshot.exists()) {
+            return setDoc(roomRef, updatedRoom, { merge: true });
+          } else {
+            return setDoc(roomRef, updatedRoom);
+          }
+        })
+        .then(() => {
+          console.log(`Room ${roomNumber} assigned to ${assignedto}`);
+          assignedCount++;
+  
+          if (assignedCount === assignedRooms + (currentHousekeeper <= remainder ? 1 : 0)) {
+            currentHousekeeper++;
+            assignedCount = 0;
+          }
+        })
+        .catch((error) => {
+          console.error(`Error assigning room ${roomNumber}:`, error);
+        });
+    });
+  
     setRoomNumbers("");
     setHousekeepers(1);
     console.log("Auto assign doneeeeeeee.");
   };
+  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

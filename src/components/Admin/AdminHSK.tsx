@@ -21,7 +21,6 @@ const AdminHSK = () => {
     return () => unsubscribe();
   }, []);
 
-  // Handle sorting logic
   const sortRooms = (rooms: any[], option: string | null) => {
     switch (option) {
       case "recent":
@@ -35,7 +34,6 @@ const AdminHSK = () => {
     }
   };
 
- 
   const toggleSorting = () => {
     setIsSortingVisible((prev) => !prev);
   };
@@ -51,7 +49,7 @@ const AdminHSK = () => {
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">Housekeepers</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">Total Housekeepers: 12</div>
+          <div className="stats-box px-2">Total Housekeepers: 10</div>
           <div className="stats-box px-2">Total Rooms to Clean: {HSKrooms.length}</div>
         </div>
       </div>
