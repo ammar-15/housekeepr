@@ -21,6 +21,7 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
       >
         +
       </button>
+
       {showOptions && (
         <div className="absolute bottom-16 right-0 flex flex-col space-y-2">
           <button
@@ -37,15 +38,20 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
           </button>
         </div>
       )}
+
       {activeModal === "HSK" && (
         <AdminHSKassign
           onAddHSKroom={(HSKroomNumber) => {
             if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
             setActiveModal(null);
           }}
+          onClose={() => setActiveModal(null)} 
         />
       )}
-      {activeModal === "AUTO" && <AdminAutoAssign />}
+
+      {activeModal === "AUTO" && (
+        <AdminAutoAssign onClose={() => setActiveModal(null)} />
+      )}
     </div>
   );
 };
