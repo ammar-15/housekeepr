@@ -5,6 +5,7 @@ import RoomData from "../../RoomData";
 const AdminAutoAssign = () => {
   const [roomNumbers, setRoomNumbers] = useState(""); 
   const [housekeepers, setHousekeepers] = useState<number>(1); 
+  const [isModalVisible, setIsModalVisible] = useState(true);
 
   const handleAutoAssign = () => {
     if (!roomNumbers.trim()) {
@@ -54,10 +55,11 @@ const AdminAutoAssign = () => {
   
     setRoomNumbers("");
     setHousekeepers(1);
+    setIsModalVisible(false);
     console.log("Auto assign doneeeeeeee.");
   };
   
-
+  if (!isModalVisible) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-md shadow-lg w-96">
@@ -78,6 +80,12 @@ const AdminAutoAssign = () => {
           min={1}
         />
         <div className="flex justify-end">
+        <button
+            onClick={() => setIsModalVisible(false)}
+            className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+          >
+            Cancel
+          </button>
           <button
             onClick={handleAutoAssign}
             className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"

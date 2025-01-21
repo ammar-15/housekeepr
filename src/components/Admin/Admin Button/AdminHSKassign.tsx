@@ -10,6 +10,7 @@ interface AdminHSKassignProps {
 const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
   const [HSKroomNumber, setHSKRoomNumber] = useState(""); 
   const [statusOption, setStatusOption] = useState("Dirty"); 
+  const [isModalVisible, setIsModalVisible] = useState(true);
 
   const handleSave = async () => {
     console.log("room sent to Firebase");
@@ -34,8 +35,10 @@ const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
         console.error("firebase error", error);
       }
     }
+    setIsModalVisible(false);
+    console.log("HSK assign done!!");
   };
-
+  if (!isModalVisible) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-md shadow-lg w-96">
@@ -56,6 +59,12 @@ const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
           <option value="Clean">Clean</option>
         </select>
         <div className="flex justify-end">
+        <button
+            onClick={() => setIsModalVisible(false)}
+            className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+          >
+            Cancel
+          </button>
           <button
             onClick={handleSave}
             className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
