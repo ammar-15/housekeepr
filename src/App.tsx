@@ -8,6 +8,8 @@ import AdminRooms from "./components/Admin/AdminRooms.tsx";
 import AdminNavbar from "./components/Admin/AdminNavbar.tsx";
 import AdminUserSwitch from "./components/Admin/AdminUserSwitch.tsx";
 import HSKdashboard from "./components/Housekeeper/HSKdashboard.tsx";
+import HSK2dashboard from "./components/Housekeeper/HSK2dashboard.tsx";
+import HSK3dashboard from "./components/Housekeeper/HSK3dashboard.tsx";
 import SUPdashboard from "./components/Supervisor/SUPdashboard.tsx";
 import AdminStart from "./components/Admin/Admin Button/AdminStart.tsx";
 import AdminAutoAssign from "./components/Admin/Admin Button/AdminAutoAssign.tsx"
@@ -27,6 +29,8 @@ function App() {
           <Route path="/AdminNavbar" element={<AdminNavbar />} />
           <Route path="/AdminUserSwitch" element={<AdminUserSwitch />} />
           <Route path="/HSKdashboard" element={<HSKdashboard />} />
+          <Route path="/HSK2dashboard" element={<HSK2dashboard />} />
+          <Route path="/HSK3dashboard" element={<HSK3dashboard />} />
           <Route path="/SUPdashboard" element={<SUPdashboard />} />
           <Route path="/AdminStart" element={<AdminStart />} />
           <Route path="/AdminAutoAssign" element={<AdminAutoAssign />} />
