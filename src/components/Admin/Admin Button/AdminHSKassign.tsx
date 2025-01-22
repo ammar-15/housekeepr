@@ -5,11 +5,18 @@ import RoomData from "../../RoomData";
 
 interface AdminHSKassignProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
+  onClose?: () => void;
 }
 
-const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
+const AdminHSKassign = ({ onAddHSKroom, onClose }: AdminHSKassignProps) => {
   const [HSKroomNumber, setHSKRoomNumber] = useState(""); 
   const [statusOption, setStatusOption] = useState("Dirty"); 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+      console.log("hskassign closed");
+    }
+  };
 
   const handleSave = async () => {
     console.log("room sent to Firebase");
@@ -34,6 +41,7 @@ const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
         console.error("firebase error", error);
       }
     }
+    console.log("HSK assign done!!");
   };
 
   return (
@@ -56,6 +64,12 @@ const AdminHSKassign = ({ onAddHSKroom }: AdminHSKassignProps) => {
           <option value="Clean">Clean</option>
         </select>
         <div className="flex justify-end">
+          <button
+            onClick={handleClose}
+            className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+          >
+            Cancel
+          </button>
           <button
             onClick={handleSave}
             className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"

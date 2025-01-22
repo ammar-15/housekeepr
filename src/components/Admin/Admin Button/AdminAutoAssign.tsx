@@ -2,9 +2,20 @@ import { useState } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore"; 
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData"; 
-const AdminAutoAssign = () => {
+
+interface AdminAutoAssignProps {
+  onClose?: () => void;
+}
+
+const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
   const [roomNumbers, setRoomNumbers] = useState(""); 
   const [housekeepers, setHousekeepers] = useState<number>(1); 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+      console.log("autassign closed");
+    }
+  };
 
   const handleAutoAssign = () => {
     if (!roomNumbers.trim()) {
@@ -21,7 +32,6 @@ const AdminAutoAssign = () => {
   
     roomList.forEach((roomNumber) => {
       const room = RoomData.find((r) => r.roomNumber === roomNumber);
-  
       if (!room) {
         console.error(`Room ${roomNumber} not found in RoomData.`);
         return;
@@ -29,7 +39,7 @@ const AdminAutoAssign = () => {
       const assignedto = `HSK${currentHousekeeper}`;
       const updatedRoom = { ...room, assignedto, roomStatus: "Dirty" };
       const roomRef = doc(db, "AdminHSK", roomNumber);
-  
+
       getDoc(roomRef)
         .then((docSnapshot) => {
           if (docSnapshot.exists()) {
@@ -41,7 +51,6 @@ const AdminAutoAssign = () => {
         .then(() => {
           console.log(`Room ${roomNumber} assigned to ${assignedto}`);
           assignedCount++;
-  
           if (assignedCount === assignedRooms + (currentHousekeeper <= remainder ? 1 : 0)) {
             currentHousekeeper++;
             assignedCount = 0;
@@ -51,13 +60,12 @@ const AdminAutoAssign = () => {
           console.error(`Error assigning room ${roomNumber}:`, error);
         });
     });
-  
+
     setRoomNumbers("");
     setHousekeepers(1);
     console.log("Auto assign doneeeeeeee.");
   };
   
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-md shadow-lg w-96">
@@ -78,10 +86,10 @@ const AdminAutoAssign = () => {
           min={1}
         />
         <div className="flex justify-end">
-          <button
-            onClick={handleAutoAssign}
-            className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
-          >
+          <button onClick={handleClose} className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400">
+            Cancel
+          </button>
+          <button onClick={handleAutoAssign} className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine">
             Auto Assign
           </button>
         </div>

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import HSKRoomContainer from "./HSKRoomContainer";
-import AdminNavbar from "./AdminNavbar";
-import AdminStart from "./Admin Button/AdminStart";
+import HSKnavbar from "./HSKnavbar.tsx";
+import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import sortIcon from "../assets/sort.svg"; 
 
-const AdminSUP = () => {
-  const [SUProoms, setSUProoms] = useState<any[]>([]);
+
+const HSK2dashboard = () => {
+  const [secondFloorRooms, setSecondFloorRooms] = useState<any[]>([]);
   const [sortOption, setSortOption] = useState<string | null>(null); 
   const [isSortingVisible, setIsSortingVisible] = useState(false); 
 
@@ -15,9 +15,13 @@ const AdminSUP = () => {
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
-      const cleanRooms = allRooms.filter((room) => room.roomStatus === "Clean"); 
-      setSUProoms(cleanRooms);
+      const dirtySecondFloorRooms = allRooms.filter(
+        (room) =>
+          room.roomStatus === "Dirty" && room.roomNumber.startsWith("2")
+      );
+      setSecondFloorRooms(dirtySecondFloorRooms);
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -43,16 +47,19 @@ const AdminSUP = () => {
     setIsSortingVisible(false); 
   };
 
+
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <AdminNavbar />
-      <div className="dashboard-header flex justify-between items-center m-0 mb-10">
-        <h1 className="text-3xl text-wine">Supervisors</h1>
+      <HSKnavbar />
+      <div className="dashboard-header flex justify-between items-center m-0 mb-10 mt-4">
+        <h1 className="text-3xl text-wine">HSK-2 Dashboard</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">Total Supervisors: 12</div>
-          <div className="stats-box px-2">Total Rooms to Inspect: {SUProoms.length}</div>
+          <div className="stats-box px-2">
+            <span>Total Rooms to Clean: {secondFloorRooms.length}</span>
+          </div>
         </div>
       </div>
+
       <div className="sort-container flex justify-end relative">
         <button
           className="bg-transparent border-none cursor-pointer"
@@ -60,6 +67,7 @@ const AdminSUP = () => {
         >
           <img src={sortIcon} alt="Sort" className="w-5 h-5" />
         </button>
+
         {isSortingVisible && (
           <div className="absolute right-0 mt-5 bg-white border border-gray-300 rounded-md shadow-lg">
             <ul className="list-none p-2">
@@ -76,14 +84,14 @@ const AdminSUP = () => {
           </div>
         )}
       </div>
+
       <div className="section-container">
-        {sortRooms(SUProoms, sortOption).map((room, index) => (
+        {sortRooms(secondFloorRooms, sortOption).map((room, index) => (
           <HSKRoomContainer key={index} room={room} />
         ))}
       </div>
-      <AdminStart />
     </div>
   );
 };
 
-export default AdminSUP;
+export default HSK2dashboard;
