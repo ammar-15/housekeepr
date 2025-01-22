@@ -4,9 +4,12 @@ import { db } from "../../../firebase";
 import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar";
 import AdminStart from "./Admin Button/AdminStart";
+import sortIcon from "../assets/sort.svg"; 
 
 const AdminSUP = () => {
   const [SUProoms, setSUProoms] = useState<any[]>([]);
+  const [sortOption, setSortOption] = useState<string | null>(null); 
+  const [isSortingVisible, setIsSortingVisible] = useState(false); 
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -18,6 +21,28 @@ const AdminSUP = () => {
     return () => unsubscribe();
   }, []);
 
+  const sortRooms = (rooms: any[], option: string | null) => {
+    switch (option) {
+      case "recent":
+        return rooms.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1)); 
+      case "ascending":
+        return rooms.sort((a, b) => a.roomNumber - b.roomNumber); 
+      case "descending":
+        return rooms.sort((a, b) => b.roomNumber - a.roomNumber); 
+      default:
+        return rooms;
+    }
+  };
+
+  const toggleSorting = () => {
+    setIsSortingVisible((prev) => !prev);
+  };
+
+  const handleSortOptionChange = (option: string) => {
+    setSortOption(option); 
+    setIsSortingVisible(false); 
+  };
+
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <AdminNavbar />
@@ -28,8 +53,31 @@ const AdminSUP = () => {
           <div className="stats-box px-2">Total Rooms to Inspect: {SUProoms.length}</div>
         </div>
       </div>
+      <div className="sort-container flex justify-end relative">
+        <button
+          className="bg-transparent border-none cursor-pointer"
+          onClick={toggleSorting}
+        >
+          <img src={sortIcon} alt="Sort" className="w-5 h-5" />
+        </button>
+        {isSortingVisible && (
+          <div className="absolute right-0 mt-5 bg-white border border-gray-300 rounded-md shadow-lg">
+            <ul className="list-none p-2">
+              <li className="cursor-pointer" onClick={() => handleSortOptionChange("recent")}>
+                Recent
+              </li>
+              <li className="cursor-pointer" onClick={() => handleSortOptionChange("ascending")}>
+                Ascending
+              </li>
+              <li className="cursor-pointer" onClick={() => handleSortOptionChange("descending")}>
+                Descending
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
       <div className="section-container">
-        {SUProoms.map((room, index) => (
+        {sortRooms(SUProoms, sortOption).map((room, index) => (
           <HSKRoomContainer key={index} room={room} />
         ))}
       </div>

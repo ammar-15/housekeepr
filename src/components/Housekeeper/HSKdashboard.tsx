@@ -67,7 +67,6 @@ const HSKdashboard = () => {
         >
           <img src={sortIcon} alt="Sort" className="w-5 h-5" />
         </button>
-
         {isSortingVisible && (
           <div className="absolute right-0 mt-5 bg-white border border-gray-300 rounded-md shadow-lg">
             <ul className="list-none p-2">
