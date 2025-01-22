@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
-import threedotsIcon from "../assets/threedots.svg"; 
+import threedotsIcon from "../assets/threedots.svg";
 
 interface RoomDataType {
   roomNumber: string;
