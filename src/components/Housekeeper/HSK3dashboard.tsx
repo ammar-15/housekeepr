@@ -3,19 +3,21 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import HSKnavbar from "./HSKnavbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
+import SortButton from "../SortButton.tsx";
 
 const HSK3dashboard = () => {
   const [thirdFloorRooms, setThirdFloorRooms] = useState<any[]>([]);
+  const [sortedRooms, setSortedRooms] = useState<any[]>([]);
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
-      const dirtythirdFloorRooms = allRooms.filter(
-        (room) =>
-          room.roomStatus === "Dirty" && room.roomNumber.startsWith("3")
+      const dirtyThirdFloorRooms = allRooms.filter(
+        (room) => room.roomStatus === "Dirty" && room.roomNumber.startsWith("3")
       );
-      setThirdFloorRooms(dirtythirdFloorRooms);
+      setThirdFloorRooms(dirtyThirdFloorRooms);
+      setSortedRooms(dirtyThirdFloorRooms); 
     });
 
     return () => unsubscribe();
@@ -28,13 +30,14 @@ const HSK3dashboard = () => {
         <h1 className="text-3xl text-wine">HSK-3 Dashboard</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
           <div className="stats-box px-2">
-            <span>Total Rooms to Clean: {thirdFloorRooms.length}</span>
+            <span>Total Rooms to Clean: {sortedRooms.length}</span>
           </div>
         </div>
       </div>
+      <SortButton rooms={thirdFloorRooms} onSortedRooms={setSortedRooms} />
 
       <div className="section-container">
-        {sortRooms(thirdFloorRooms, sortOption).map((room, index) => (
+        {sortedRooms.map((room, index) => (
           <HSKRoomContainer key={index} room={room} />
         ))}
       </div>

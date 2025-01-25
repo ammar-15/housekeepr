@@ -1,21 +1,22 @@
 import { useState } from "react";
-import sortIcon from "../assets/sort.svg";
+import sortIcon from "../components/assets/sort.svg"; 
 
 interface SortButtonProps {
-  onSortChange: (option: string) => void;
+  rooms?: any[];  
+  onSortedRooms?: (sortedRooms: any[]) => void;  
 }
 
-const SortButton = ({ onSortChange }: SortButtonProps) => {
+const SortButton = ({ rooms = [], onSortedRooms = () => {} }: SortButtonProps) => {
   const [isSortingVisible, setIsSortingVisible] = useState(false);
 
   const sortRooms = (rooms: any[], option: string | null) => {
     switch (option) {
       case "recent":
-        return rooms.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
+        return [...rooms].sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
       case "ascending":
-        return rooms.sort((a, b) => a.roomNumber - b.roomNumber);
+        return [...rooms].sort((a, b) => a.roomNumber.localeCompare(b.roomNumber));
       case "descending":
-        return rooms.sort((a, b) => b.roomNumber - a.roomNumber);
+        return [...rooms].sort((a, b) => b.roomNumber.localeCompare(a.roomNumber));
       default:
         return rooms;
     }
@@ -26,8 +27,8 @@ const SortButton = ({ onSortChange }: SortButtonProps) => {
   };
 
   const handleSortOptionChange = (option: string) => {
-    onSortChange(option);
     setIsSortingVisible(false);
+    onSortedRooms(sortRooms(rooms, option));
   };
 
   return (
@@ -42,22 +43,13 @@ const SortButton = ({ onSortChange }: SortButtonProps) => {
       {isSortingVisible && (
         <div className="absolute right-0 mt-5 bg-white border border-gray-300 rounded-md shadow-lg">
           <ul className="list-none p-2">
-            <li
-              className="cursor-pointer"
-              onClick={() => handleSortOptionChange("recent")}
-            >
+            <li className="cursor-pointer" onClick={() => handleSortOptionChange("recent")}>
               Recent
             </li>
-            <li
-              className="cursor-pointer"
-              onClick={() => handleSortOptionChange("ascending")}
-            >
+            <li className="cursor-pointer" onClick={() => handleSortOptionChange("ascending")}>
               Ascending
             </li>
-            <li
-              className="cursor-pointer"
-              onClick={() => handleSortOptionChange("descending")}
-            >
+            <li className="cursor-pointer" onClick={() => handleSortOptionChange("descending")}>
               Descending
             </li>
           </ul>
