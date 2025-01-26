@@ -8,6 +8,7 @@ import AdminRooms from "./components/Admin/AdminRooms.tsx";
 import AdminNavbar from "./components/Admin/AdminNavbar.tsx";
 import AdminUserSwitch from "./components/Admin/AdminUserSwitch.tsx";
 import HSKdashboard from "./components/Housekeeper/HSKdashboard.tsx";
+import HSKdashboardfilter from "./components/Housekeeper/HSKdashboardfilter.tsx";
 import HSK2dashboard from "./components/Housekeeper/HSK2dashboard.tsx";
 import HSK3dashboard from "./components/Housekeeper/HSK3dashboard.tsx";
 import SUPdashboard from "./components/Supervisor/SUPdashboard.tsx";
@@ -40,6 +41,7 @@ function App() {
           <Route path="/AdminAutoAssign" element={<AdminAutoAssign />} />
           <Route path="/AdminHSKassign" element={<AdminHSKassign />} />
           <Route path="/SortButton" element={<SortButton />} />
+          <Route path="/HSKdashboardfilter" element={<HSKdashboardfilter />} />
         </Routes>
       </div>
     </Router>
