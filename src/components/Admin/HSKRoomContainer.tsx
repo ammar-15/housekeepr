@@ -50,8 +50,15 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       </button>
       <p className="flex-1 text-center">{room.roomNumber}</p>
       <p className="flex-1 text-center">{room.roomType}</p>
-      <p className="flex-1 text-center">{room.roomStatus}</p>
-      <p className="flex-1 text-center">{room.coStatus}</p>
+      <p
+        className={`flex-1 text-center px-2 py-1 rounded-md ${
+          room.roomStatus === "Clean" ? "bg-lightgreen text-black" : "bg-lightyellow text-black"}`}>
+          {room.roomStatus}
+      </p>
+      <p className={`flex-1 text-center mx-3 px-0.1 py-1 rounded-md ${
+          room.coStatus === "DUE" ? "bg-mistysky text-black" : "bg-lightgreen text-black"}`}>
+          {room.coStatus}
+      </p>
       <p className="flex-1 text-center">{room.people}</p>
       <p className="flex-1 text-center">{room.arrival}</p>
       <p className="flex-1 text-center">{room.departs}</p>

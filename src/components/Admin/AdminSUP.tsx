@@ -46,7 +46,7 @@ const AdminSUP = () => {
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <AdminNavbar />
-      <div className="dashboard-header flex justify-between items-center m-0 mb-10">
+      <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">Supervisors</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
           <div className="stats-box px-2">Total Supervisors: 12</div>
