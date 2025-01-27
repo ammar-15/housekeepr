@@ -14,6 +14,7 @@ import HSK3dashboard from "./components/Housekeeper/HSK3dashboard.tsx";
 import SUPdashboard from "./components/Supervisor/SUPdashboard.tsx";
 import SUP2dashboard from "./components/Supervisor/SUP2dashboard.tsx";
 import SUP3dashboard from "./components/Supervisor/SUP3dashboard.tsx";
+import SUPdashboardfilter from "./components/Supervisor/SUPdashboardfilter.tsx";
 import AdminStart from "./components/Admin/Admin Button/AdminStart.tsx";
 import AdminAutoAssign from "./components/Admin/Admin Button/AdminAutoAssign.tsx"
 import AdminHSKassign from "./components/Admin/Admin Button/AdminHSKassign.tsx";
@@ -42,6 +43,7 @@ function App() {
           <Route path="/AdminHSKassign" element={<AdminHSKassign />} />
           <Route path="/SortButton" element={<SortButton />} />
           <Route path="/HSKdashboardfilter" element={<HSKdashboardfilter />} />
+          <Route path="/SUPdashboardfilter" element={<SUPdashboardfilter />} />
         </Routes>
       </div>
     </Router>
