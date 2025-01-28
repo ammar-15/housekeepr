@@ -82,7 +82,6 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       <p className="flex-1 text-center">{room.extras}</p>
       <p className="flex-1 text-center">{room.early_ci}</p>
       <p className="flex-1 text-center">{room.assignedto}</p>
-      <p className="flex-1 text-center">{room.time_stamp}</p>
 
       {isModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

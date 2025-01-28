@@ -29,11 +29,14 @@ const AdminHSKassign = ({ onAddHSKroom, onClose }: AdminHSKassignProps) => {
         return;
       }
 
+      const currentTime = new Date();
+      const formattedTime = currentTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+
       try {
         const roomRef = doc(db, "AdminHSK", HSKroomNumber);
-        const updatedRoom = { ...room, roomStatus: statusOption };
+        const updatedRoom = { ...room, roomStatus: statusOption, time_stamp: formattedTime };
         await setDoc(roomRef, updatedRoom);
-        console.log(`room saved to Firebase with status "${statusOption}":`, updatedRoom);
+        console.log(`room saved to Firebase with status "${statusOption}" at "${formattedTime}":`, updatedRoom);
 
         if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
         setHSKRoomNumber(""); 

@@ -29,6 +29,10 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
 
     let currentHousekeeper = 1;
     let assignedCount = 0;
+
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+
   
     roomList.forEach((roomNumber) => {
       const room = RoomData.find((r) => r.roomNumber === roomNumber);
@@ -37,7 +41,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
         return;
       }
       const assignedto = `HSK${currentHousekeeper}`;
-      const updatedRoom = { ...room, assignedto, roomStatus: "Dirty" };
+      const updatedRoom = { ...room, assignedto, roomStatus: "Dirty", time_stamp: formattedTime };
       const roomRef = doc(db, "AdminHSK", roomNumber);
 
       getDoc(roomRef)
@@ -49,7 +53,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
           }
         })
         .then(() => {
-          console.log(`Room ${roomNumber} assigned to ${assignedto}`);
+          console.log(`Room ${roomNumber} assigned to ${assignedto} at ${formattedTime}`);
           assignedCount++;
           if (assignedCount === assignedRooms + (currentHousekeeper <= remainder ? 1 : 0)) {
             currentHousekeeper++;
