@@ -2,8 +2,8 @@ import { useState } from "react";
 import sortIcon from "../components/assets/sort.svg"; 
 
 interface SortButtonProps {
-  rooms?: any[];  
-  onSortedRooms?: (sortedRooms: any[]) => void;  
+  rooms: any[];  
+  onSortedRooms: (sortedRooms: any[]) => void;  
 }
 
 const SortButton = ({ rooms = [], onSortedRooms = () => {} }: SortButtonProps) => {
