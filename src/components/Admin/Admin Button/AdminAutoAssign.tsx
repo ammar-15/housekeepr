@@ -31,7 +31,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
     let assignedCount = 0;
 
     const currentTime = new Date();
-    const formattedTime = currentTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+    const formattedTime = currentTime.toISOString();
 
   
     roomList.forEach((roomNumber) => {

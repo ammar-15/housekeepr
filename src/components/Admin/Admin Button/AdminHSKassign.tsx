@@ -30,7 +30,7 @@ const AdminHSKassign = ({ onAddHSKroom, onClose }: AdminHSKassignProps) => {
       }
 
       const currentTime = new Date();
-      const formattedTime = currentTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      const formattedTime = currentTime.toISOString();
 
       try {
         const roomRef = doc(db, "AdminHSK", HSKroomNumber);
