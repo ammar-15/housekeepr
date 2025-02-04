@@ -11,6 +11,10 @@ const SUPNavbar = () => {
     navigate("/SUPdashboard");
   };
 
+  const handleNotes = () => {
+    navigate("/Notes");
+  };
+
   const toggleUserSwitch = () => {
     setShowUserSwitch(!showUserSwitch);
   };
@@ -30,10 +34,17 @@ const SUPNavbar = () => {
           </div>
         )}
       </div>
+      <div className="flex flex-row gap-5">
       <div className="flex gap-5">
         <button onClick={handleSupervisor} className="hover:underline">
           Rooms
         </button>
+      </div>
+      <div className="flex gap-5">
+          <button onClick={handleNotes} className="hover:underline">
+            Notes
+          </button>
+        </div>
       </div>
     </nav>
   );
