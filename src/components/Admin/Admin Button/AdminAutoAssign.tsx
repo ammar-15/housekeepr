@@ -8,9 +8,9 @@ interface AdminAutoAssignProps {
 }
 
 const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
-  const [roomNumbers, setRoomNumbers] = useState(""); 
+  const [checkOutRoomNumbers, setCheckOutRoomNumbers] = useState(""); 
+  const [stayOverRoomNumbers, setStayOverRoomNumbers] = useState(""); 
   const [housekeepers, setHousekeepers] = useState<number>(1); 
-  const [coStatus, setCoStatus] = useState("DUE"); 
 
   const handleClose = () => {
     if (onClose) {
@@ -19,12 +19,12 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
     }
   };
 
-  const handleAutoAssign = () => {
-    if (!roomNumbers.trim()) {
+  const handleAutoAssign = (rooms: string, coStatus: string) => {
+    if (!rooms.trim()) {
       console.error("No room numbers provided.");
       return;
     }
-    const roomList = roomNumbers.split(",").map((room) => room.trim());
+    const roomList = rooms.split(",").map((room) => room.trim());
     const totalRooms = roomList.length;
     const assignedRooms = Math.floor(totalRooms / housekeepers);
     const remainder = totalRooms % housekeepers;
@@ -65,48 +65,61 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
           console.error(`Error assigning room ${roomNumber}:`, error);
         });
     });
+  };
 
-    setRoomNumbers("");
+  const handleSubmit = () => {
+    handleAutoAssign(checkOutRoomNumbers, "DUE");
+    handleAutoAssign(stayOverRoomNumbers, "STAYOVER");
+
+    setCheckOutRoomNumbers("");
+    setStayOverRoomNumbers("");
     setHousekeepers(1);
-    setCoStatus("DUE");
-    console.log("Auto assign done.");
+    console.log("Auto assign completed.");
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-md shadow-lg w-96">
+      <div className="bg-white p-6 rounded-md shadow-lg w-30%">
         <h2 className="text-xl mb-4">Auto Assign Rooms</h2>
-        <input
-          type="text"
-          placeholder="Enter C/O (separated with commas)"
-          value={roomNumbers}
-          onChange={(e) => setRoomNumbers(e.target.value)}
-          className="w-full mb-3 p-2 border rounded-md"
-        />
-        <input
-          type="number"
-          placeholder="Enter number of housekeepers"
-          value={housekeepers}
-          onChange={(e) => setHousekeepers(Number(e.target.value))}
-          className="w-full mb-3 p-2 border rounded-md"
-          min={1}
-        />
-        
-        <label className="block text-sm font-medium text-gray-700">CO Status</label>
-        <select
-          value={coStatus}
-          onChange={(e) => setCoStatus(e.target.value)}
-          className="w-full mb-3 p-2 border rounded-md"
-        >
-          <option value="DUE">DUE</option>
-          <option value="STAYOVER">STAYOVER</option>
-        </select>
+        <div className="makethis2 flex space-x-4">
+                    <div className="w-50%">
+            <h3 className="text-md mb-2">Check-Out Rooms</h3>
+            <input
+              type="text"
+              placeholder="(Comma separated)"
+              value={checkOutRoomNumbers}
+              onChange={(e) => setCheckOutRoomNumbers(e.target.value)}
+              className="w-full mb-3 p-2 border rounded-md"
+            />
+          </div>
+          <div className="w-50%">
+            <h3 className="text-md mb-2">Stayover Rooms</h3>
+            <input
+              type="text"
+              placeholder="(Comma separated)"
+              value={stayOverRoomNumbers}
+              onChange={(e) => setStayOverRoomNumbers(e.target.value)}
+              className="w-full mb-3 p-2 border rounded-md"
+            />
+          </div>
+        </div>
+        <div className="mt-3">
+          <h3 className="text-md mb-2">Number of Housekeepers</h3>
+          <input
+            type="number"
+            placeholder="Enter number of housekeepers"
+            value={housekeepers}
+            onChange={(e) => setHousekeepers(Number(e.target.value))}
+            className="w-full mb-3 p-2 border rounded-md"
+            min={1}
+          />
+        </div>
 
         <div className="flex justify-end">
           <button onClick={handleClose} className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400">
             Cancel
           </button>
-          <button onClick={handleAutoAssign} className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine">
+          <button onClick={handleSubmit} className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine">
             Auto Assign
           </button>
         </div>
