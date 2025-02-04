@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../../firebase";
+import EditRoomContainer from "./EditRoomContainer";
 import threedotsIcon from "../assets/threedots.svg";
 
 interface RoomDataType {
@@ -22,27 +21,9 @@ interface HSKRoomContainerProps {
 }
 const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newRoomStatus, setNewRoomStatus] = useState(room.roomStatus);
-  const [newCoStatus, setNewCoStatus] = useState(room.coStatus);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
-  };
-
-  const handleStatusChange = async () => {
-    try {
-      const roomRef = doc(db, "AdminHSK", room.roomNumber);
-      await updateDoc(roomRef, {
-        roomStatus: newRoomStatus,
-        coStatus: newCoStatus,
-      });
-      console.log(
-        `Room ${room.roomNumber} updated to Status: ${newRoomStatus}, CO: ${newCoStatus}`
-      );
-      setIsModalVisible(false);
-    } catch (error) {
-      console.error("Error updating room status:", error);
-    }
   };
 
   return (
@@ -84,59 +65,13 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       <p className="flex-1 text-center">{room.extras}</p>
       <p className="flex-1 text-center">{room.early_ci}</p>
       <p className="flex-1 text-center">{room.assignedto}</p>
-
       {isModalVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-md shadow-lg w-80">
-            <h2 className="text-xl mb-4">Update Room {room.roomNumber}</h2>
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Room Status
-                </label>
-                <select
-                  value={newRoomStatus}
-                  onChange={(e) => setNewRoomStatus(e.target.value)}
-                  className="w-full p-2 border rounded-md"
-                >
-                  <option value="Clean">Clean</option>
-                  <option value="Dirty">Dirty</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Check Out Status
-                </label>
-                <select
-                  value={newCoStatus}
-                  onChange={(e) => setNewCoStatus(e.target.value)}
-                  className="w-full p-2 border rounded-md"
-                >
-                  <option value="DUE">DUE</option>
-                  <option value="OUT">OUT</option>
-                  <option value="VACANT">VACANT</option>
-                  <option value="INSPECTED">INSPECTED</option>
-                  <option value="STAYOVER">STAYOVER</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                onClick={toggleModal}
-                className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleStatusChange}
-                className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
-              >
-                Update
-              </button>
-            </div>
-          </div>
-        </div>
+        <EditRoomContainer
+          roomNumber={room.roomNumber}
+          initialRoomStatus={room.roomStatus}
+          initialCoStatus={room.coStatus}
+          onClose={toggleModal}
+        />
       )}
     </div>
   );
