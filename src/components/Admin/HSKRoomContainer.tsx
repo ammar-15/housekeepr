@@ -7,8 +7,8 @@ interface RoomDataType {
   roomType: string;
   roomStatus: string;
   coStatus: string;
-  people: string;
-  arrival: string;
+  workload: string;
+  nearElevator: string;
   departs: string;
   extras: string;
   early_ci: string;
@@ -59,8 +59,6 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       >
         {room.coStatus}
       </p>
-      <p className="flex-1 text-center">{room.people}</p>
-      <p className="flex-1 text-center">{room.arrival}</p>
       <p className="flex-1 text-center">{room.departs}</p>
       <p className="flex-1 text-center">{room.extras}</p>
       <p className="flex-1 text-center">{room.early_ci}</p>
