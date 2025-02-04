@@ -44,10 +44,6 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       console.error("Error updating room status:", error);
     }
   };
-  if (!room) {
-    console.log("Room not found");
-    return <div>Room not found</div>;
-  }
 
   return (
     <div className="HSKRoomContainer flex items-center justify-between p-4 bg-white rounded-md shadow-md mb-2">
@@ -67,10 +63,16 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       </p>
       <p
         className={`flex-1 text-center mx-3 px-0.1 py-1 rounded-md ${
-          room.coStatus === "DUE" ? "bg-mistysky text-black"
-            : room.coStatus === "OUT" ? "bg-lightyellow text-black"
-            : room.coStatus === "VACANT" ? "bg-yellow text-black"
-            : room.coStatus === "INSPECTED" ? "bg-lightblue text-black"
+          room.coStatus === "DUE"
+            ? "bg-mistysky text-black"
+            : room.coStatus === "OUT"
+            ? "bg-lightyellow text-black"
+            : room.coStatus === "VACANT"
+            ? "bg-yellow text-black"
+            : room.coStatus === "INSPECTED"
+            ? "bg-lightblue text-black"
+            : room.coStatus === "STAYOVER"
+            ? "bg-lightpurple text-black"
             : "bg-red text-black"
         }`}
       >
@@ -103,7 +105,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Check out Status
+                  Check Out Status
                 </label>
                 <select
                   value={newCoStatus}
@@ -114,6 +116,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
                   <option value="OUT">OUT</option>
                   <option value="VACANT">VACANT</option>
                   <option value="INSPECTED">INSPECTED</option>
+                  <option value="STAYOVER">STAYOVER</option>
                 </select>
               </div>
             </div>

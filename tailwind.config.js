@@ -64,6 +64,8 @@ export default {
       blue: "#1ccaff",
       lightblue: "#72f1ff",
       red: "#ff4f4f",
+      purple: "#b64fff",
+      lightpurple: "#e598ff",
     },
   },
   plugins: [],

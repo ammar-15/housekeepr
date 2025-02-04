@@ -10,6 +10,8 @@ interface AdminAutoAssignProps {
 const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
   const [roomNumbers, setRoomNumbers] = useState(""); 
   const [housekeepers, setHousekeepers] = useState<number>(1); 
+  const [coStatus, setCoStatus] = useState("DUE"); 
+
   const handleClose = () => {
     if (onClose) {
       onClose();
@@ -33,7 +35,6 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
     const currentTime = new Date();
     const formattedTime = currentTime.toISOString();
 
-  
     roomList.forEach((roomNumber) => {
       const room = RoomData.find((r) => r.roomNumber === roomNumber);
       if (!room) {
@@ -41,7 +42,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
         return;
       }
       const assignedto = `HSK${currentHousekeeper}`;
-      const updatedRoom = { ...room, assignedto, roomStatus: "Dirty", time_stamp: formattedTime };
+      const updatedRoom = { ...room, assignedto, roomStatus: "Dirty", coStatus, time_stamp: formattedTime };
       const roomRef = doc(db, "AdminHSK", roomNumber);
 
       getDoc(roomRef)
@@ -67,16 +68,17 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
 
     setRoomNumbers("");
     setHousekeepers(1);
-    console.log("Auto assign doneeeeeeee.");
+    setCoStatus("DUE");
+    console.log("Auto assign done.");
   };
-  
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-md shadow-lg w-96">
         <h2 className="text-xl mb-4">Auto Assign Rooms</h2>
         <input
           type="text"
-          placeholder="Enter room numbers (separated with commas)"
+          placeholder="Enter C/O (separated with commas)"
           value={roomNumbers}
           onChange={(e) => setRoomNumbers(e.target.value)}
           className="w-full mb-3 p-2 border rounded-md"
@@ -89,6 +91,17 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
           className="w-full mb-3 p-2 border rounded-md"
           min={1}
         />
+        
+        <label className="block text-sm font-medium text-gray-700">CO Status</label>
+        <select
+          value={coStatus}
+          onChange={(e) => setCoStatus(e.target.value)}
+          className="w-full mb-3 p-2 border rounded-md"
+        >
+          <option value="DUE">DUE</option>
+          <option value="STAYOVER">STAYOVER</option>
+        </select>
+
         <div className="flex justify-end">
           <button onClick={handleClose} className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400">
             Cancel
