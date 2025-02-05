@@ -1,75 +1,117 @@
 import { useState } from "react";
-import { doc, setDoc, getDoc } from "firebase/firestore"; 
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
-import RoomData from "../../RoomData"; 
+import RoomData from "../../RoomData";
+
+interface Room {
+  roomNumber: string;
+  roomType: string;
+  coStatus: string;
+  workload: number;
+  nearElevator: string;
+}
 
 interface AdminAutoAssignProps {
   onClose?: () => void;
 }
 
-const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
-  const [checkOutRoomNumbers, setCheckOutRoomNumbers] = useState(""); 
-  const [stayOverRoomNumbers, setStayOverRoomNumbers] = useState(""); 
-  const [housekeepers, setHousekeepers] = useState<number>(1); 
+const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
+  const [checkOutRoomNumbers, setCheckOutRoomNumbers] = useState("");
+  const [stayOverRoomNumbers, setStayOverRoomNumbers] = useState("");
+  const [housekeepers, setHousekeepers] = useState<number>(1);
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-      console.log("autassign closed");
-    }
+    onClose?.();
+    console.log("Auto Assign modal closed");
   };
 
-  const handleAutoAssign = (rooms: string, coStatus: string) => {
-    if (!rooms.trim()) {
-      console.error("No room numbers provided.");
-      return;
-    }
-    const roomList = rooms.split(",").map((room) => room.trim());
-    const totalRooms = roomList.length;
-    const assignedRooms = Math.floor(totalRooms / housekeepers);
-    const remainder = totalRooms % housekeepers;
-
-    let currentHousekeeper = 1;
-    let assignedCount = 0;
-
-    const currentTime = new Date();
-    const formattedTime = currentTime.toISOString();
-
-    roomList.forEach((roomNumber) => {
-      const room = RoomData.find((r) => r.roomNumber === roomNumber);
-      if (!room) {
-        console.error(`Room ${roomNumber} not found in RoomData.`);
-        return;
-      }
-      const assignedto = `HSK${currentHousekeeper}`;
-      const updatedRoom = { ...room, assignedto, roomStatus: "Dirty", coStatus, time_stamp: formattedTime };
-      const roomRef = doc(db, "AdminHSK", roomNumber);
-
-      getDoc(roomRef)
-        .then((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            return setDoc(roomRef, updatedRoom, { merge: true });
-          } else {
-            return setDoc(roomRef, updatedRoom);
-          }
-        })
-        .then(() => {
-          console.log(`Room ${roomNumber} assigned to ${assignedto} at ${formattedTime}`);
-          assignedCount++;
-          if (assignedCount === assignedRooms + (currentHousekeeper <= remainder ? 1 : 0)) {
-            currentHousekeeper++;
-            assignedCount = 0;
-          }
-        })
-        .catch((error) => {
-          console.error(`Error assigning room ${roomNumber}:`, error);
-        });
+  const parseFloor = (roomNumber: string): number => parseInt(roomNumber[0]);
+  const sortRoomsSequentially = (rooms: Room[]) => {
+    return [...rooms].sort((a, b) => {
+      const floorA = parseFloor(a.roomNumber);
+      const floorB = parseFloor(b.roomNumber);
+      if (floorA !== floorB) return floorA - floorB;
+      return parseInt(a.roomNumber) - parseInt(b.roomNumber);
     });
   };
 
-  const handleSubmit = () => {
-    handleAutoAssign(checkOutRoomNumbers, "DUE");
-    handleAutoAssign(stayOverRoomNumbers, "STAYOVER");
+  const smartAssign = (rooms: Room[], housekeepers: number) => {
+    if (housekeepers <= 0 || rooms.length === 0) return [];
+    const sortedRooms = sortRoomsSequentially(rooms);
+    const assignments = Array.from({ length: housekeepers }, (_, i) => ({
+      housekeeper: `HSK${i + 1}`,
+      rooms: [] as Room[],
+      workload: 0,
+    }));
+
+    let hskIndex = 0;
+    sortedRooms.forEach((room) => {
+      assignments[hskIndex].rooms.push(room);
+      assignments[hskIndex].workload += room.workload;
+      
+      if (assignments[hskIndex].rooms.length >= rooms.length / housekeepers) {
+        hskIndex = (hskIndex + 1) % housekeepers;
+      }
+    });
+
+    const MAX_ITERATIONS = 10;
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+      const sortedByWorkload = [...assignments].sort((a, b) => a.workload - b.workload);
+      const heaviest = sortedByWorkload[sortedByWorkload.length - 1];
+      const lightest = sortedByWorkload[0];
+
+      if (Math.abs(heaviest.workload - lightest.workload) < 0.5) break;
+      const candidateIndex = heaviest.rooms.findIndex(
+        (room) =>
+          !lightest.rooms.some((r) => r.roomNumber === room.roomNumber) &&
+          Math.abs((heaviest.workload - room.workload) - (lightest.workload + room.workload)) < 0.5
+      );
+
+      if (candidateIndex !== -1) {
+        const candidate = heaviest.rooms[candidateIndex];
+        heaviest.rooms.splice(candidateIndex, 1);
+        heaviest.workload -= candidate.workload;
+        lightest.rooms.push(candidate);
+        lightest.workload += candidate.workload;
+      } else {
+        break;
+      }
+    }
+
+    return assignments;
+  };
+
+  const handleSubmit = async () => {
+    const checkoutList = checkOutRoomNumbers.split(",").map((room) => room.trim());
+    const stayoverList = stayOverRoomNumbers.split(",").map((room) => room.trim());
+
+    const allRooms: Room[] = [...checkoutList, ...stayoverList]
+      .map((roomNumber) => {
+        const room = RoomData.find((room) => room.roomNumber === roomNumber);
+        return room ? { ...room, workload: parseFloat(room.workload) } : null;
+      })
+      .filter((room) => room !== null) as Room[];
+
+    const assignments = smartAssign(allRooms, housekeepers);
+    const currentTime = new Date().toISOString();
+
+    const assignmentPromises = assignments.flatMap((assignment) =>
+      assignment.rooms.map(async (room) => {
+        const roomRef = doc(db, "AdminHSK", room.roomNumber);
+        const updatedRoom = { ...room, assignedto: assignment.housekeeper, time_stamp: currentTime };
+
+        try {
+          const docSnapshot = await getDoc(roomRef);
+          return docSnapshot.exists()
+            ? setDoc(roomRef, updatedRoom, { merge: true })
+            : setDoc(roomRef, updatedRoom);
+        } catch (error) {
+          console.error(`Error assigning room ${room.roomNumber}:`, error);
+        }
+      })
+    );
+
+    await Promise.all(assignmentPromises);
 
     setCheckOutRoomNumbers("");
     setStayOverRoomNumbers("");
@@ -81,8 +123,8 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-md shadow-lg w-30%">
         <h2 className="text-xl mb-4">Auto Assign Rooms</h2>
-        <div className="makethis2 flex space-x-4">
-                    <div className="w-50%">
+        <div className="flex space-x-4">
+          <div className="w-50%">
             <h3 className="text-md mb-2">Check-Out Rooms</h3>
             <input
               type="text"

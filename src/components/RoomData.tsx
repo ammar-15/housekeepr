@@ -351,32 +351,6 @@ const RoomData = [
       time_stamp:""
     },
     {
-      roomNumber: "101",
-      roomType: "",
-      roomStatus: "Dirty",
-      coStatus: "DUE",
-      workload: "",
-      nearElevator: "NO",
-      departs: "",
-      extras: "",
-      early_ci: "",
-      assignedto: "",
-      time_stamp:""
-    },
-    {
-      roomNumber: "101",
-      roomType: "",
-      roomStatus: "Dirty",
-      coStatus: "DUE",
-      workload: "",
-      nearElevator: "NO",
-      departs: "",
-      extras: "",
-      early_ci: "",
-      assignedto: "",
-      time_stamp:""
-    },
-    {
       roomNumber: "130",
       roomType: "NQ",
       roomStatus: "Dirty",
@@ -420,7 +394,7 @@ const RoomData = [
       roomType: "SKN1",
       roomStatus: "Dirty",
       coStatus: "DUE",
-      workload: "",
+      workload: "1.3",
       nearElevator: "NO",
       departs: "",
       extras: "",
@@ -519,19 +493,6 @@ const RoomData = [
       roomStatus: "Dirty",
       coStatus: "DUE",
       workload: "1",
-      nearElevator: "YES",
-      departs: "",
-      extras: "",
-      early_ci: "",
-      assignedto: "",
-      time_stamp:""
-    },
-    {
-      roomNumber: "101",
-      roomType: "",
-      roomStatus: "Dirty",
-      coStatus: "DUE",
-      workload: "",
       nearElevator: "YES",
       departs: "",
       extras: "",
@@ -1526,7 +1487,7 @@ const RoomData = [
       roomType: "SKN1",
       roomStatus: "Dirty",
       coStatus: "DUE",
-      workload: "",
+      workload: "1.3",
       nearElevator: "NO",
       departs: "",
       extras: "",
@@ -2222,7 +2183,7 @@ const RoomData = [
       roomType: "SKN1",
       roomStatus: "Dirty",
       coStatus: "DUE",
-      workload: "",
+      workload: "1.3",
       nearElevator: "NO",
       departs: "",
       extras: "",
@@ -2334,8 +2295,6 @@ const RoomData = [
       assignedto: "",
       time_stamp:""
     },
-
-
   ];
   
   export default RoomData;

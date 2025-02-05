@@ -6,10 +6,10 @@ import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 
 interface SUPdashboardfilterProps {
-  floorNumber?: string; 
+  assignedto: string;
 }
 
-const SUPdashboardfilter = ({ floorNumber }: SUPdashboardfilterProps) => {
+const SUPdashboardfilter = ({ assignedto }: SUPdashboardfilterProps) => {
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
 
@@ -17,24 +17,26 @@ const SUPdashboardfilter = ({ floorNumber }: SUPdashboardfilterProps) => {
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
-      const filteredFloorRooms = allRooms.filter(
-        (room) => room.roomStatus === "Clean" && room.roomNumber.startsWith(floorNumber)
+
+      const assignedRooms = allRooms.filter(
+        (room) => room.roomStatus === "Clean" && room.assignedto === assignedto
       );
-      setFilteredRooms(filteredFloorRooms);
-      setSortedRooms(filteredFloorRooms);
+
+      setFilteredRooms(assignedRooms);
+      setSortedRooms(assignedRooms);
     });
 
     return () => unsubscribe();
-  }, [floorNumber]);
+  }, [assignedto]);
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <SUPnavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-10 mt-4">
-        <h1 className="text-3xl text-wine">SUP-{floorNumber} Dashboard</h1>
+        <h1 className="text-3xl text-wine">{assignedto}-Dashboard</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
           <div className="stats-box px-2">
-            <span>Total Rooms Clean: {sortedRooms.length}</span>
+            <span>Total Rooms to Clean: {sortedRooms.length}</span>
           </div>
         </div>
       </div>
