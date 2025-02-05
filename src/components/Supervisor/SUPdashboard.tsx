@@ -1,7 +1,7 @@
 import SUPdashboardfilter from "./SUPdashboardfilter";
 
 const SUPdashboard = () => {
-  return <SUPdashboardfilter floorNumber="1" />;
+  return <SUPdashboardfilter assignedto="SUP1" />;
 };
 
 export default SUPdashboard;
