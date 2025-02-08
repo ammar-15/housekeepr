@@ -19,7 +19,7 @@ const HSKdashboardfilter = ({ assignedto }: HSKdashboardfilterProps) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
 
       const assignedRooms = allRooms.filter(
-        (room) => room.roomStatus === "Dirty" && room.assignedto === assignedto
+        (room) => (room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE") && room.assignedto === assignedto
       );
 
       setFilteredRooms(assignedRooms);
