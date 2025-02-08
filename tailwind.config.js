@@ -67,6 +67,8 @@ export default {
       lightred: "#ff9797",
       purple: "#b64fff",
       lightpurple: "#e598ff",
+      orange : "#ff9f4f",
+      lightorange : "#ffcc98",
     },
   },
   plugins: [],
