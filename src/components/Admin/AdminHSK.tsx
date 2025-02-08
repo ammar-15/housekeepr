@@ -15,7 +15,7 @@ const AdminHSK = () => {
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
-      const dirtyRooms = allRooms.filter((room) => room.roomStatus === "Dirty");
+      const dirtyRooms = allRooms.filter((room) => (room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE"));
       setHSKrooms(dirtyRooms);
     });
     return () => unsubscribe();

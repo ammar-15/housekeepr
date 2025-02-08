@@ -37,7 +37,11 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
         className={`flex-1 text-center px-2 py-1 rounded-md ${
           room.roomStatus === "Clean"
             ? "bg-lightgreen text-black"
-            : "bg-lightyellow text-black"
+            : room.roomStatus === "ON CHANGE"
+            ?"bg-orange text-black"
+            : room.roomStatus === "Dirty"
+            ? "bg-lightyellow text-black"
+            : "bg-red text-black"
         }`}
       >
         {room.roomStatus}

@@ -21,7 +21,7 @@ const EditRoomContainer = ({
   const handleStatusChange = async () => {
     try {
       let updatedCoStatus = newCoStatus;
-      if (newRoomStatus === "Clean" && newCoStatus !== "STAYOVER") {
+      if ((newRoomStatus === "Clean" || newRoomStatus === "ON CHANGE")&& newCoStatus !== "STAYOVER") {
         updatedCoStatus = "VACANT";
       }
       const roomRef = doc(db, "AdminHSK", roomNumber);
@@ -55,10 +55,14 @@ const EditRoomContainer = ({
                 if (selectedStatus === "Clean" && newCoStatus !== "STAYOVER") {
                   setNewCoStatus("VACANT");
                 }
+                else if (selectedStatus === "ON CHANGE" && newCoStatus !== "STAYOVER") {
+                    setNewCoStatus("VACANT");
+                }
               }}
               className="w-full p-2 border rounded-md"
             >
               <option value="Clean">Clean</option>
+              <option value="ON CHANGE">ON CHANGE</option>
               <option value="Dirty">Dirty</option>
             </select>
           </div>
