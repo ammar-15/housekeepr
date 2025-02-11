@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import user_switch from "../assets/user_switch.svg";
+import user_switch from "./assets/user_switch.svg";
 
 import {
   collection,
@@ -10,10 +10,10 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { db } from "../../../firebase";
-import NotesContainer from "../NotesContainer";
-import SortButton from "../SortButton";
-import AdminUserSwitch from "../Admin/AdminUserSwitch";
+import { db } from "../../firebase";
+import NotesContainer from "./NotesContainer";
+import SortButton from "./SortButton";
+import AdminUserSwitch from "./Admin/AdminUserSwitch";
 
 const Notes = () => {
   const [notes, setNotes] = useState<any[]>([]);
@@ -73,9 +73,9 @@ const Notes = () => {
 
   const handleGoBack = () => {
     if (window.history.length > 2) {
-      navigate(-1); 
+      navigate(-1);
     } else {
-      navigate("/SUPdashboard"); 
+      navigate("/SUPdashboard");
     }
   };
 
@@ -83,8 +83,15 @@ const Notes = () => {
     <div className="notes-main flex flex-col m-0 py-20 px-10">
       <nav className="navbar fixed px-10 py-3 top-0 left-0 right-0 flex justify-between items-center bg-chocolate text-white">
         <div className="relative">
-        <button onClick={toggleUserSwitch} className="user-switch-button focus:outline-none">
-            <img src={user_switch} alt="User Switch" className="w-8 h-8 invert" />
+          <button
+            onClick={toggleUserSwitch}
+            className="user-switch-button focus:outline-none"
+          >
+            <img
+              src={user_switch}
+              alt="User Switch"
+              className="w-8 h-8 invert"
+            />
           </button>
           {showUserSwitch && (
             <div className="absolute top-12 left-0 bg-white text-black border border-gray-300 shadow-lg rounded-md p-2 z-50">
@@ -96,12 +103,15 @@ const Notes = () => {
           <button onClick={handleGoBack} className="hover:underline">
             Rooms
           </button>
-          <button onClick={() => navigate("/Notes")} className="hover:underline">
+          <button
+            onClick={() => navigate("/Notes")}
+            className="hover:underline"
+          >
             Notes
           </button>
         </div>
       </nav>
-      
+
       <div className="noteheader-container flex justify-between items-center m-0 mb-5">
         <h2 className="text-2xl font-semibold text-darkpurple">Notes</h2>
         <SortButton rooms={notes} onSortedRooms={setSortedNotes} />
