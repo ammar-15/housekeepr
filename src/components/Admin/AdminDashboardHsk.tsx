@@ -11,7 +11,7 @@ interface HousekeeperData {
 }
 
 const AdminDashboardHsk = () => {
-  const [housekeeperRooms, setHousekeeperRooms] = useState<{
+  const [housekeeperRooms, setHousekeeperRooms] = useState<{ 
     [key: string]: { previousRoom?: HousekeeperData; currentRoom?: HousekeeperData };
   }>({});
 
@@ -39,12 +39,14 @@ const AdminDashboardHsk = () => {
 
         if (room.roomStatus === "ON CHANGE") {
           updatedHousekeeperRooms[room.assignedto].currentRoom = room;
-        } else if (room.roomStatus === "Clean") {
-          if (hskData.currentRoom && hskData.currentRoom.roomNumber === room.roomNumber) {
-            updatedHousekeeperRooms[room.assignedto].previousRoom = room;
-            updatedHousekeeperRooms[room.assignedto].currentRoom = undefined; 
+        } 
+        else if (room.roomStatus === "Clean") {
+          if (hskData.currentRoom) {
+            updatedHousekeeperRooms[room.assignedto].previousRoom = hskData.currentRoom;
           }
+          updatedHousekeeperRooms[room.assignedto].previousRoom = room; 
         }
+        
       });
 
       setHousekeeperRooms(updatedHousekeeperRooms);
