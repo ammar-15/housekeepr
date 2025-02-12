@@ -30,7 +30,7 @@ const AdminDashboard = () => {
         </div>
       </div>
       <div className="section-container">
-        <h2 className="supervisorheader-admin text-tg pb-5">Supervisors</h2>
+        <h2 className="supervisorheader-admin text-lg pb-5">Supervisors</h2>
         <div className="supervisors-container flex pb-5">
           <AdminDashboardSup />
         </div>
