@@ -15,7 +15,7 @@ const AdminHSK = () => {
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
-      const dirtyRooms = allRooms.filter((room) => room.roomStatus === "Dirty");
+      const dirtyRooms = allRooms.filter((room) => (room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE"));
       setHSKrooms(dirtyRooms);
     });
     return () => unsubscribe();
@@ -63,7 +63,7 @@ const AdminHSK = () => {
         </button>
 
         {isSortingVisible && (
-          <div className="absolute right-0 mt-5 bg-white border border-gray-300 rounded-md shadow-lg">
+          <div className="absolute right-0 mt-5 bg-white rounded-md shadow-lg">
             <ul className="list-none p-2">
               <li className="cursor-pointer" onClick={() => handleSortOptionChange("recent")}>
                 Recent

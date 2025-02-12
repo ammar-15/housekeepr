@@ -21,7 +21,7 @@ const EditRoomContainer = ({
   const handleStatusChange = async () => {
     try {
       let updatedCoStatus = newCoStatus;
-      if (newRoomStatus === "Clean" && newCoStatus !== "STAYOVER") {
+      if ((newRoomStatus === "Clean" || newRoomStatus === "ON CHANGE")&& newCoStatus !== "STAYOVER") {
         updatedCoStatus = "VACANT";
       }
       const roomRef = doc(db, "AdminHSK", roomNumber);
@@ -55,10 +55,14 @@ const EditRoomContainer = ({
                 if (selectedStatus === "Clean" && newCoStatus !== "STAYOVER") {
                   setNewCoStatus("VACANT");
                 }
+                else if (selectedStatus === "ON CHANGE" && newCoStatus !== "STAYOVER") {
+                    setNewCoStatus("VACANT");
+                }
               }}
               className="w-full p-2 border rounded-md"
             >
               <option value="Clean">Clean</option>
+              <option value="ON CHANGE">ON CHANGE</option>
               <option value="Dirty">Dirty</option>
             </select>
           </div>
@@ -82,7 +86,7 @@ const EditRoomContainer = ({
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className="text-black bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400 mr-2"
+            className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2"
           >
             Cancel
           </button>

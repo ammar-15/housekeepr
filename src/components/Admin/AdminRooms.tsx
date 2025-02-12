@@ -31,7 +31,7 @@ const AdminRooms = () => {
         <h1 className="text-3xl text-wine">Rooms</h1>
         <div className="flex gap-1">
         <button
-            className="ml-3 bg-red-500 hover:bg-lightred p-2 rounded"
+            className="ml-3 hover:bg-lightred p-2 rounded"
             onClick={() => setShowClearModal(true)}
           >
             <img src={TrashIcon} alt="Clear Rooms" className="w-5 h-5" />

@@ -20,6 +20,10 @@ const AdminNavbar = () => {
     navigate("../AdminRooms");
   };
 
+  const handleNotes = () => {
+    navigate("/Notes");
+  };
+
   const toggleUserSwitch = () => {
     setShowUserSwitch(!showUserSwitch);
   };
@@ -51,6 +55,9 @@ const AdminNavbar = () => {
         <button onClick={handleRooms} className="hover:underline">
           Rooms
         </button>
+        <button onClick={handleNotes} className="hover:underline">
+            Notes
+          </button>
       </div>
     </nav>
   );
