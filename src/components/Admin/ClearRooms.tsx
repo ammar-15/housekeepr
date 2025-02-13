@@ -42,6 +42,7 @@ const ClearRooms = ({ onClose }: ClearRoomsProps) => {
       <div className="bg-lightred p-6 rounded-md shadow-lg w-96">
         <h2 className="text-xl mb-4 text-red-600">End of Day</h2>
         <p>Are you sure you want to clear all rooms from the day?</p>
+        <p className="text-xs italic">there would be a 'yes' button to clear the rooms but for now just explore the site</p>
         <div className="flex justify-end mt-5">
           <button
             className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2"
@@ -50,13 +51,16 @@ const ClearRooms = ({ onClose }: ClearRoomsProps) => {
           >
             No
           </button>
-          <button
+            {/* <p
             className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
             onClick={handleClearRooms}
             disabled={loading}
-          >
+            >
             {loading ? "Clearing..." : "Yes"}
-          </button>
+            </p> */}
+            <p className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine">
+              'Yes'
+            </p>
         </div>
       </div>
     </div>
