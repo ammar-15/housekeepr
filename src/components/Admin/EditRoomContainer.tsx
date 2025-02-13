@@ -21,9 +21,6 @@ const EditRoomContainer = ({
   const handleStatusChange = async () => {
     try {
       let updatedCoStatus = newCoStatus;
-      if ((newRoomStatus === "Clean" || newRoomStatus === "ON CHANGE")&& newCoStatus !== "STAYOVER") {
-        updatedCoStatus = "VACANT";
-      }
       const roomRef = doc(db, "AdminHSK", roomNumber);
       await updateDoc(roomRef, {
         roomStatus: newRoomStatus,
@@ -44,7 +41,7 @@ const EditRoomContainer = ({
         <h2 className="text-xl mb-4">Update Room {roomNumber}</h2>
         <div className="flex justify-between items-center mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Room Status
             </label>
             <select
@@ -54,9 +51,11 @@ const EditRoomContainer = ({
                 setNewRoomStatus(selectedStatus);
                 if (selectedStatus === "Clean" && newCoStatus !== "STAYOVER") {
                   setNewCoStatus("VACANT");
-                }
-                else if (selectedStatus === "ON CHANGE" && newCoStatus !== "STAYOVER") {
-                    setNewCoStatus("VACANT");
+                } else if (
+                  selectedStatus === "ON CHANGE" &&
+                  newCoStatus !== "STAYOVER"
+                ) {
+                  setNewCoStatus("VACANT");
                 }
               }}
               className="w-full p-2 border rounded-md"
@@ -67,7 +66,7 @@ const EditRoomContainer = ({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               Check Out Status
             </label>
             <select

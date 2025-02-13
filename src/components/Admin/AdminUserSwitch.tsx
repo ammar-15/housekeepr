@@ -29,39 +29,46 @@ const AdminUserSwitch = () => {
 
   return (
     <div className="flex flex-col gap-2">
-        <button
+      <button
         onClick={handleAdminDashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Admin
       </button>
       <button
         onClick={handleHSKdashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Housekeeper 1
       </button>
       <button
         onClick={handleHSK2dashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Housekeeper 2
       </button>
       <button
         onClick={handleHSK3dashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Housekeeper 3
       </button>
       <button
         onClick={handleSUPdashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Supervisor 1
       </button>
       <button
         onClick={handleSUP2dashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Supervisor 2
       </button>
       <button
         onClick={handleSUP3dashboard}
-        className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">
+        className="px-4 py-2 text-sm"
+      >
         Supervisor 3
       </button>
     </div>

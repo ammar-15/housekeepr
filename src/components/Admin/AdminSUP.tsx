@@ -15,7 +15,7 @@ const AdminSUP = () => {
     const roomsCollectionRef = collection(db, "AdminHSK");
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
-      const cleanRooms = allRooms.filter((room) => room.roomStatus === "Clean"); 
+      const cleanRooms = allRooms.filter((room) => (room.roomStatus === "Clean" || room.coStatus === "INSPECTED")); 
       setSUProoms(cleanRooms);
     });
     return () => unsubscribe();
@@ -61,7 +61,7 @@ const AdminSUP = () => {
           <img src={sortIcon} alt="Sort" className="w-5 h-5" />
         </button>
         {isSortingVisible && (
-          <div className="absolute right-0 mt-5 bg-white border border-gray-300 rounded-md shadow-lg">
+          <div className="absolute right-0 mt-5 bg-white border rounded-md shadow-lg">
             <ul className="list-none p-2">
               <li className="cursor-pointer" onClick={() => handleSortOptionChange("recent")}>
                 Recent

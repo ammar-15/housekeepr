@@ -36,7 +36,7 @@ const NotesContainer = ({ note, updateNote, deleteNote }: NotesContainerProps) =
         </button>
         {isDropdownVisible && (
           <div className="right-0 mt-2 w-32 bg-red shadow-lg rounded-md">
-            <button className="w-full text-left text-white px-4 py-2 hover:bg-gray-200" onClick={handleDelete}>
+            <button className="w-full text-left text-white px-4 py-2 hover:bg-lightred" onClick={handleDelete}>
               Delete
             </button>
           </div>
