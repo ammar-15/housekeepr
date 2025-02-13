@@ -37,7 +37,7 @@ const AdminNavbar = () => {
           <img src={user_switch} alt="User Switch" className="w-8 h-8 invert" />
         </button>
         {showUserSwitch && (
-          <div className="absolute top-12 left-0 bg-white text-black border border-gray-300 shadow-lg rounded-md p-2 z-50">
+          <div className="absolute top-12 left-0 bg-white text-black shadow-lg rounded-md p-2 z-50">
             <AdminUserSwitch />
           </div>
         )}

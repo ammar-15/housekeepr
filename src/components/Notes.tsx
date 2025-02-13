@@ -94,7 +94,7 @@ const Notes = () => {
             />
           </button>
           {showUserSwitch && (
-            <div className="absolute top-12 left-0 bg-white text-black border border-gray-300 shadow-lg rounded-md p-2 z-50">
+            <div className="absolute top-12 left-0 bg-white text-black border shadow-lg rounded-md p-2 z-50">
               <AdminUserSwitch />
             </div>
           )}
