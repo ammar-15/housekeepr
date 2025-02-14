@@ -11,11 +11,11 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import NotesContainer from "./NotesContainer";
+import Notes from "./Note";
 import SortButton from "./SortButton";
 import AdminUserSwitch from "./Admin/AdminUserSwitch";
 
-const Notes = () => {
+const NoteContainer = () => {
   const [notes, setNotes] = useState<any[]>([]);
   const [sortedNotes, setSortedNotes] = useState<any[]>([]);
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ const Notes = () => {
             Rooms
           </button>
           <button
-            onClick={() => navigate("/Notes")}
+            onClick={() => navigate("/Note")}
             className="hover:underline"
           >
             Notes
@@ -119,7 +119,7 @@ const Notes = () => {
 
       <div className="notes-container grid grid-cols-4 gap-4">
         {sortedNotes.map((note) => (
-          <NotesContainer
+          <Notes
             key={note.id}
             note={note}
             updateNote={updateNote}
@@ -137,4 +137,4 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default NoteContainer;

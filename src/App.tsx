@@ -16,7 +16,7 @@ import SUP3dashboard from "./components/Supervisor/SUP3dashboard.tsx";
 import AdminStart from "./components/Admin/Admin Button/AdminStart.tsx";
 import AdminAutoAssign from "./components/Admin/Admin Button/AdminAutoAssign.tsx";
 import AdminHSKassign from "./components/Admin/Admin Button/AdminHSKassign.tsx";
-import Notes from "./components/Notes.tsx";
+import Notes from "./components/NoteContainer.tsx";
 
 function App() {
   return (
