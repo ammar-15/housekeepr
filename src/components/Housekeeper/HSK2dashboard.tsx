@@ -1,7 +1,7 @@
 import HSKdashboardfilter from "./HSKdashboardfilter";
 
 const HSK2dashboard = () => {
-  return <HSKdashboardfilter assignedto="HSK2" />;
+  return <HSKdashboardfilter assignedtoHSK="HSK2" />;
 };
 
 export default HSK2dashboard;

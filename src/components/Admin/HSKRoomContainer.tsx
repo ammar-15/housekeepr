@@ -12,7 +12,8 @@ interface RoomDataType {
   departs: string;
   extras: string;
   early_ci: string;
-  assignedto: string;
+  assignedtoHSK: string;
+  assignedtoSUP: string;
   time_stamp: string;
 }
 
@@ -38,7 +39,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
           room.roomStatus === "Clean"
             ? "bg-lightgreen text-black"
             : room.roomStatus === "ON CHANGE"
-            ?"bg-orange text-black"
+            ? "bg-orange text-black"
             : room.roomStatus === "Dirty"
             ? "bg-lightyellow text-black"
             : "bg-red text-black"
@@ -66,12 +67,15 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       <p className="flex-1 text-center">{room.departs}</p>
       <p className="flex-1 text-center">{room.extras}</p>
       <p className="flex-1 text-center">{room.early_ci}</p>
-      <p className="flex-1 text-center">{room.assignedto}</p>
+      <p className="flex-1 text-center">{room.assignedtoHSK}</p>
+      <p className="flex-1 text-center">{room.assignedtoSUP}</p>
       {isModalVisible && (
         <EditRoomContainer
           roomNumber={room.roomNumber}
           initialRoomStatus={room.roomStatus}
           initialCoStatus={room.coStatus}
+          assignedtoHSK={room.assignedtoHSK}
+          assignedtoSUP={room.assignedtoSUP}
           onClose={toggleModal}
         />
       )}

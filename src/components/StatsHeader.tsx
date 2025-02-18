@@ -14,13 +14,13 @@ interface StatsData {
 }
 
 interface StatsHeaderProps {
-  onStatsUpdate: (stats: StatsData) => void; 
+  onStatsUpdate: (stats: StatsData) => void;
 }
 
 const StatsHeader = ({ onStatsUpdate }: StatsHeaderProps) => {
   const setStats = useState<StatsData>({
     totalHousekeepers: 0,
-    totalSupervisors: 3, //change later
+    totalSupervisors: 0, //change later
     totalRoomsToClean: 0,
     totalRoomsToInspect: 0,
     totalRooms: 0,
@@ -36,25 +36,29 @@ const StatsHeader = ({ onStatsUpdate }: StatsHeaderProps) => {
       const roomsData = snapshot.docs.map((doc) => doc.data());
 
       const maxHousekeeper = roomsData.reduce((max, room) => {
-        if (room.assignedto && room.assignedto.startsWith("HSK")) {
-          const num = parseInt(room.assignedto.replace("HSK", ""), 10);
+        if (room.assignedtoHSK && room.assignedtoHSK.startsWith("HSK")) {
+          const num = parseInt(room.assignedtoHSK.replace("HSK", ""), 10);
           return num > max ? num : max;
         }
         return max;
       }, 0);
 
       const totalRooms = roomsData.length;
-      const dirtyRooms = roomsData.filter((room) => room.roomStatus === "Dirty").length;
+      const dirtyRooms = roomsData.filter(
+        (room) => room.roomStatus === "Dirty"
+      ).length;
       const cleanRooms = roomsData.filter(
         (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
       ).length;
-      const inspectedRooms = roomsData.filter((room) => room.coStatus === "INSPECTED").length;
+      const inspectedRooms = roomsData.filter(
+        (room) => room.coStatus === "INSPECTED"
+      ).length;
       const totalRoomsToClean = dirtyRooms;
       const totalRoomsToInspect = cleanRooms;
 
       const updatedStats = {
         totalHousekeepers: maxHousekeeper,
-        totalSupervisors: 3, //change later
+        totalSupervisors: 0,
         totalRoomsToClean,
         totalRoomsToInspect,
         totalRooms,
@@ -74,4 +78,3 @@ const StatsHeader = ({ onStatsUpdate }: StatsHeaderProps) => {
 };
 
 export default StatsHeader;
- 
