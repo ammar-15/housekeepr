@@ -1,13 +1,13 @@
 import { useState } from "react";
 import threeDotsIcon from "./assets/threedots.svg";
 
-interface NotesContainerProps {
+interface NotesProps {
   note: { id: string; content: string };
   updateNote: (id: string, newContent: string) => void;
   deleteNote: (id: string) => void;
 }
 
-const NotesContainer = ({ note, updateNote, deleteNote }: NotesContainerProps) => {
+const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
   const [content, setContent] = useState(note.content);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -46,4 +46,4 @@ const NotesContainer = ({ note, updateNote, deleteNote }: NotesContainerProps) =
   );
 };
 
-export default NotesContainer;
+export default Notes;

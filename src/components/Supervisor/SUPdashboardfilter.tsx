@@ -6,10 +6,10 @@ import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 
 interface SUPdashboardfilterProps {
-  assignedto: string;
+  assignedtoSUP: string;
 }
 
-const SUPdashboardfilter = ({ assignedto }: SUPdashboardfilterProps) => {
+const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
 
@@ -19,7 +19,8 @@ const SUPdashboardfilter = ({ assignedto }: SUPdashboardfilterProps) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
 
       const assignedRooms = allRooms.filter(
-        (room) => room.roomStatus === "Clean" && room.assignedto === assignedto
+        (room) =>
+          room.roomStatus === "Clean" && room.assignedtoSUP === assignedtoSUP
       );
 
       setFilteredRooms(assignedRooms);
@@ -27,13 +28,13 @@ const SUPdashboardfilter = ({ assignedto }: SUPdashboardfilterProps) => {
     });
 
     return () => unsubscribe();
-  }, [assignedto]);
+  }, [assignedtoSUP]);
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <SUPnavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
-        <h1 className="text-3xl text-wine">{assignedto}-Dashboard</h1>
+        <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
         <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
           <div className="stats-box px-2">
             <span>Total Rooms to Inspect: {sortedRooms.length}</span>
