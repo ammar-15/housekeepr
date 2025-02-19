@@ -6,7 +6,8 @@ interface EditRoomContainerProps {
   roomNumber: string;
   initialRoomStatus: string;
   initialCoStatus: string;
-  assignedto: string;
+  assignedtoHSK: string;
+  assignedtoSUP: string;
   onClose: () => void;
 }
 
@@ -14,33 +15,48 @@ const EditRoomContainer = ({
   roomNumber,
   initialRoomStatus,
   initialCoStatus,
-  assignedto,
+  assignedtoHSK,
+  assignedtoSUP,
   onClose,
 }: EditRoomContainerProps) => {
   const [newRoomStatus, setNewRoomStatus] = useState(initialRoomStatus);
   const [newCoStatus, setNewCoStatus] = useState(initialCoStatus);
-  const [AssignedTo, setAssignedTo] = useState("");
+  const [newAssignedto, setNewAssignedto] = useState(""); 
 
   const handleStatusChange = async () => {
     try {
       let updatedCoStatus = newCoStatus;
       const roomRef = doc(db, "AdminHSK", roomNumber);
-      let updatedAssignedTo = AssignedTo.trim() !== "" ? AssignedTo : assignedto;
+      
+      let updatedassignedtoHSK = assignedtoHSK;
+      let updatedassignedtoSUP = assignedtoSUP;
+      
+      if (newAssignedto.trim() !== "") {
+        if (newAssignedto.startsWith("HSK")) {
+          updatedassignedtoHSK = newAssignedto;
+        } else if (newAssignedto.startsWith("SUP")) {
+          updatedassignedtoSUP = newAssignedto;
+        } else {
+          console.error("Invalid. Please enter assignment correctly");
+          return;
+        }
+      }
 
       await updateDoc(roomRef, {
         roomStatus: newRoomStatus,
-        assignedto: updatedAssignedTo,
+        assignedtoHSK: updatedassignedtoHSK,
+        assignedtoSUP: updatedassignedtoSUP,
         coStatus: updatedCoStatus,
       });
       console.log(
-        `Room ${roomNumber} updated to Status: ${newRoomStatus}, CO: ${updatedCoStatus}, assigned to: ${AssignedTo}`
+        `Room ${roomNumber} updated to Status: ${newRoomStatus}, CO: ${updatedCoStatus}, Assigned to: ${newAssignedto}`
       );
-      setAssignedTo("");
+
+      setNewAssignedto("");
       onClose();
     } catch (error) {
       console.error("Error updating room status:", error);
     }
-
   };
 
   return (
@@ -72,9 +88,7 @@ const EditRoomContainer = ({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium">
-              Check Out Status
-            </label>
+            <label className="block text-sm font-medium">Check Out Status</label>
             <select
               value={newCoStatus}
               onChange={(e) => setNewCoStatus(e.target.value)}
@@ -88,12 +102,12 @@ const EditRoomContainer = ({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium">Assign</label>
+            <label className="block text-sm font-medium">Assign To</label>
             <input
               type="text"
-              placeholder="Assigned To"
-              value={AssignedTo}
-              onChange={(e) => setAssignedTo(e.target.value)}
+              placeholder="HSK# or SUP#"
+              value={newAssignedto}
+              onChange={(e) => setNewAssignedto(e.target.value)}
               className="w-full p-2 border rounded-md"
             />
           </div>
