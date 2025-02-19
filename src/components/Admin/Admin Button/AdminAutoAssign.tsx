@@ -19,6 +19,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
   const [checkOutRoomNumbers, setCheckOutRoomNumbers] = useState("");
   const [stayOverRoomNumbers, setStayOverRoomNumbers] = useState("");
   const [housekeepers, setHousekeepers] = useState<number>(1);
+  const [supervisors, setSupervisors] = useState<number>(1);
 
   const handleClose = () => {
     onClose?.();
@@ -26,6 +27,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
   };
 
   const parseFloor = (roomNumber: string): number => parseInt(roomNumber[0]);
+
   const sortRoomsSequentially = (rooms: Room[]) => {
     return [...rooms].sort((a, b) => {
       const floorA = parseFloor(a.roomNumber);
@@ -35,48 +37,25 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
     });
   };
 
-  const smartAssign = (rooms: Room[], housekeepers: number) => {
-    if (housekeepers <= 0 || rooms.length === 0) return [];
+  const smartAssign = (rooms: Room[], assigneesCount: number, prefix: string) => {
+    if (assigneesCount <= 0 || rooms.length === 0) return [];
     const sortedRooms = sortRoomsSequentially(rooms);
-    const assignments = Array.from({ length: housekeepers }, (_, i) => ({
-      housekeeper: `HSK${i + 1}`,
+
+    const assignments = Array.from({ length: assigneesCount }, (_, i) => ({
+      assignee: `${prefix}${i + 1}`, 
       rooms: [] as Room[],
       workload: 0,
     }));
 
-    let hskIndex = 0;
+    let index = 0;
     sortedRooms.forEach((room) => {
-      assignments[hskIndex].rooms.push(room);
-      assignments[hskIndex].workload += room.workload;
-      
-      if (assignments[hskIndex].rooms.length >= rooms.length / housekeepers) {
-        hskIndex = (hskIndex + 1) % housekeepers;
+      assignments[index].rooms.push(room);
+      assignments[index].workload += room.workload;
+
+      if (assignments[index].rooms.length >= rooms.length / assigneesCount) {
+        index = (index + 1) % assigneesCount;
       }
     });
-
-    const MAX_ITERATIONS = 10;
-    for (let i = 0; i < MAX_ITERATIONS; i++) {
-      const sortedByWorkload = [...assignments].sort((a, b) => a.workload - b.workload);
-      const heaviest = sortedByWorkload[sortedByWorkload.length - 1];
-      const lightest = sortedByWorkload[0];
-
-      if (Math.abs(heaviest.workload - lightest.workload) < 0.5) break;
-      const candidateIndex = heaviest.rooms.findIndex(
-        (room) =>
-          !lightest.rooms.some((r) => r.roomNumber === room.roomNumber) &&
-          Math.abs((heaviest.workload - room.workload) - (lightest.workload + room.workload)) < 0.5
-      );
-
-      if (candidateIndex !== -1) {
-        const candidate = heaviest.rooms[candidateIndex];
-        heaviest.rooms.splice(candidateIndex, 1);
-        heaviest.workload -= candidate.workload;
-        lightest.rooms.push(candidate);
-        lightest.workload += candidate.workload;
-      } else {
-        break;
-      }
-    }
 
     return assignments;
   };
@@ -84,22 +63,40 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
   const handleSubmit = async () => {
     const checkoutList = checkOutRoomNumbers.split(",").map((room) => room.trim());
     const stayoverList = stayOverRoomNumbers.split(",").map((room) => room.trim());
-
+  
     const allRooms: Room[] = [...checkoutList, ...stayoverList]
       .map((roomNumber) => {
         const room = RoomData.find((room) => room.roomNumber === roomNumber);
-        return room ? { ...room, workload: parseFloat(room.workload) } : null;
+        return room
+          ? {
+              ...room,
+              workload: parseFloat(room.workload),
+              coStatus: stayoverList.includes(roomNumber) ? "STAYOVER" : room.coStatus, 
+            }
+          : null;
       })
       .filter((room) => room !== null) as Room[];
-
-    const assignments = smartAssign(allRooms, housekeepers);
+  
+    const housekeeperAssignments = smartAssign(allRooms, housekeepers, "HSK");
+    const supervisorAssignments = smartAssign(allRooms, supervisors, "SUP");
     const currentTime = new Date().toISOString();
-
-    const assignmentPromises = assignments.flatMap((assignment) =>
-      assignment.rooms.map(async (room) => {
+  
+    const assignmentPromises = housekeeperAssignments.flatMap((hskAssignment) =>
+      hskAssignment.rooms.map(async (room) => {
         const roomRef = doc(db, "AdminHSK", room.roomNumber);
-        const updatedRoom = { ...room, assignedto: assignment.housekeeper, time_stamp: currentTime };
-
+  
+        const assignedSupervisor = supervisorAssignments.find((sup) =>
+          sup.rooms.some((r) => r.roomNumber === room.roomNumber)
+        )?.assignee;
+  
+        const updatedRoom = {
+          ...room,
+          assignedtoHSK: hskAssignment.assignee,
+          assignedtoSUP: assignedSupervisor || "",
+          coStatus: stayoverList.includes(room.roomNumber) ? "STAYOVER" : room.coStatus, 
+          time_stamp: currentTime,
+        };
+  
         try {
           const docSnapshot = await getDoc(roomRef);
           return docSnapshot.exists()
@@ -110,12 +107,13 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
         }
       })
     );
-
+  
     await Promise.all(assignmentPromises);
-
+  
     setCheckOutRoomNumbers("");
     setStayOverRoomNumbers("");
     setHousekeepers(1);
+    setSupervisors(1);
     console.log("Auto assign completed.");
   };
 
@@ -145,16 +143,29 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
             />
           </div>
         </div>
-        <div className="mt-3">
-          <h3 className="text-md mb-2">Number of Housekeepers</h3>
-          <input
-            type="number"
-            placeholder="Enter number of housekeepers"
-            value={housekeepers}
-            onChange={(e) => setHousekeepers(Number(e.target.value))}
-            className="w-full mb-3 p-2 border rounded-md"
-            min={1}
-          />
+        <div className="flex space-x-4 mt-3">
+          <div className="w-50%">
+            <h3 className="text-md mb-2">Number of Housekeepers</h3>
+            <input
+              type="number"
+              placeholder="Enter number of housekeepers"
+              value={housekeepers}
+              onChange={(e) => setHousekeepers(Number(e.target.value))}
+              className="w-full mb-3 p-2 border rounded-md"
+              min={1}
+            />
+          </div>
+          <div className="w-50%">
+            <h3 className="text-md mb-2">Number of Supervisors</h3>
+            <input
+              type="number"
+              placeholder="Enter number of supervisors"
+              value={supervisors}
+              onChange={(e) => setSupervisors(Number(e.target.value))}
+              className="w-full mb-3 p-2 border rounded-md"
+              min={1}
+            />
+          </div>
         </div>
 
         <div className="flex justify-end">

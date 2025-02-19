@@ -1,18 +1,25 @@
 import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData";
 
 interface AdminHSKassignProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
-  onAssignedTo?: (AssignedTo: string) => void;
+  onassignedtoHSK?: (assignedtoHSK: string) => void;
+  onassignedtoSUP?: (assignedtoSUP: string) => void;
   onClose?: () => void;
 }
 
-const AdminHSKassign = ({ onAddHSKroom, onAssignedTo, onClose }: AdminHSKassignProps) => {
-  const [HSKroomNumber, setHSKRoomNumber] = useState(""); 
-  const [AssignedTo, setAssignedTo] = useState("");
-  const [statusOption, setStatusOption] = useState("Dirty"); 
+const AdminHSKassign = ({
+  onAddHSKroom,
+  onassignedtoHSK,
+  onassignedtoSUP,
+  onClose,
+}: AdminHSKassignProps) => {
+  const [HSKroomNumber, setHSKRoomNumber] = useState("");
+  const [assignedto, setAssignedto] = useState("");
+  const [statusOption, setStatusOption] = useState("Dirty");
+
   const handleClose = () => {
     if (onClose) {
       onClose();
@@ -23,34 +30,48 @@ const AdminHSKassign = ({ onAddHSKroom, onAssignedTo, onClose }: AdminHSKassignP
   const handleSave = async () => {
     console.log("room sent to Firebase");
 
-    if (HSKroomNumber.trim() !== "") {
-      const room = RoomData.find((r) => r.roomNumber === HSKroomNumber); 
+    if (HSKroomNumber.trim() !== "" && assignedto.trim() !== "") {
+      const room = RoomData.find((r) => r.roomNumber === HSKroomNumber);
 
       if (!room) {
         console.error("room not found in RoomData.");
         return;
       }
 
-      const currentTime = new Date();
-      const formattedTime = currentTime.toISOString();
+      const currentTime = new Date().toISOString();
+      const roomRef = doc(db, "AdminHSK", HSKroomNumber);
+      let updatedRoom = {
+        ...room,
+        roomStatus: statusOption,
+        coStatus: statusOption === "Clean" ? "VACANT" : room.coStatus, 
+        time_stamp: currentTime,
+      };
+
+      if (assignedto.startsWith("HSK")) {
+        updatedRoom = { ...updatedRoom, assignedtoHSK: assignedto };
+        if (onassignedtoHSK) onassignedtoHSK(assignedto);
+      } else if (assignedto.startsWith("SUP")) {
+        updatedRoom = { ...updatedRoom, assignedtoSUP: assignedto };
+        if (onassignedtoSUP) onassignedtoSUP(assignedto);
+      } else {
+        console.error("Invalid assignment! Must start with 'HSK' or 'SUP'.");
+        return;
+      }
 
       try {
-        const roomRef = doc(db, "AdminHSK", HSKroomNumber);
-        const updatedRoom = { ...room, roomStatus: statusOption, assignedto: AssignedTo, time_stamp: formattedTime };
         await setDoc(roomRef, updatedRoom);
-        console.log(`room saved to Firebase with status "${statusOption}" at "${formattedTime}":`, updatedRoom);
+        console.log(`Room ${HSKroomNumber} assigned to ${assignedto} and saved to Firebase.`);
 
         if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
-        if (onAssignedTo) onAssignedTo(AssignedTo);
-        console.log(HSKroomNumber, setAssignedTo);
-
-        setHSKRoomNumber(""); 
-        setAssignedTo(""); 
+        setHSKRoomNumber("");
+        setAssignedto("");
       } catch (error) {
-        console.error("firebase room error", error);
+        console.error("Firebase room error", error);
       }
-    };
-};
+    } else {
+      console.error("Room Number and Assignment cannot be empty.");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -65,9 +86,9 @@ const AdminHSKassign = ({ onAddHSKroom, onAssignedTo, onClose }: AdminHSKassignP
         />
         <input
           type="text"
-          placeholder="Assigned To"
-          value={AssignedTo}
-          onChange={(e) => setAssignedTo(e.target.value)}
+          placeholder="Assigned To (HSK# or SUP#)"
+          value={assignedto}
+          onChange={(e) => setAssignedto(e.target.value)}
           className="w-full mb-3 p-2 border rounded-md"
         />
         <select
