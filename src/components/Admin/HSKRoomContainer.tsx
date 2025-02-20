@@ -9,9 +9,7 @@ interface RoomDataType {
   coStatus: string;
   workload: string;
   nearElevator: string;
-  departs: string;
   extras: string;
-  early_ci: string;
   assignedtoHSK: string;
   assignedtoSUP: string;
   time_stamp: string;
@@ -64,9 +62,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       >
         {room.coStatus}
       </p>
-      <p className="flex-1 text-center">{room.departs}</p>
       <p className="flex-1 text-center">{room.extras}</p>
-      <p className="flex-1 text-center">{room.early_ci}</p>
       <p className="flex-1 text-center">{room.assignedtoHSK}</p>
       <p className="flex-1 text-center">{room.assignedtoSUP}</p>
       {isModalVisible && (
