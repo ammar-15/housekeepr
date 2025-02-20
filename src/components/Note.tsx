@@ -1,5 +1,5 @@
 import { useState } from "react";
-import threeDotsIcon from "./assets/threedots.svg";
+import trashIcon from "./assets/trashicon.svg";
 
 interface NotesProps {
   note: { id: string; content: string };
@@ -9,10 +9,9 @@ interface NotesProps {
 
 const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
   const [content, setContent] = useState(note.content);
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-
+  
   const handleUpdate = () => {
-    updateNote(note.id, content); 
+    updateNote(note.id, content);
   };
 
   const handleDelete = () => {
@@ -31,16 +30,9 @@ const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
         placeholder="Empty Note"
       />
       <div className="top-2 right-2">
-        <button onClick={() => setIsDropdownVisible(!isDropdownVisible)}>
-          <img src={threeDotsIcon} alt="Options" className="w-5 h-5" />
+        <button onClick={handleDelete} className="hover:rounded-md">
+          <img src={trashIcon} alt="Options" className="w-5 h-5" />
         </button>
-        {isDropdownVisible && (
-          <div className="right-0 mt-2 w-32 bg-red shadow-lg rounded-md">
-            <button className="w-full text-left text-white px-4 py-2 hover:bg-lightred" onClick={handleDelete}>
-              Delete
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
