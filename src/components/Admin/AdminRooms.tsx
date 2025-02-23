@@ -4,7 +4,7 @@ import { db } from "../../../firebase";
 import AdminNavbar from "./AdminNavbar.tsx";
 import HSKRoomContainer from "./HSKRoomContainer.tsx";
 import ClearRooms from "./ClearRooms.tsx";
-import TrashIcon from "../assets/trashicon.svg";
+import MoonIcon from "../assets/moon.svg";
 import StatsHeader from "../StatsHeader.tsx";
 
 const AdminRooms = () => {
@@ -40,7 +40,7 @@ const AdminRooms = () => {
             className="ml-3 hover:bg-lightred p-2 rounded"
             onClick={() => setShowClearModal(true)}
           >
-            <img src={TrashIcon} alt="Clear Rooms" className="w-5 h-5" />
+            <img src={MoonIcon} alt="Clear Rooms" className="w-5 h-5" />
           </button>
           <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
             <div className="stats-box px-2">
