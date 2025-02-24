@@ -1,7 +1,7 @@
 const RoomData = [
   {
     roomNumber: "101",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -13,7 +13,7 @@ const RoomData = [
   },
   {
     roomNumber: "102",
-    roomType: "PNQ",
+    roomType: "1QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -25,7 +25,7 @@ const RoomData = [
   },
   {
     roomNumber: "103",
-    roomType: "SNK",
+    roomType: "1KFJ",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.5",
@@ -37,7 +37,7 @@ const RoomData = [
   },
   {
     roomNumber: "104",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -49,7 +49,7 @@ const RoomData = [
   },
   {
     roomNumber: "105",
-    roomType: "SNK",
+    roomType: "1KFJ",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.5",
@@ -61,7 +61,7 @@ const RoomData = [
   },
   {
     roomNumber: "106",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -73,7 +73,7 @@ const RoomData = [
   },
   {
     roomNumber: "107",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -85,7 +85,7 @@ const RoomData = [
   },
   {
     roomNumber: "108",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -97,7 +97,7 @@ const RoomData = [
   },
   {
     roomNumber: "109",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -109,7 +109,7 @@ const RoomData = [
   },
   {
     roomNumber: "110",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -121,7 +121,7 @@ const RoomData = [
   },
   {
     roomNumber: "111",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -133,7 +133,7 @@ const RoomData = [
   },
   {
     roomNumber: "112",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -145,7 +145,7 @@ const RoomData = [
   },
   {
     roomNumber: "113",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -157,7 +157,7 @@ const RoomData = [
   },
   {
     roomNumber: "114",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -169,7 +169,7 @@ const RoomData = [
   },
   {
     roomNumber: "115",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -181,7 +181,7 @@ const RoomData = [
   },
   {
     roomNumber: "116",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -193,7 +193,7 @@ const RoomData = [
   },
   {
     roomNumber: "117",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -205,7 +205,7 @@ const RoomData = [
   },
   {
     roomNumber: "118",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -217,7 +217,7 @@ const RoomData = [
   },
   {
     roomNumber: "119",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -229,7 +229,7 @@ const RoomData = [
   },
   {
     roomNumber: "120",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -241,7 +241,7 @@ const RoomData = [
   },
   {
     roomNumber: "121",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -253,7 +253,7 @@ const RoomData = [
   },
   {
     roomNumber: "122",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -265,7 +265,7 @@ const RoomData = [
   },
   {
     roomNumber: "123",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -277,7 +277,7 @@ const RoomData = [
   },
   {
     roomNumber: "124",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -289,7 +289,7 @@ const RoomData = [
   },
   {
     roomNumber: "125",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -301,7 +301,7 @@ const RoomData = [
   },
   {
     roomNumber: "126",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -313,7 +313,7 @@ const RoomData = [
   },
   {
     roomNumber: "128",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -325,7 +325,7 @@ const RoomData = [
   },
   {
     roomNumber: "130",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -337,7 +337,7 @@ const RoomData = [
   },
   {
     roomNumber: "132",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -349,7 +349,7 @@ const RoomData = [
   },
   {
     roomNumber: "134",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -373,7 +373,7 @@ const RoomData = [
   },
   {
     roomNumber: "138",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -388,7 +388,7 @@ const RoomData = [
 
   {
     roomNumber: "201",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -400,7 +400,7 @@ const RoomData = [
   },
   {
     roomNumber: "202",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -412,7 +412,7 @@ const RoomData = [
   },
   {
     roomNumber: "203",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -424,7 +424,7 @@ const RoomData = [
   },
   {
     roomNumber: "204",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -436,7 +436,7 @@ const RoomData = [
   },
   {
     roomNumber: "205",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -448,7 +448,7 @@ const RoomData = [
   },
   {
     roomNumber: "206",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -460,7 +460,7 @@ const RoomData = [
   },
   {
     roomNumber: "207",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -472,7 +472,7 @@ const RoomData = [
   },
   {
     roomNumber: "208",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -484,7 +484,7 @@ const RoomData = [
   },
   {
     roomNumber: "209",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -496,7 +496,7 @@ const RoomData = [
   },
   {
     roomNumber: "210",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -508,7 +508,7 @@ const RoomData = [
   },
   {
     roomNumber: "211",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -520,7 +520,7 @@ const RoomData = [
   },
   {
     roomNumber: "212",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -532,7 +532,7 @@ const RoomData = [
   },
   {
     roomNumber: "213",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -544,7 +544,7 @@ const RoomData = [
   },
   {
     roomNumber: "214",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -556,7 +556,7 @@ const RoomData = [
   },
   {
     roomNumber: "215",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -568,7 +568,7 @@ const RoomData = [
   },
   {
     roomNumber: "216",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -580,7 +580,7 @@ const RoomData = [
   },
   {
     roomNumber: "217",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -592,7 +592,7 @@ const RoomData = [
   },
   {
     roomNumber: "218",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -604,7 +604,7 @@ const RoomData = [
   },
   {
     roomNumber: "219",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -616,7 +616,7 @@ const RoomData = [
   },
   {
     roomNumber: "220",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -628,7 +628,7 @@ const RoomData = [
   },
   {
     roomNumber: "221",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -640,7 +640,7 @@ const RoomData = [
   },
   {
     roomNumber: "222",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -652,7 +652,7 @@ const RoomData = [
   },
   {
     roomNumber: "223",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -664,7 +664,7 @@ const RoomData = [
   },
   {
     roomNumber: "224",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -676,7 +676,7 @@ const RoomData = [
   },
   {
     roomNumber: "225",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -688,7 +688,7 @@ const RoomData = [
   },
   {
     roomNumber: "226",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -700,7 +700,7 @@ const RoomData = [
   },
   {
     roomNumber: "227",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -712,7 +712,7 @@ const RoomData = [
   },
   {
     roomNumber: "228",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -724,7 +724,7 @@ const RoomData = [
   },
   {
     roomNumber: "229",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -736,7 +736,7 @@ const RoomData = [
   },
   {
     roomNumber: "230",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -748,7 +748,7 @@ const RoomData = [
   },
   {
     roomNumber: "232",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -760,7 +760,7 @@ const RoomData = [
   },
   {
     roomNumber: "234",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -772,7 +772,7 @@ const RoomData = [
   },
   {
     roomNumber: "236",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -784,7 +784,7 @@ const RoomData = [
   },
   {
     roomNumber: "238",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -796,7 +796,7 @@ const RoomData = [
   },
   {
     roomNumber: "240",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -808,7 +808,7 @@ const RoomData = [
   },
   {
     roomNumber: "242",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -820,7 +820,7 @@ const RoomData = [
   },
   {
     roomNumber: "244",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -835,7 +835,7 @@ const RoomData = [
 
   {
     roomNumber: "301",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -847,7 +847,7 @@ const RoomData = [
   },
   {
     roomNumber: "302",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -859,7 +859,7 @@ const RoomData = [
   },
   {
     roomNumber: "303",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -871,7 +871,7 @@ const RoomData = [
   },
   {
     roomNumber: "304",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -883,7 +883,7 @@ const RoomData = [
   },
   {
     roomNumber: "305",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -895,7 +895,7 @@ const RoomData = [
   },
   {
     roomNumber: "306",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -907,7 +907,7 @@ const RoomData = [
   },
   {
     roomNumber: "307",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -919,7 +919,7 @@ const RoomData = [
   },
   {
     roomNumber: "308",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -931,7 +931,7 @@ const RoomData = [
   },
   {
     roomNumber: "309",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -943,7 +943,7 @@ const RoomData = [
   },
   {
     roomNumber: "310",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -955,7 +955,7 @@ const RoomData = [
   },
   {
     roomNumber: "311",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -967,7 +967,7 @@ const RoomData = [
   },
   {
     roomNumber: "312",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -979,7 +979,7 @@ const RoomData = [
   },
   {
     roomNumber: "313",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -991,7 +991,7 @@ const RoomData = [
   },
   {
     roomNumber: "314",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1003,7 +1003,7 @@ const RoomData = [
   },
   {
     roomNumber: "315",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1015,7 +1015,7 @@ const RoomData = [
   },
   {
     roomNumber: "316",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1027,7 +1027,7 @@ const RoomData = [
   },
   {
     roomNumber: "317",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1039,7 +1039,7 @@ const RoomData = [
   },
   {
     roomNumber: "318",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1051,7 +1051,7 @@ const RoomData = [
   },
   {
     roomNumber: "319",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1063,7 +1063,7 @@ const RoomData = [
   },
   {
     roomNumber: "320",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1075,7 +1075,7 @@ const RoomData = [
   },
   {
     roomNumber: "321",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1087,7 +1087,7 @@ const RoomData = [
   },
   {
     roomNumber: "322",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1099,7 +1099,7 @@ const RoomData = [
   },
   {
     roomNumber: "323",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1111,7 +1111,7 @@ const RoomData = [
   },
   {
     roomNumber: "324",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1123,7 +1123,7 @@ const RoomData = [
   },
   {
     roomNumber: "325",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1135,7 +1135,7 @@ const RoomData = [
   },
   {
     roomNumber: "326",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1147,7 +1147,7 @@ const RoomData = [
   },
   {
     roomNumber: "327",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1159,7 +1159,7 @@ const RoomData = [
   },
   {
     roomNumber: "328",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1171,7 +1171,7 @@ const RoomData = [
   },
   {
     roomNumber: "329",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1183,7 +1183,7 @@ const RoomData = [
   },
   {
     roomNumber: "330",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1195,7 +1195,7 @@ const RoomData = [
   },
   {
     roomNumber: "331",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1207,7 +1207,7 @@ const RoomData = [
   },
   {
     roomNumber: "332",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1219,7 +1219,7 @@ const RoomData = [
   },
   {
     roomNumber: "333",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1231,7 +1231,7 @@ const RoomData = [
   },
   {
     roomNumber: "334",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1243,7 +1243,7 @@ const RoomData = [
   },
   {
     roomNumber: "335",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1255,7 +1255,7 @@ const RoomData = [
   },
   {
     roomNumber: "336",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1267,7 +1267,7 @@ const RoomData = [
   },
   {
     roomNumber: "337",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1279,7 +1279,7 @@ const RoomData = [
   },
   {
     roomNumber: "338",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1291,7 +1291,7 @@ const RoomData = [
   },
   {
     roomNumber: "339",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1303,7 +1303,7 @@ const RoomData = [
   },
   {
     roomNumber: "340",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1315,7 +1315,7 @@ const RoomData = [
   },
   {
     roomNumber: "341",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1327,7 +1327,7 @@ const RoomData = [
   },
   {
     roomNumber: "342",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1339,7 +1339,7 @@ const RoomData = [
   },
   {
     roomNumber: "343",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1351,7 +1351,7 @@ const RoomData = [
   },
   {
     roomNumber: "344",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1375,7 +1375,7 @@ const RoomData = [
   },
   {
     roomNumber: "348",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1387,7 +1387,7 @@ const RoomData = [
   },
   {
     roomNumber: "350",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1399,7 +1399,7 @@ const RoomData = [
   },
   {
     roomNumber: "352",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1411,7 +1411,7 @@ const RoomData = [
   },
   {
     roomNumber: "354",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1423,7 +1423,7 @@ const RoomData = [
   },
   {
     roomNumber: "356",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1435,7 +1435,7 @@ const RoomData = [
   },
   {
     roomNumber: "358",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1447,7 +1447,7 @@ const RoomData = [
   },
   {
     roomNumber: "360",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1459,7 +1459,7 @@ const RoomData = [
   },
   {
     roomNumber: "362",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1474,7 +1474,7 @@ const RoomData = [
 
   {
     roomNumber: "401",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1486,7 +1486,7 @@ const RoomData = [
   },
   {
     roomNumber: "402",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1498,7 +1498,7 @@ const RoomData = [
   },
   {
     roomNumber: "403",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1510,7 +1510,7 @@ const RoomData = [
   },
   {
     roomNumber: "404",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1522,7 +1522,7 @@ const RoomData = [
   },
   {
     roomNumber: "405",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1534,7 +1534,7 @@ const RoomData = [
   },
   {
     roomNumber: "406",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1546,7 +1546,7 @@ const RoomData = [
   },
   {
     roomNumber: "407",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1558,7 +1558,7 @@ const RoomData = [
   },
   {
     roomNumber: "408",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1570,7 +1570,7 @@ const RoomData = [
   },
   {
     roomNumber: "409",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1582,7 +1582,7 @@ const RoomData = [
   },
   {
     roomNumber: "410",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1594,7 +1594,7 @@ const RoomData = [
   },
   {
     roomNumber: "411",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1606,7 +1606,7 @@ const RoomData = [
   },
   {
     roomNumber: "412",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1618,7 +1618,7 @@ const RoomData = [
   },
   {
     roomNumber: "413",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1630,7 +1630,7 @@ const RoomData = [
   },
   {
     roomNumber: "414",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1642,7 +1642,7 @@ const RoomData = [
   },
   {
     roomNumber: "415",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1654,7 +1654,7 @@ const RoomData = [
   },
   {
     roomNumber: "416",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1666,7 +1666,7 @@ const RoomData = [
   },
   {
     roomNumber: "417",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1678,7 +1678,7 @@ const RoomData = [
   },
   {
     roomNumber: "418",
-    roomType: "NKEX1",
+    roomType: "1KES",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.4",
@@ -1690,7 +1690,7 @@ const RoomData = [
   },
   {
     roomNumber: "419",
-    roomType: "SNK1",
+    roomType: "1KS",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1702,7 +1702,7 @@ const RoomData = [
   },
   {
     roomNumber: "420",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1714,7 +1714,7 @@ const RoomData = [
   },
   {
     roomNumber: "421",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1726,7 +1726,7 @@ const RoomData = [
   },
   {
     roomNumber: "422",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1738,7 +1738,7 @@ const RoomData = [
   },
   {
     roomNumber: "423",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1750,7 +1750,7 @@ const RoomData = [
   },
   {
     roomNumber: "424",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1762,7 +1762,7 @@ const RoomData = [
   },
   {
     roomNumber: "425",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1774,7 +1774,7 @@ const RoomData = [
   },
   {
     roomNumber: "426",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1786,7 +1786,7 @@ const RoomData = [
   },
   {
     roomNumber: "427",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1798,7 +1798,7 @@ const RoomData = [
   },
   {
     roomNumber: "428",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1810,7 +1810,7 @@ const RoomData = [
   },
   {
     roomNumber: "429",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1822,7 +1822,7 @@ const RoomData = [
   },
   {
     roomNumber: "430",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1834,7 +1834,7 @@ const RoomData = [
   },
   {
     roomNumber: "431",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1846,7 +1846,7 @@ const RoomData = [
   },
   {
     roomNumber: "432",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1858,7 +1858,7 @@ const RoomData = [
   },
   {
     roomNumber: "433",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1870,7 +1870,7 @@ const RoomData = [
   },
   {
     roomNumber: "434",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1882,7 +1882,7 @@ const RoomData = [
   },
   {
     roomNumber: "435",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1894,7 +1894,7 @@ const RoomData = [
   },
   {
     roomNumber: "436",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -1906,7 +1906,7 @@ const RoomData = [
   },
   {
     roomNumber: "437",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1918,7 +1918,7 @@ const RoomData = [
   },
   {
     roomNumber: "438",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1930,7 +1930,7 @@ const RoomData = [
   },
   {
     roomNumber: "439",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1942,7 +1942,7 @@ const RoomData = [
   },
   {
     roomNumber: "440",
-    roomType: "ENQQ",
+    roomType: "2QE",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.3",
@@ -1954,7 +1954,7 @@ const RoomData = [
   },
   {
     roomNumber: "441",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1966,7 +1966,7 @@ const RoomData = [
   },
   {
     roomNumber: "442",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -1978,7 +1978,7 @@ const RoomData = [
   },
   {
     roomNumber: "443",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -1990,7 +1990,7 @@ const RoomData = [
   },
   {
     roomNumber: "444",
-    roomType: "PNQQ",
+    roomType: "2QP",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -2014,7 +2014,7 @@ const RoomData = [
   },
   {
     roomNumber: "448",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -2026,7 +2026,7 @@ const RoomData = [
   },
   {
     roomNumber: "450",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -2038,7 +2038,7 @@ const RoomData = [
   },
   {
     roomNumber: "452",
-    roomType: "NQQ",
+    roomType: "2Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -2050,7 +2050,7 @@ const RoomData = [
   },
   {
     roomNumber: "454",
-    roomType: "NQQB",
+    roomType: "2QB",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.2",
@@ -2062,7 +2062,7 @@ const RoomData = [
   },
   {
     roomNumber: "456",
-    roomType: "NK",
+    roomType: "1K",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -2074,7 +2074,7 @@ const RoomData = [
   },
   {
     roomNumber: "458",
-    roomType: "NQ",
+    roomType: "1Q",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1",
@@ -2086,7 +2086,7 @@ const RoomData = [
   },
   {
     roomNumber: "460",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
@@ -2098,7 +2098,7 @@ const RoomData = [
   },
   {
     roomNumber: "462",
-    roomType: "NKEF",
+    roomType: "1KF",
     roomStatus: "Dirty",
     coStatus: "DUE",
     workload: "1.1",
