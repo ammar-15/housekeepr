@@ -77,9 +77,13 @@ const AdminSUP = () => {
         )}
       </div>
       <div className="section-container">
-        {sortRooms(SUProoms, sortOption).map((room, index) => (
+        {SUProoms.length > 0 ? (sortRooms(SUProoms, sortOption).map((room, index) => (
           <HSKRoomContainer key={index} room={room} />
-        ))}
+        ))) : (
+          <div className="text-center text-gray text-lg mt-10 animate-bounce">
+            No rooms
+          </div>
+        )}
       </div>
       <AdminStart />
     </div>

@@ -50,7 +50,7 @@ const AdminHSK = () => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-       <StatsHeader onStatsUpdate={setStats} />
+      <StatsHeader onStatsUpdate={setStats} />
       <AdminNavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">Housekeepers</h1>
@@ -86,9 +86,15 @@ const AdminHSK = () => {
       </div>
 
       <div className="section-container">
-        {sortRooms(HSKrooms, sortOption).map((room, index) => (
-          <HSKRoomContainer key={index} room={room} />
-        ))}
+        {HSKrooms.length > 0 ? (
+          sortRooms(HSKrooms, sortOption).map((room, index) => (
+            <HSKRoomContainer key={index} room={room} />
+          ))
+        ) : (
+          <div className="text-center text-gray text-lg mt-10 animate-bounce">
+            No rooms
+          </div>
+        )}
       </div>
       <AdminStart />
     </div>

@@ -45,9 +45,13 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
 
       <div className="section-container">
-        {sortedRooms.map((room, index) => (
+        {sortedRooms.length > 0 ? (sortedRooms.map((room, index) => (
           <HSKRoomContainer key={index} room={room} />
-        ))}
+        ))) : (
+          <div className="text-center text-gray text-lg mt-10 animate-bounce">
+            No rooms
+          </div>
+        )}
       </div>
     </div>
   );
