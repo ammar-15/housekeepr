@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
@@ -22,6 +22,23 @@ const EditRoomContainer = ({
   const [newRoomStatus, setNewRoomStatus] = useState(initialRoomStatus);
   const [newCoStatus, setNewCoStatus] = useState(initialCoStatus);
   const [newAssignedto, setNewAssignedto] = useState(""); 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleClose = () => {
+    onClose?.();
+    console.log("Edit Room modal closed");
+  };
 
   const handleStatusChange = async () => {
     try {
@@ -57,11 +74,12 @@ const EditRoomContainer = ({
     } catch (error) {
       console.error("Error updating room status:", error);
     }
+    handleClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-md shadow-lg w-35%">
+      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-35%">
         <h2 className="text-xl mb-4">Update Room {roomNumber}</h2>
         <div className="flex justify-between items-center mb-4">
           <div>
