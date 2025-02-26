@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData";
@@ -19,6 +19,19 @@ const AdminHSKassign = ({
   const [HSKroomNumber, setHSKRoomNumber] = useState("");
   const [assignedto, setAssignedto] = useState("");
   const [statusOption, setStatusOption] = useState("Dirty");
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   const handleClose = () => {
     if (onClose) {
@@ -71,11 +84,12 @@ const AdminHSKassign = ({
     } else {
       console.error("Room Number and Assignment cannot be empty.");
     }
+    handleClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-md shadow-lg w-96">
+      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-96">
         <h2 className="text-xl mb-4">Assign Room</h2>
         <input
           type="text"
