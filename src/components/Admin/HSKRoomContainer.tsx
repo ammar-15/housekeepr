@@ -1,6 +1,6 @@
 import { useState } from "react";
 import EditRoomContainer from "./EditRoomContainer";
-import threedotsIcon from "../assets/threedots.svg";
+import threedotsIcon from "../assets/edit.svg";
 
 interface RoomDataType {
   roomNumber: string;
@@ -9,9 +9,7 @@ interface RoomDataType {
   coStatus: string;
   workload: string;
   nearElevator: string;
-  departs: string;
   extras: string;
-  early_ci: string;
   assignedtoHSK: string;
   assignedtoSUP: string;
   time_stamp: string;
@@ -48,7 +46,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
         {room.roomStatus}
       </p>
       <p
-        className={`flex-1 text-center mx-3 px-0.1 py-1 rounded-md ${
+        className={`flex-1 text-center mx-3 py-1 rounded-md ${
           room.coStatus === "DUE"
             ? "bg-mistysky text-black"
             : room.coStatus === "OUT"
@@ -64,9 +62,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
       >
         {room.coStatus}
       </p>
-      <p className="flex-1 text-center">{room.departs}</p>
       <p className="flex-1 text-center">{room.extras}</p>
-      <p className="flex-1 text-center">{room.early_ci}</p>
       <p className="flex-1 text-center">{room.assignedtoHSK}</p>
       <p className="flex-1 text-center">{room.assignedtoSUP}</p>
       {isModalVisible && (

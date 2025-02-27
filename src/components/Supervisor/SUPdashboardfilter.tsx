@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import SUPnavbar from "./SUPnavbar.tsx";
+import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
+import StatsHeader from "../StatsHeader.tsx";
+import RoomHeader from "../Admin/RoomHeader.tsx";
 
 interface SUPdashboardfilterProps {
   assignedtoSUP: string;
@@ -32,22 +34,25 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <SUPnavbar />
+      <Navbar navItems={["S-Dashboard", "Notes"]} />{" "}
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
-        <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">
-            <span>Total Rooms to Inspect: {sortedRooms.length}</span>
-          </div>
-        </div>
+        <StatsHeader pagename="SUPfilter" displayedRooms={sortedRooms} />
+
       </div>
 
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
-
+      <div className="room-header">
+        <RoomHeader />
+      </div>
       <div className="section-container">
-        {sortedRooms.map((room, index) => (
+        {sortedRooms.length > 0 ? (sortedRooms.map((room, index) => (
           <HSKRoomContainer key={index} room={room} />
-        ))}
+        ))) : (
+          <div className="text-center text-gray text-lg mt-10 animate-bounce">
+            No rooms
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData";
@@ -20,6 +20,19 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
   const [stayOverRoomNumbers, setStayOverRoomNumbers] = useState("");
   const [housekeepers, setHousekeepers] = useState<number>(1);
   const [supervisors, setSupervisors] = useState<number>(1);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleClose = () => {
     onClose?.();
@@ -109,6 +122,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
     );
   
     await Promise.all(assignmentPromises);
+    handleClose();
   
     setCheckOutRoomNumbers("");
     setStayOverRoomNumbers("");
@@ -119,7 +133,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-md shadow-lg w-30%">
+      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-30%">
         <h2 className="text-xl mb-4">Auto Assign Rooms</h2>
         <div className="flex space-x-4">
           <div className="w-50%">

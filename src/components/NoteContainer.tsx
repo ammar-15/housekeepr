@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import user_switch from "./assets/user_switch.svg";
-
+import SortButton from "../components/SortButton"; 
 import {
   collection,
   addDoc,
@@ -12,7 +12,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import Notes from "./Note";
-import SortButton from "./SortButton";
 import AdminUserSwitch from "./Admin/AdminUserSwitch";
 
 const NoteContainer = () => {
@@ -39,36 +38,29 @@ const NoteContainer = () => {
         : new Date(),
     }));
     setNotes(notesList);
-    setSortedNotes(notesList);
   };
 
   const addNote = async () => {
     const newNote = { content: "", createdAt: new Date() };
     const docRef = await addDoc(collection(db, "notes"), newNote);
-    setNotes([...notes, { ...newNote, id: docRef.id }]);
-    setSortedNotes([...notes, { ...newNote, id: docRef.id }]);
+    const updatedNotes = [...notes, { ...newNote, id: docRef.id }];
+    setNotes(updatedNotes);
   };
 
   const updateNote = async (id: string, newContent: string) => {
     const noteRef = doc(db, "notes", id);
     await updateDoc(noteRef, { content: newContent });
-    setNotes(
-      notes.map((note) =>
-        note.id === id ? { ...note, content: newContent } : note
-      )
+    const updatedNotes = notes.map((note) =>
+      note.id === id ? { ...note, content: newContent } : note
     );
-    setSortedNotes(
-      notes.map((note) =>
-        note.id === id ? { ...note, content: newContent } : note
-      )
-    );
+    setNotes(updatedNotes);
   };
 
   const deleteNote = async (id: string) => {
     const noteRef = doc(db, "notes", id);
     await deleteDoc(noteRef);
-    setNotes(notes.filter((note) => note.id !== id));
-    setSortedNotes(notes.filter((note) => note.id !== id));
+    const updatedNotes = notes.filter((note) => note.id !== id);
+    setNotes(updatedNotes);
   };
 
   const handleGoBack = () => {
@@ -94,17 +86,17 @@ const NoteContainer = () => {
             />
           </button>
           {showUserSwitch && (
-            <div className="absolute top-12 left-0 bg-white text-black border shadow-lg rounded-md p-2 z-50">
+            <div className="absolute top-12 left-0 bg-white text-black border shadow-lg rounded-md p-2">
               <AdminUserSwitch />
             </div>
           )}
         </div>
         <div className="flex flex-row gap-5">
           <button onClick={handleGoBack} className="hover:underline">
-            Rooms
+            Back
           </button>
           <button
-            onClick={() => navigate("/Note")}
+            onClick={() => navigate("/Notes")}
             className="hover:underline"
           >
             Notes
@@ -113,8 +105,9 @@ const NoteContainer = () => {
       </nav>
 
       <div className="noteheader-container flex justify-between items-center m-0 mb-5">
-        <h2 className="text-2xl font-semibold text-darkpurple">Notes</h2>
-        <SortButton rooms={notes} onSortedRooms={setSortedNotes} />
+        <h2 className="text-3xl text-wine">Notes</h2>
+        <SortButton rooms={notes} onSortedRooms={setSortedNotes} sortProps={["recent", "oldest"]} />
+        
       </div>
 
       <div className="notes-container grid grid-cols-4 gap-4">
