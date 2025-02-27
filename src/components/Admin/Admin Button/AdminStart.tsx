@@ -26,15 +26,15 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
         <div className="absolute bottom-16 right-0 flex flex-col space-y-2">
           <button
             onClick={() => setActiveModal("HSK")}
-            className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
+            className="bg-white w-40 px-4 py-2 rounded-md shadow hover:bg-mistysky"
           >
-            AdminHSKassign
+            Room Assign
           </button>
           <button
             onClick={() => setActiveModal("AUTO")}
-            className="bg-white px-4 py-2 rounded-md shadow hover:bg-mistysky"
+            className="bg-white w-40 px-4 py-2 rounded-md shadow hover:bg-mistysky"
           >
-            AdminAutoAssign
+            Start The day
           </button>
         </div>
       )}
