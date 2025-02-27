@@ -15,7 +15,7 @@ export interface RoomData {
   time_stamp?: string;
 }
 
-let globalLastAssignedHSK: { [roomNumber: string]: string } = {};
+let globalLastAssignedHSK: { [roomNumber: string]: string } = {}; //store as separate state make sure it doesn't get lost, useContext
 
 const AdminDashboard = () => {
   const [housekeeperRooms, setHousekeeperRooms] = useState<{
