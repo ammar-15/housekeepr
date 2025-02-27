@@ -8,10 +8,6 @@ import sortIcon from "../assets/sort.svg";
 import StatsHeader from "../StatsHeader";
 
 const AdminHSK = () => {
-  const [stats, setStats] = useState({
-    totalHousekeepers: 0,
-    totalRoomsToClean: 0,
-  });
   const [HSKrooms, setHSKrooms] = useState<any[]>([]);
   const [sortOption, setSortOption] = useState<string | null>(null); 
   const [isSortingVisible, setIsSortingVisible] = useState(false); 
@@ -50,14 +46,10 @@ const AdminHSK = () => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <StatsHeader onStatsUpdate={setStats} />
       <AdminNavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">Housekeepers</h1>
-        <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">Total Housekeepers: {stats.totalHousekeepers}</div>
-          <div className="stats-box px-2">Total Rooms to Clean: {stats.totalRoomsToClean}</div>
-        </div>
+        <StatsHeader pagename="AdminHSK" displayedRooms={HSKrooms} />
       </div>
 
       <div className="sort-container flex justify-end relative">

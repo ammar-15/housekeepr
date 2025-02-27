@@ -10,9 +10,6 @@ import StatsHeader from "../StatsHeader.tsx";
 const AdminRooms = () => {
   const [allRooms, setAllRooms] = useState<any[]>([]);
   const [showClearModal, setShowClearModal] = useState(false);
-  const [stats, setStats] = useState({
-    totalRooms: 0,
-  });
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -28,7 +25,7 @@ const AdminRooms = () => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-       <StatsHeader onStatsUpdate={setStats} />
+
 
       <div className="AdminRoomsNav">
         <AdminNavbar />
@@ -42,11 +39,7 @@ const AdminRooms = () => {
           >
             <img src={MoonIcon} alt="Clear Rooms" className="w-5 h-5" />
           </button>
-          <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-            <div className="stats-box px-2">
-              <span>Total Rooms: {stats.totalRooms}</span>
-            </div>
-          </div>
+          <StatsHeader pagename="AdminRooms" />
         </div>
       </div>
       <div className="section-container">

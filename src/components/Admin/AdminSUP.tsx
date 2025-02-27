@@ -5,6 +5,7 @@ import HSKRoomContainer from "./HSKRoomContainer";
 import AdminNavbar from "./AdminNavbar";
 import AdminStart from "./Admin Button/AdminStart";
 import sortIcon from "../assets/sort.svg"; 
+import StatsHeader from "../StatsHeader";
 
 const AdminSUP = () => {
   const [SUProoms, setSUProoms] = useState<any[]>([]);
@@ -48,10 +49,8 @@ const AdminSUP = () => {
       <AdminNavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">Supervisors</h1>
-        <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">Total Supervisors: 12</div>
-          <div className="stats-box px-2">Total Rooms to Inspect: {SUProoms.length}</div>
-        </div>
+       <StatsHeader pagename="AdminSUP" displayedRooms={SUProoms} />
+       
       </div>
       <div className="sort-container flex justify-end relative">
         <button

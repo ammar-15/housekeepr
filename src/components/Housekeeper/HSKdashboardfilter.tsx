@@ -4,6 +4,7 @@ import { db } from "../../../firebase";
 import HSKnavbar from "./HSKnavbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
+import StatsHeader from "../StatsHeader.tsx";
 
 interface HSKdashboardfilterProps {
   assignedtoHSK: string;
@@ -36,11 +37,8 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
       <HSKnavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">{assignedtoHSK}-Dashboard</h1>
-        <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">
-            <span>Total Rooms to Clean: {sortedRooms.length}</span>
-          </div>
-        </div>
+        <StatsHeader pagename="HSKfilter" displayedRooms={sortedRooms} />
+
       </div>
 
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />

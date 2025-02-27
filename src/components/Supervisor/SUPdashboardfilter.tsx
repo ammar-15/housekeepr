@@ -4,6 +4,7 @@ import { db } from "../../../firebase";
 import SUPnavbar from "./SUPnavbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
+import StatsHeader from "../StatsHeader.tsx";
 
 interface SUPdashboardfilterProps {
   assignedtoSUP: string;
@@ -35,11 +36,8 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
       <SUPnavbar />
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
-        <div className="dashboard-stats flex bg-clay text-white rounded-md px-3 py-1.5">
-          <div className="stats-box px-2">
-            <span>Total Rooms to Inspect: {sortedRooms.length}</span>
-          </div>
-        </div>
+        <StatsHeader pagename="SUPfilter" displayedRooms={sortedRooms} />
+
       </div>
 
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
