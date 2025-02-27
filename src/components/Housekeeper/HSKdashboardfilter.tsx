@@ -5,6 +5,7 @@ import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 import StatsHeader from "../StatsHeader.tsx";
+import RoomHeader from "../Admin/RoomHeader.tsx";
 
 interface HSKdashboardfilterProps {
   assignedtoHSK: string;
@@ -40,6 +41,9 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
         <StatsHeader pagename="HSKfilter" displayedRooms={sortedRooms} />
       </div>
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
+      <div className="room-header">
+        <RoomHeader />
+      </div>
       <div className="section-container">
         {sortedRooms.length > 0 ? (
           sortedRooms.map((room, index) => (

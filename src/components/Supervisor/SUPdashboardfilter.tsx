@@ -5,6 +5,7 @@ import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 import StatsHeader from "../StatsHeader.tsx";
+import RoomHeader from "../Admin/RoomHeader.tsx";
 
 interface SUPdashboardfilterProps {
   assignedtoSUP: string;
@@ -41,7 +42,9 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
       </div>
 
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
-
+      <div className="room-header">
+        <RoomHeader />
+      </div>
       <div className="section-container">
         {sortedRooms.length > 0 ? (sortedRooms.map((room, index) => (
           <HSKRoomContainer key={index} room={room} />

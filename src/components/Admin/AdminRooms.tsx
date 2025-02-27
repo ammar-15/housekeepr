@@ -6,6 +6,7 @@ import HSKRoomContainer from "./HSKRoomContainer.tsx";
 import ClearRooms from "./ClearRooms.tsx";
 import MoonIcon from "../assets/moon.svg";
 import StatsHeader from "../StatsHeader.tsx";
+import RoomHeader from "./RoomHeader.tsx";
 
 const AdminRooms = () => {
   const [allRooms, setAllRooms] = useState<any[]>([]);
@@ -47,6 +48,9 @@ const AdminRooms = () => {
           </button>
           <StatsHeader pagename="AdminRooms" />
         </div>
+      </div>
+      <div className="room-header">
+        <RoomHeader />
       </div>
       <div className="section-container">
         {allRooms.length > 0 ? (

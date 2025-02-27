@@ -82,7 +82,7 @@ const SortButton = ({
       </button>
 
       {isSortingVisible && (
-        <div className="absolute right-0 mt-5 bg-white rounded-md shadow-lg">
+        <div className="absolute right-0 mt-5 bg-white rounded-md shadow-lg z-10">
           <ul className="list-none p-2">
             {sortProps.includes("recent") && (
               <li

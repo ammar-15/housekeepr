@@ -6,6 +6,7 @@ import Navbar from "../Navbar.tsx";
 import AdminStart from "./Admin Button/AdminStart";
 import StatsHeader from "../StatsHeader";
 import SortButton from "../SortButton.tsx";
+import RoomHeader from "./RoomHeader.tsx";
 
 const AdminHSK = () => {
   const [HSKrooms, setHSKrooms] = useState<any[]>([]);
@@ -34,6 +35,9 @@ const AdminHSK = () => {
         <StatsHeader pagename="AdminHSK" displayedRooms={HSKrooms} />
       </div>
       <SortButton rooms={HSKrooms} onSortedRooms={setSortedRooms} />
+      <div className="room-header">
+        <RoomHeader />
+      </div>
       <div className="section-container">
         {HSKrooms.length > 0 ? (
           sortedRooms.map((room, index) => (

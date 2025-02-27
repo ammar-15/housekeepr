@@ -1,6 +1,6 @@
 import { useState } from "react";
 import EditRoomContainer from "./EditRoomContainer";
-import threedotsIcon from "../assets/threedots.svg";
+import threedotsIcon from "../assets/edit.svg";
 
 interface RoomDataType {
   roomNumber: string;
@@ -46,7 +46,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
         {room.roomStatus}
       </p>
       <p
-        className={`flex-1 text-center mx-3 px-0.1 py-1 rounded-md ${
+        className={`flex-1 text-center mx-3 py-1 rounded-md ${
           room.coStatus === "DUE"
             ? "bg-mistysky text-black"
             : room.coStatus === "OUT"
