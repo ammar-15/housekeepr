@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import AdminNavbar from "./AdminNavbar";
+import Navbar from "../Navbar";
 import AdminStart from "./Admin Button/AdminStart";
 import StatsHeader from "../StatsHeader";
 
@@ -18,7 +18,6 @@ export interface RoomData {
 let globalLastAssignedHSK: { [roomNumber: string]: string } = {};
 
 const AdminDashboard = () => {
-
   const [housekeeperRooms, setHousekeeperRooms] = useState<{
     [hsk: string]: { previousRoom?: RoomData; currentRoom?: RoomData };
   }>({});
@@ -73,8 +72,7 @@ const AdminDashboard = () => {
           }
           if (room.coStatus === "INSPECTED") {
             updatedSupervisorRooms[room.assignedtoSUP].previousRoom = room;
-          } 
-          else if (room.roomStatus === "Clean") {
+          } else if (room.roomStatus === "Clean") {
             updatedSupervisorRooms[room.assignedtoSUP].currentRoom = room;
           }
         }
@@ -89,13 +87,20 @@ const AdminDashboard = () => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-        <div className="AdminNav">
-        <AdminNavbar />
+      <div className="AdminNav">
+        <Navbar
+          navItems={[
+            "Dashboard",
+            "Housekeeper",
+            "Supervisors",
+            "Rooms",
+            "Notes",
+          ]}
+        />
       </div>
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
         <h1 className="text-3xl text-wine">Dashboard</h1>
         <StatsHeader pagename="AdminDashboard" />
-
       </div>
 
       <div className="section-container">
@@ -132,9 +137,7 @@ const AdminDashboard = () => {
             ))}
           </div>
         ) : (
-          <div className="text-left text-gray text-lg mb-5">
-            No rooms
-          </div>
+          <div className="text-left text-gray text-lg mb-5">No rooms</div>
         )}
       </div>
       <div className="section-container">
@@ -171,9 +174,7 @@ const AdminDashboard = () => {
             ))}
           </div>
         ) : (
-          <div className="text-left text-gray text-lg mb-3">
-            No rooms
-          </div>
+          <div className="text-left text-gray text-lg mb-3">No rooms</div>
         )}
       </div>
       <AdminStart />

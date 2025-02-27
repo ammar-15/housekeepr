@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import SUPnavbar from "./SUPnavbar.tsx";
+import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 import StatsHeader from "../StatsHeader.tsx";
@@ -33,7 +33,7 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <SUPnavbar />
+      <Navbar navItems={["S-Dashboard", "Notes"]} />{" "}
       <div className="dashboard-header flex justify-between items-center m-0 mb-5">
         <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
         <StatsHeader pagename="SUPfilter" displayedRooms={sortedRooms} />

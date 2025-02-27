@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import user_switch from "./assets/user_switch.svg";
-import sortIcon from "../components/assets/sort.svg";
+import SortButton from "../components/SortButton"; 
 import {
   collection,
   addDoc,
@@ -17,11 +17,8 @@ import AdminUserSwitch from "./Admin/AdminUserSwitch";
 const NoteContainer = () => {
   const [notes, setNotes] = useState<any[]>([]);
   const [sortedNotes, setSortedNotes] = useState<any[]>([]);
-  const [sortOrder, setSortOrder] = useState<"oldest" | "newest">("newest");
-  const [showSortDropdown, setShowSortDropdown] = useState(false);
   const navigate = useNavigate();
   const [showUserSwitch, setShowUserSwitch] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleUserSwitch = () => {
     setShowUserSwitch(!showUserSwitch);
@@ -29,16 +26,6 @@ const NoteContainer = () => {
 
   useEffect(() => {
     loadNotes();
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowSortDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const loadNotes = async () => {
@@ -51,7 +38,6 @@ const NoteContainer = () => {
         : new Date(),
     }));
     setNotes(notesList);
-    sortNotes(notesList, sortOrder);
   };
 
   const addNote = async () => {
@@ -59,7 +45,6 @@ const NoteContainer = () => {
     const docRef = await addDoc(collection(db, "notes"), newNote);
     const updatedNotes = [...notes, { ...newNote, id: docRef.id }];
     setNotes(updatedNotes);
-    sortNotes(updatedNotes, sortOrder);
   };
 
   const updateNote = async (id: string, newContent: string) => {
@@ -69,7 +54,6 @@ const NoteContainer = () => {
       note.id === id ? { ...note, content: newContent } : note
     );
     setNotes(updatedNotes);
-    sortNotes(updatedNotes, sortOrder);
   };
 
   const deleteNote = async (id: string) => {
@@ -77,22 +61,6 @@ const NoteContainer = () => {
     await deleteDoc(noteRef);
     const updatedNotes = notes.filter((note) => note.id !== id);
     setNotes(updatedNotes);
-    sortNotes(updatedNotes, sortOrder);
-  };
-
-  const sortNotes = (notesList: any[], order: "oldest" | "newest") => {
-    const sorted = [...notesList].sort((a, b) =>
-      order === "oldest"
-        ? a.createdAt.getTime() - b.createdAt.getTime()
-        : b.createdAt.getTime() - a.createdAt.getTime()
-    );
-    setSortedNotes(sorted);
-  };
-
-  const changeSortOrder = (order: "oldest" | "newest") => {
-    setSortOrder(order);
-    sortNotes(notes, order);
-    setShowSortDropdown(false); 
   };
 
   const handleGoBack = () => {
@@ -125,7 +93,7 @@ const NoteContainer = () => {
         </div>
         <div className="flex flex-row gap-5">
           <button onClick={handleGoBack} className="hover:underline">
-            Rooms
+            Back
           </button>
           <button
             onClick={() => navigate("/Notes")}
@@ -138,36 +106,8 @@ const NoteContainer = () => {
 
       <div className="noteheader-container flex justify-between items-center m-0 mb-5">
         <h2 className="text-3xl text-wine">Notes</h2>
-
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setShowSortDropdown(!showSortDropdown)}
-            className="flex items-center text-white rounded-md"
-          >
-            <img src={sortIcon} alt="Sort" className="w-5 h-5" />
-          </button>
-
-          {showSortDropdown && (
-            <div className="absolute right-0 mt-2 w-3r bg-white border rounded-md shadow-lg">
-              <button
-                className={`block px-2 py-2 text-center w-full  ${
-                  sortOrder === "newest" ? "text-black" : ""
-                }`}
-                onClick={() => changeSortOrder("newest")}
-              >
-                Newest
-              </button>
-              <button
-                className={`block px-2 py-2 text-center w-full ${
-                  sortOrder === "oldest" ? "text-black" : ""
-                }`}
-                onClick={() => changeSortOrder("oldest")}
-              >
-                Oldest
-              </button>
-            </div>
-          )}
-        </div>
+        <SortButton rooms={notes} onSortedRooms={setSortedNotes} sortProps={["recent", "oldest"]} />
+        
       </div>
 
       <div className="notes-container grid grid-cols-4 gap-4">

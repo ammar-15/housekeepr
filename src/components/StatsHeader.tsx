@@ -51,14 +51,14 @@ const StatsHeader = ({ pagename, displayedRooms = [] }: StatsHeaderProps) => {
           const num = parseInt(room.assignedtoSUP.replace("SUP", ""), 10);
           return num > max ? num : max;
         } else {
-          console.log("maxHousekeeper can't find a room assigned to SUP");
+          console.log("maxSupervisor can't find a room assigned to SUP");
         }
         return max;
       }, 0);
 
       const totalRooms = roomsData.length;
       const dirtyRooms = roomsData.filter(
-        (room) => room.roomStatus === "Dirty"
+        ((room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE")
       ).length;
       const cleanRooms = roomsData.filter(
         (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
@@ -67,7 +67,7 @@ const StatsHeader = ({ pagename, displayedRooms = [] }: StatsHeaderProps) => {
         (room) => room.coStatus === "INSPECTED"
       ).length;
       const HSKfilterrooms = displayedRooms.filter(
-        (room) => room.roomStatus === "Dirty"
+        ((room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE")
       ).length;
       const SUPfilterrooms = displayedRooms.filter(
         (room) => room.roomStatus === "Clean"

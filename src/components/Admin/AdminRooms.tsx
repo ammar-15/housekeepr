@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import AdminNavbar from "./AdminNavbar.tsx";
+import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "./HSKRoomContainer.tsx";
 import ClearRooms from "./ClearRooms.tsx";
 import MoonIcon from "../assets/moon.svg";
@@ -25,10 +25,16 @@ const AdminRooms = () => {
 
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-
-
       <div className="AdminRoomsNav">
-        <AdminNavbar />
+        <Navbar
+          navItems={[
+            "Dashboard",
+            "Housekeeper",
+            "Supervisors",
+            "Rooms",
+            "Notes",
+          ]}
+        />
       </div>
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
         <h1 className="text-3xl text-wine">Rooms</h1>
