@@ -28,7 +28,7 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
             onClick={() => setActiveModal("HSK")}
             className="bg-white w-40 px-4 py-2 rounded-md shadow hover:bg-mistysky"
           >
-            Room Assign
+            Assign Room
           </button>
           <button
             onClick={() => setActiveModal("AUTO")}
