@@ -110,7 +110,7 @@ const AdminDashboard = () => {
             {Object.keys(housekeeperRooms).map((hskKey) => (
               <div
                 key={hskKey}
-                className="hsk-container p-4 bg-white rounded-md shadow-md w-40"
+                className="hsk-container p-4 bg-pearl rounded-md shadow-md w-40"
               >
                 <h2 className="text-lg font-bold text-center">{hskKey}</h2>
                 <div className="hsk-details text-center">
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
             {Object.keys(supervisorRooms).map((supKey) => (
               <div
                 key={supKey}
-                className="sup-container p-4 bg-white rounded-md shadow-md w-40"
+                className="sup-container p-4 bg-pearl rounded-md shadow-md w-40"
               >
                 <h2 className="text-lg font-bold text-center">{supKey}</h2>
                 <div className="sup-details text-center">
