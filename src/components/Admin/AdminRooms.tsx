@@ -7,6 +7,7 @@ import ClearRooms from "./ClearRooms.tsx";
 import MoonIcon from "../assets/moon.svg";
 import StatsHeader from "../StatsHeader.tsx";
 import RoomHeader from "./RoomHeader.tsx";
+import PrintIcon from "../assets/print.svg";
 
 const AdminRooms = () => {
   const [allRooms, setAllRooms] = useState<any[]>([]);
@@ -24,6 +25,10 @@ const AdminRooms = () => {
     return () => unsubscribe();
   }, []);
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="dashboard-container flex flex-col m-0 py-20 px-10">
       <div className="AdminRoomsNav">
@@ -40,8 +45,14 @@ const AdminRooms = () => {
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
         <h1 className="text-3xl text-wine">Rooms</h1>
         <div className="flex gap-1">
+        <button
+            className="ml-3 hover:bg-lightgreen p-2 rounded"
+            onClick={handlePrint}
+          >
+            <img src={PrintIcon} alt="Clear Rooms" className="w-5 h-5" />
+          </button>
           <button
-            className="ml-3 hover:bg-lightred p-2 rounded"
+            className=" hover:bg-lightred p-2 rounded"
             onClick={() => setShowClearModal(true)}
           >
             <img src={MoonIcon} alt="Clear Rooms" className="w-5 h-5" />
