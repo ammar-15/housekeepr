@@ -26,7 +26,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
   };
 
   return (
-    <div className="HSKRoomContainer flex items-center justify-between p-4 bg-white rounded-md shadow-md mb-2">
+    <div className="HSKRoomContainer flex items-center justify-between p-4 bg-pearl rounded-md shadow-md mb-2">
       <button onClick={toggleModal} className="mr-2">
         <img src={threedotsIcon} alt="Options" className="w-5 h-5" />
       </button>
