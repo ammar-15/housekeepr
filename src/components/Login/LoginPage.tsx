@@ -10,7 +10,6 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     if (username === "admin" && password === "admin") {
-      alert("Login successful!");
       navigate("/AdminDashboard");
     } else {
       alert("Invalid credentials. Please try again.");
