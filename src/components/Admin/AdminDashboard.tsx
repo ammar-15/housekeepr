@@ -15,16 +15,13 @@ export interface RoomData {
   time_stamp?: string;
 }
 
+type RoomAssignment = { previousRoom?: RoomData; currentRoom?: RoomData };
+
 let globalLastAssignedHSK: { [roomNumber: string]: string } = {}; //store as separate state make sure it doesn't get lost, useContext
 
 const AdminDashboard = () => {
-  const [housekeeperRooms, setHousekeeperRooms] = useState<{
-    [hsk: string]: { previousRoom?: RoomData; currentRoom?: RoomData };
-  }>({});
-
-  const [supervisorRooms, setSupervisorRooms] = useState<{
-    [sup: string]: { previousRoom?: RoomData; currentRoom?: RoomData };
-  }>({});
+  const [housekeeperRooms, setHousekeeperRooms] = useState<{[hsk: string]: RoomAssignment;}>({});
+  const [supervisorRooms, setSupervisorRooms] = useState<{[sup: string]: RoomAssignment;}>({});
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -39,12 +36,8 @@ const AdminDashboard = () => {
         time_stamp: doc.data().time_stamp || "",
       }));
 
-      const updatedHousekeeperRooms: {
-        [hsk: string]: { previousRoom?: RoomData; currentRoom?: RoomData };
-      } = {};
-      const updatedSupervisorRooms: {
-        [sup: string]: { previousRoom?: RoomData; currentRoom?: RoomData };
-      } = {};
+      const updatedHousekeeperRooms: { [hsk: string]: RoomAssignment } = {};
+      const updatedSupervisorRooms: { [sup: string]: RoomAssignment } = {};
 
       const newGlobalLastAssigned = { ...globalLastAssignedHSK };
 
