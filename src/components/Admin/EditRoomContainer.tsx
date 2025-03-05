@@ -21,12 +21,15 @@ const EditRoomContainer = ({
 }: EditRoomContainerProps) => {
   const [newRoomStatus, setNewRoomStatus] = useState(initialRoomStatus);
   const [newCoStatus, setNewCoStatus] = useState(initialCoStatus);
-  const [newAssignedto, setNewAssignedto] = useState(""); 
+  const [newAssignedto, setNewAssignedto] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         handleClose();
       }
     };
@@ -44,10 +47,10 @@ const EditRoomContainer = ({
     try {
       let updatedCoStatus = newCoStatus;
       const roomRef = doc(db, "AdminHSK", roomNumber);
-      
+
       let updatedassignedtoHSK = assignedtoHSK;
       let updatedassignedtoSUP = assignedtoSUP;
-      
+
       if (newAssignedto.trim() !== "") {
         if (newAssignedto.startsWith("HSK")) {
           updatedassignedtoHSK = newAssignedto;
@@ -78,8 +81,8 @@ const EditRoomContainer = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-35%">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 cursor-default" onClick={(e) => e.stopPropagation()} >
+      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-35%" onClick={(e) => e.stopPropagation()} >
         <h2 className="text-xl mb-4">Update Room {roomNumber}</h2>
         <div className="flex justify-between items-center mb-4">
           <div>
@@ -87,6 +90,7 @@ const EditRoomContainer = ({
             <select
               value={newRoomStatus}
               onChange={(e) => {
+                e.stopPropagation();
                 const selectedStatus = e.target.value;
                 setNewRoomStatus(selectedStatus);
                 if (selectedStatus === "Clean" && newCoStatus !== "STAYOVER") {
@@ -98,7 +102,7 @@ const EditRoomContainer = ({
                   setNewCoStatus("VACANT");
                 }
               }}
-              className="w-full p-2 border rounded-md"
+              className="w-full p-2 border rounded-md cursor-pointer"
             >
               <option value="Clean">Clean</option>
               <option value="ON CHANGE">ON CHANGE</option>
@@ -106,11 +110,13 @@ const EditRoomContainer = ({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium">Check Out Status</label>
+            <label className="block text-sm font-medium">
+              Check Out Status
+            </label>
             <select
               value={newCoStatus}
-              onChange={(e) => setNewCoStatus(e.target.value)}
-              className="w-full p-2 border rounded-md"
+              onChange={(e) => {e.stopPropagation(); setNewCoStatus(e.target.value)}}
+              className="w-full p-2 border rounded-md cursor-pointer"
             >
               <option value="DUE">DUE</option>
               <option value="OUT">OUT</option>
@@ -120,14 +126,15 @@ const EditRoomContainer = ({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium">Assign To</label>
-            <input
-              type="text"
-              placeholder="HSK# or SUP#"
+            <label className="block text-sm font-medium">Assigned To</label>
+            <select
               value={newAssignedto}
-              onChange={(e) => setNewAssignedto(e.target.value)}
-              className="w-full p-2 border rounded-md"
-            />
+              onChange={(e) => {e.stopPropagation(); setNewAssignedto(e.target.value)}}
+              className="w-3r p-2 border rounded-md cursor-pointer"
+            >
+              <option value={assignedtoHSK}>{assignedtoHSK}</option>
+              <option value={assignedtoSUP}>{assignedtoSUP}</option>
+            </select>
           </div>
         </div>
         <div className="flex justify-end">
