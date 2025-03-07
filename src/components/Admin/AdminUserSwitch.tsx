@@ -11,8 +11,8 @@ const AdminUserSwitch = () => {
     setIsDropdownVisible((prev) => !prev);
   };
 
-  const handleHSKdashboard = () => {
-    navigate("/HSKdashboard");
+  const handleHSK1dashboard = () => {
+    navigate("/HSK1dashboard");
   };
   const handleHSK2dashboard = () => {
     navigate("/HSK2dashboard");
@@ -21,8 +21,8 @@ const AdminUserSwitch = () => {
     navigate("/HSK3dashboard");
   };
 
-  const handleSUPdashboard = () => {
-    navigate("/SUPdashboard");
+  const handleSUP1dashboard = () => {
+    navigate("/SUP1dashboard");
   };
   const handleSUP2dashboard = () => {
     navigate("/SUP2dashboard");
@@ -73,7 +73,7 @@ const AdminUserSwitch = () => {
           <button onClick={handleAdminDashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
             Admin
           </button>
-          <button onClick={handleHSKdashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleHSK1dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
             Housekeeper 1
           </button>
           <button onClick={handleHSK2dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
@@ -82,7 +82,7 @@ const AdminUserSwitch = () => {
           <button onClick={handleHSK3dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
             Housekeeper 3
           </button>
-          <button onClick={handleSUPdashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleSUP1dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
             Supervisor 1
           </button>
           <button onClick={handleSUP2dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
