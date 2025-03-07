@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import HSKRoomContainer from "./HSKRoomContainer";
-import Navbar from "../Navbar.tsx";
+import AdminNavbar from "./AdminNavbar.tsx";
 import AdminStart from "./Admin Button/AdminStart";
 import StatsHeader from "../StatsHeader";
 import SortButton from "../SortButton.tsx";
@@ -26,11 +26,9 @@ const AdminSUP = () => {
   }, []);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <Navbar
-        navItems={["Dashboard", "Housekeeper", "Supervisors", "Rooms", "Notes"]}
-      />
-      <div className="dashboard-header flex justify-between items-center m-0 mb-5">
+    <div className="dashboard-container flex flex-col m-0 py-11p px-10">
+      <AdminNavbar />
+      <div className="dashboard-header flex justify-between items-center m-0 mb-4">
         <h1 className="text-3xl text-wine">Supervisors</h1>
         <StatsHeader pagename="AdminSUP" displayedRooms={SUProoms} />
       </div>

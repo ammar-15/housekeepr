@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import Navbar from "../Navbar";
+import AdminNavbar from "./AdminNavbar";
 import AdminStart from "./Admin Button/AdminStart";
 import StatsHeader from "../StatsHeader";
 
@@ -20,8 +20,12 @@ type RoomAssignment = { previousRoom?: RoomData; currentRoom?: RoomData };
 let globalLastAssignedHSK: { [roomNumber: string]: string } = {}; //store as separate state make sure it doesn't get lost, useContext
 
 const AdminDashboard = () => {
-  const [housekeeperRooms, setHousekeeperRooms] = useState<{[hsk: string]: RoomAssignment;}>({});
-  const [supervisorRooms, setSupervisorRooms] = useState<{[sup: string]: RoomAssignment;}>({});
+  const [housekeeperRooms, setHousekeeperRooms] = useState<{
+    [hsk: string]: RoomAssignment;
+  }>({});
+  const [supervisorRooms, setSupervisorRooms] = useState<{
+    [sup: string]: RoomAssignment;
+  }>({});
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -79,17 +83,9 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-20 px-10">
+    <div className="dashboard-container flex flex-col m-0 py-11p px-10">
       <div className="AdminNav">
-        <Navbar
-          navItems={[
-            "Dashboard",
-            "Housekeeper",
-            "Supervisors",
-            "Rooms",
-            "Notes",
-          ]}
-        />
+        <AdminNavbar />
       </div>
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
         <h1 className="text-3xl text-wine">Dashboard</h1>
