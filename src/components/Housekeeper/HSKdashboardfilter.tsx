@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 import StatsHeader from "../StatsHeader.tsx";
@@ -34,28 +33,27 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
   }, [assignedtoHSK]);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <Navbar navItems={["H-Dashboard", "Notes"]} />{" "}
-      <div className="dashboard-header flex justify-between items-center m-0 mb-5">
-        <h1 className="text-3xl text-wine">{assignedtoHSK}-Dashboard</h1>
-        <StatsHeader pagename="HSKfilter" displayedRooms={sortedRooms} />
-      </div>
-      <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
-      <div className="room-header">
-        <RoomHeader />
-      </div>
-      <div className="section-container">
-        {sortedRooms.length > 0 ? (
-          sortedRooms.map((room, index) => (
-            <HSKRoomContainer key={index} room={room} />
-          ))
-        ) : (
-          <div className="text-center text-gray text-lg mt-10 animate-bounce">
-            No rooms
-          </div>
-        )}
-      </div>
+    <>
+    <div className="dashboard-header flex justify-between items-center m-0 mb-4">
+      <h1 className="text-3xl text-wine">{assignedtoHSK}-Dashboard</h1>
+      <StatsHeader pagename="HSKfilter" displayedRooms={sortedRooms} />
     </div>
+    <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
+    <div className="room-header">
+      <RoomHeader />
+    </div>
+    <div className="section-container">
+      {sortedRooms.length > 0 ? (
+        sortedRooms.map((room, index) => (
+          <HSKRoomContainer key={index} room={room} />
+        ))
+      ) : (
+        <div className="text-center text-gray text-lg mt-10 animate-bounce">
+          No rooms
+        </div>
+      )}
+    </div>
+  </>
   );
 };
 
