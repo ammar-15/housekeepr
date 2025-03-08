@@ -14,6 +14,9 @@ const AdminRooms = () => {
   const [allRooms, setAllRooms] = useState<any[]>([]);
   const [showClearModal, setShowClearModal] = useState(false);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalRooms: 0
+  });
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -22,6 +25,12 @@ const AdminRooms = () => {
         id: doc.id,
         ...doc.data(),
       }));
+      const totalRooms = roomsData.length;
+      const updatedStats = {
+        totalRooms
+      };
+
+      setStats(updatedStats);
       setAllRooms(roomsData);
       setSortedRooms(roomsData);
     });
@@ -52,7 +61,7 @@ const AdminRooms = () => {
           >
             <img src={MoonIcon} alt="Clear Rooms" className="w-5 h-5" />
           </button>
-          <StatsHeader pagename="AdminRooms" />
+          <StatsHeader pagename="AdminRooms" stats={stats} />
         </div>
       </div>
       <SortButton rooms={allRooms} onSortedRooms={setSortedRooms} />

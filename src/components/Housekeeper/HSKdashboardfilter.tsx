@@ -13,6 +13,10 @@ interface HSKdashboardfilterProps {
 const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalRoomsToClean: 0,
+  });
+
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -24,7 +28,15 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
           (room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE") &&
           room.assignedtoHSK === assignedtoHSK
       );
+      const HSKfilterrooms = assignedRooms.filter(
+        ((room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE")
+      ).length;
 
+      const updatedStats = {
+        totalRoomsToClean: HSKfilterrooms,
+      };
+      
+      setStats(updatedStats);
       setFilteredRooms(assignedRooms);
       setSortedRooms(assignedRooms);
     });
@@ -36,7 +48,7 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
     <>
     <div className="dashboard-header flex justify-between items-center m-0 mb-4">
       <h1 className="text-3xl text-wine">{assignedtoHSK}-Dashboard</h1>
-      <StatsHeader pagename="HSKfilter" displayedRooms={sortedRooms} />
+      <StatsHeader pagename="HSKfilter" stats={stats} />
     </div>
     <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
     <div className="room-header">

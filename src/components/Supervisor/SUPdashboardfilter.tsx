@@ -13,6 +13,9 @@ interface SUPdashboardfilterProps {
 const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalRoomsToInspect: 0,
+  });
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -23,7 +26,15 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
         (room) =>
           room.roomStatus === "Clean" && room.assignedtoSUP === assignedtoSUP
       );
+      const SUPfilterrooms = assignedRooms.filter(
+        ((room) => room.roomStatus === "Clean")
+      ).length;
 
+      const updatedStats = {
+        totalRoomsToInspect: SUPfilterrooms,
+      };
+
+      setStats(updatedStats);
       setFilteredRooms(assignedRooms);
       setSortedRooms(assignedRooms);
     });
@@ -35,7 +46,7 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
     <>
       <div className="dashboard-header flex justify-between items-center m-0 mb-4">
         <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
-        <StatsHeader pagename="SUPfilter" displayedRooms={sortedRooms} />
+        <StatsHeader pagename="SUPfilter" stats={stats} />
       </div>
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
       <div className="room-header">

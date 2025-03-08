@@ -26,6 +26,11 @@ const AdminDashboard = () => {
   const [supervisorRooms, setSupervisorRooms] = useState<{
     [sup: string]: RoomAssignment;
   }>({});
+  const [stats, setStats] = useState({
+    dirtyRooms: 0,
+    cleanRooms: 0,
+    inspectedRooms: 0,
+  });
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -39,6 +44,16 @@ const AdminDashboard = () => {
         coStatus: doc.data().coStatus || "",
         time_stamp: doc.data().time_stamp || "",
       }));
+
+      const dirtyRooms = roomsData.filter(
+        (room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE"
+      ).length;
+      const cleanRooms = roomsData.filter(
+        (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
+      ).length;
+      const inspectedRooms = roomsData.filter(
+        (room) => room.coStatus === "INSPECTED"
+      ).length;
 
       const updatedHousekeeperRooms: { [hsk: string]: RoomAssignment } = {};
       const updatedSupervisorRooms: { [sup: string]: RoomAssignment } = {};
@@ -74,6 +89,14 @@ const AdminDashboard = () => {
           }
         }
       });
+
+      const updatedStats = {
+        dirtyRooms,
+        cleanRooms,
+        inspectedRooms,
+      };
+
+      setStats(updatedStats);
       setHousekeeperRooms(updatedHousekeeperRooms);
       setSupervisorRooms(updatedSupervisorRooms);
       globalLastAssignedHSK = newGlobalLastAssigned;
@@ -89,7 +112,7 @@ const AdminDashboard = () => {
       </div>
       <div className="dashboard-header flex justify-between items-center m-0 mb-10">
         <h1 className="text-3xl text-wine">Dashboard</h1>
-        <StatsHeader pagename="AdminDashboard" />
+        <StatsHeader pagename="AdminDashboard" stats={stats} />
       </div>
 
       <div className="section-container">
