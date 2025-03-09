@@ -35,7 +35,7 @@ const AdminSUP = () => {
       }, 0);
       
       const SUPfilterrooms = allRooms.filter(
-        (room) => room.roomStatus === "Clean"
+        (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
       ).length;
 
       const updatedStats = {
