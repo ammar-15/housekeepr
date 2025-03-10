@@ -26,7 +26,7 @@ const AdminDashboard = () => {
   const [supervisorRooms, setSupervisorRooms] = useState<{
     [sup: string]: RoomAssignment;
   }>(() =>{
-    const SUPstoredData = localStorage.getItem("supervisorRooms");
+    const SUPstoredData = sessionStorage.getItem("supervisorRooms");
     return SUPstoredData ? JSON.parse(SUPstoredData) : {};
   });
   const [stats, setStats] = useState({
@@ -131,11 +131,13 @@ const AdminDashboard = () => {
         "housekeeperRooms",
         JSON.stringify(result.updatedHousekeeperRooms)
       );
+      sessionStorage.setItem(
+        "supervisorRooms",
+        JSON.stringify(result.updatedSupervisorRooms)
+      );      
       setStats({ dirtyRooms, cleanRooms, inspectedRooms });
       setHousekeeperRooms(result.updatedHousekeeperRooms);
       setSupervisorRooms(result.updatedSupervisorRooms);
-      console.log("housekeeperRooms", result.updatedHousekeeperRooms);
-      console.log("supervisorRooms", result.updatedSupervisorRooms);
       lastAssignedHSKRef.current = result.HSKnewLastAssigned;
       lastAssignedSUPRef.current = result.SUPnewLastAssigned;
     });
