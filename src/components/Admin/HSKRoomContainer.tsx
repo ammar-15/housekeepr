@@ -1,6 +1,5 @@
 import { useState } from "react";
 import EditRoomContainer from "./EditRoomContainer";
-import threedotsIcon from "../assets/edit.svg";
 
 interface RoomDataType {
   roomNumber: string;
@@ -26,10 +25,7 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
   };
 
   return (
-    <div className="HSKRoomContainer flex items-center justify-between p-4 bg-pearl rounded-md shadow-md mb-2">
-      <button onClick={toggleModal} className="mr-2">
-        <img src={threedotsIcon} alt="Options" className="w-5 h-5" />
-      </button>
+    <div className="HSKRoomContainer flex items-center justify-between py-4 bg-pearl rounded-md shadow-md mb-2 cursor-pointer" onClick={toggleModal}>
       <p className="flex-1 text-center">{room.roomNumber}</p>
       <p className="flex-1 text-center">{room.roomType}</p>
       <p

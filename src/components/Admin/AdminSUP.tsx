@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import HSKRoomContainer from "./HSKRoomContainer";
-import Navbar from "../Navbar.tsx";
+import AdminNavbar from "./AdminNavbar.tsx";
 import AdminStart from "./Admin Button/AdminStart";
 import StatsHeader from "../StatsHeader";
 import SortButton from "../SortButton.tsx";
@@ -11,6 +11,11 @@ import RoomHeader from "./RoomHeader.tsx";
 const AdminSUP = () => {
   const [SUProoms, setSUProoms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalSupervisors: 0,
+    totalRoomsToInspect: 0,
+  });
+
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -19,6 +24,26 @@ const AdminSUP = () => {
       const cleanRooms = allRooms.filter(
         (room) => room.roomStatus === "Clean" || room.coStatus === "INSPECTED"
       );
+      const maxSupervisor = cleanRooms.reduce((max, room) => {
+        if (room.assignedtoSUP && room.assignedtoSUP.startsWith("SUP")) {
+          const num = parseInt(room.assignedtoSUP.replace("SUP", ""), 10);
+          return num > max ? num : max;
+        } else {
+          console.log("maxSupervisor can't find a room assigned to SUP");
+        }
+        return max;
+      }, 0);
+      
+      const SUPfilterrooms = allRooms.filter(
+        (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
+      ).length;
+
+      const updatedStats = {
+        totalSupervisors: maxSupervisor,
+        totalRoomsToInspect: SUPfilterrooms,
+      };
+
+      setStats(updatedStats);
       setSUProoms(cleanRooms);
       setSortedRooms(cleanRooms);
     });
@@ -26,13 +51,11 @@ const AdminSUP = () => {
   }, []);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <Navbar
-        navItems={["Dashboard", "Housekeeper", "Supervisors", "Rooms", "Notes"]}
-      />
-      <div className="dashboard-header flex justify-between items-center m-0 mb-5">
+    <div className="dashboard-container flex flex-col m-0 py-11p px-10">
+      <AdminNavbar />
+      <div className="dashboard-header flex justify-between items-center m-0 mb-4">
         <h1 className="text-3xl text-wine">Supervisors</h1>
-        <StatsHeader pagename="AdminSUP" displayedRooms={SUProoms} />
+        <StatsHeader pagename="AdminSUP" stats={stats} />
       </div>
       <SortButton rooms={SUProoms} onSortedRooms={setSortedRooms} />
       <div className="room-header">

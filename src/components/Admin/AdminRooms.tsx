@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import Navbar from "../Navbar.tsx";
+import AdminNavbar from "./AdminNavbar.tsx";
 import HSKRoomContainer from "./HSKRoomContainer.tsx";
 import ClearRooms from "./ClearRooms.tsx";
 import MoonIcon from "../assets/moon.svg";
 import StatsHeader from "../StatsHeader.tsx";
 import RoomHeader from "./RoomHeader.tsx";
 import PrintIcon from "../assets/print.svg";
+import SortButton from "../SortButton.tsx";
 
 const AdminRooms = () => {
   const [allRooms, setAllRooms] = useState<any[]>([]);
   const [showClearModal, setShowClearModal] = useState(false);
+  const [sortedRooms, setSortedRooms] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalRooms: 0
+  });
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -20,7 +25,14 @@ const AdminRooms = () => {
         id: doc.id,
         ...doc.data(),
       }));
+      const totalRooms = roomsData.length;
+      const updatedStats = {
+        totalRooms
+      };
+
+      setStats(updatedStats);
       setAllRooms(roomsData);
+      setSortedRooms(roomsData);
     });
     return () => unsubscribe();
   }, []);
@@ -30,22 +42,14 @@ const AdminRooms = () => {
   };
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-20 px-10">
+    <div className="dashboard-container flex flex-col m-0 py-11p px-10">
       <div className="AdminRoomsNav">
-        <Navbar
-          navItems={[
-            "Dashboard",
-            "Housekeeper",
-            "Supervisors",
-            "Rooms",
-            "Notes",
-          ]}
-        />
+        <AdminNavbar />
       </div>
-      <div className="dashboard-header flex justify-between items-center m-0 mb-10">
+      <div className="dashboard-header flex justify-between items-center m-0 mb-4">
         <h1 className="text-3xl text-wine">Rooms</h1>
         <div className="flex gap-1">
-        <button
+          <button
             className="ml-3 hover:bg-lightgreen p-2 rounded"
             onClick={handlePrint}
           >
@@ -57,15 +61,16 @@ const AdminRooms = () => {
           >
             <img src={MoonIcon} alt="Clear Rooms" className="w-5 h-5" />
           </button>
-          <StatsHeader pagename="AdminRooms" />
+          <StatsHeader pagename="AdminRooms" stats={stats} />
         </div>
       </div>
+      <SortButton rooms={allRooms} onSortedRooms={setSortedRooms} />
       <div className="room-header">
         <RoomHeader />
       </div>
       <div className="section-container">
         {allRooms.length > 0 ? (
-          allRooms.map((room, index) => (
+          sortedRooms.map((room, index) => (
             <HSKRoomContainer key={index} room={room} />
           ))
         ) : (

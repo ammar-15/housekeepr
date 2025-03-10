@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
-import Navbar from "../Navbar.tsx";
 import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
 import SortButton from "../SortButton.tsx";
 import StatsHeader from "../StatsHeader.tsx";
@@ -14,6 +13,9 @@ interface SUPdashboardfilterProps {
 const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalRoomsToInspect: 0,
+  });
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -24,7 +26,15 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
         (room) =>
           room.roomStatus === "Clean" && room.assignedtoSUP === assignedtoSUP
       );
+      const SUPfilterrooms = assignedRooms.filter(
+        ((room) => room.roomStatus === "Clean")
+      ).length;
 
+      const updatedStats = {
+        totalRoomsToInspect: SUPfilterrooms,
+      };
+
+      setStats(updatedStats);
       setFilteredRooms(assignedRooms);
       setSortedRooms(assignedRooms);
     });
@@ -33,28 +43,27 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
   }, [assignedtoSUP]);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-20 px-10">
-      <Navbar navItems={["S-Dashboard", "Notes"]} />{" "}
-      <div className="dashboard-header flex justify-between items-center m-0 mb-5">
+    <>
+      <div className="dashboard-header flex justify-between items-center m-0 mb-4">
         <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
-        <StatsHeader pagename="SUPfilter" displayedRooms={sortedRooms} />
-
+        <StatsHeader pagename="SUPfilter" stats={stats} />
       </div>
-
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
       <div className="room-header">
         <RoomHeader />
       </div>
       <div className="section-container">
-        {sortedRooms.length > 0 ? (sortedRooms.map((room, index) => (
-          <HSKRoomContainer key={index} room={room} />
-        ))) : (
+        {sortedRooms.length > 0 ? (
+          sortedRooms.map((room, index) => (
+            <HSKRoomContainer key={index} room={room} />
+          ))
+        ) : (
           <div className="text-center text-gray text-lg mt-10 animate-bounce">
             No rooms
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
