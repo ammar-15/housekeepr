@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import AdminNavbar from "./AdminNavbar";
@@ -12,25 +12,31 @@ export interface RoomData {
   roomType?: string;
   roomStatus?: string;
   coStatus?: string;
-  time_stamp?: string;
 }
 
 type RoomAssignment = { previousRoom?: RoomData; currentRoom?: RoomData };
 
-let globalLastAssignedHSK: { [roomNumber: string]: string } = {}; //store as separate state make sure it doesn't get lost, useContext
-
 const AdminDashboard = () => {
   const [housekeeperRooms, setHousekeeperRooms] = useState<{
     [hsk: string]: RoomAssignment;
-  }>({});
+  }>(() => {
+    const HSKstoredData = sessionStorage.getItem("housekeeperRooms");
+    return HSKstoredData ? JSON.parse(HSKstoredData) : {};
+  });
   const [supervisorRooms, setSupervisorRooms] = useState<{
     [sup: string]: RoomAssignment;
-  }>({});
+  }>(() =>{
+    const SUPstoredData = localStorage.getItem("supervisorRooms");
+    return SUPstoredData ? JSON.parse(SUPstoredData) : {};
+  });
   const [stats, setStats] = useState({
     dirtyRooms: 0,
     cleanRooms: 0,
     inspectedRooms: 0,
   });
+
+  const lastAssignedHSKRef = useRef<Record<string, string>>({});
+  const lastAssignedSUPRef = useRef<Record<string, string>>({});
 
   useEffect(() => {
     const roomsCollectionRef = collection(db, "AdminHSK");
@@ -42,7 +48,6 @@ const AdminDashboard = () => {
         roomType: doc.data().roomType || "",
         roomStatus: doc.data().roomStatus || "",
         coStatus: doc.data().coStatus || "",
-        time_stamp: doc.data().time_stamp || "",
       }));
 
       const dirtyRooms = roomsData.filter(
@@ -55,51 +60,84 @@ const AdminDashboard = () => {
         (room) => room.coStatus === "INSPECTED"
       ).length;
 
-      const updatedHousekeeperRooms: { [hsk: string]: RoomAssignment } = {};
-      const updatedSupervisorRooms: { [sup: string]: RoomAssignment } = {};
+      const result = roomsData.reduce(
+        (acc, room) => {
+          const {
+            assignedtoHSK,
+            assignedtoSUP,
+            roomStatus,
+            coStatus,
+            roomNumber,
+          } = room;
 
-      const newGlobalLastAssigned = { ...globalLastAssignedHSK };
+          if (assignedtoHSK) {
+            if (!acc.updatedHousekeeperRooms[assignedtoHSK]) {
+              acc.updatedHousekeeperRooms[assignedtoHSK] = {};
+            }
 
-      roomsData.forEach((room) => {
-        if (room.assignedtoHSK) {
-          if (!updatedHousekeeperRooms[room.assignedtoHSK]) {
-            updatedHousekeeperRooms[room.assignedtoHSK] = {};
-          }
-          if (room.roomStatus === "ON CHANGE") {
-            updatedHousekeeperRooms[room.assignedtoHSK].currentRoom = room;
-            newGlobalLastAssigned[room.roomNumber] = room.assignedtoHSK;
-          } else if (room.roomStatus === "Clean") {
-            const lastHSK = newGlobalLastAssigned[room.roomNumber];
-            if (lastHSK) {
-              if (!updatedHousekeeperRooms[lastHSK]) {
-                updatedHousekeeperRooms[lastHSK] = {};
+            if (roomStatus === "ON CHANGE") {
+              acc.updatedHousekeeperRooms[assignedtoHSK].currentRoom = room;
+              acc.HSKnewLastAssigned[roomNumber] = assignedtoHSK;
+            } else if (roomStatus === "Clean") {
+              const originalHSK = acc.HSKnewLastAssigned[roomNumber];
+              if (originalHSK) {
+                if (!acc.updatedHousekeeperRooms[originalHSK]) {
+                  acc.updatedHousekeeperRooms[originalHSK] = {};
+                }
+                acc.updatedHousekeeperRooms[originalHSK].previousRoom = room;
+                acc.updatedHousekeeperRooms[assignedtoHSK].currentRoom =
+                  undefined;
               }
-              updatedHousekeeperRooms[lastHSK].previousRoom = room;
             }
           }
-        }
-        if (room.assignedtoSUP) {
-          if (!updatedSupervisorRooms[room.assignedtoSUP]) {
-            updatedSupervisorRooms[room.assignedtoSUP] = {};
-          }
-          if (room.coStatus === "INSPECTED") {
-            updatedSupervisorRooms[room.assignedtoSUP].previousRoom = room;
-          } else if (room.roomStatus === "Clean") {
-            updatedSupervisorRooms[room.assignedtoSUP].currentRoom = room;
-          }
-        }
-      });
 
-      const updatedStats = {
-        dirtyRooms,
-        cleanRooms,
-        inspectedRooms,
-      };
+          if (assignedtoSUP) {
+            if (!acc.updatedSupervisorRooms[assignedtoSUP]) {
+              acc.updatedSupervisorRooms[assignedtoSUP] = {};
+            }
 
-      setStats(updatedStats);
-      setHousekeeperRooms(updatedHousekeeperRooms);
-      setSupervisorRooms(updatedSupervisorRooms);
-      globalLastAssignedHSK = newGlobalLastAssigned;
+            if (roomStatus === "Clean" && coStatus !== "INSPECTED") {
+              acc.updatedSupervisorRooms[assignedtoSUP].currentRoom = room;
+              acc.SUPnewLastAssigned[roomNumber] = assignedtoSUP;
+            } else if (roomStatus === "Clean" && coStatus === "INSPECTED") {
+              const originalSUP = acc.SUPnewLastAssigned[roomNumber];
+              if (originalSUP) {
+                if (!acc.updatedSupervisorRooms[originalSUP]) {
+                  acc.updatedSupervisorRooms[originalSUP] = {};
+                }
+                acc.updatedSupervisorRooms[originalSUP].previousRoom = room;
+                acc.updatedSupervisorRooms[originalSUP].currentRoom =
+                  undefined;
+              }
+            }
+          }
+
+          return acc;
+        },
+        {
+          updatedHousekeeperRooms: JSON.parse(
+            sessionStorage.getItem("housekeeperRooms") || "{}"
+          ),
+          updatedSupervisorRooms: JSON.parse(
+            sessionStorage.getItem("supervisorRooms") || "{}"
+          ),
+          HSKnewLastAssigned: { ...lastAssignedHSKRef.current },
+          SUPnewLastAssigned: { ...lastAssignedSUPRef.current },
+
+        }
+      );
+
+      sessionStorage.setItem(
+        "housekeeperRooms",
+        JSON.stringify(result.updatedHousekeeperRooms)
+      );
+      setStats({ dirtyRooms, cleanRooms, inspectedRooms });
+      setHousekeeperRooms(result.updatedHousekeeperRooms);
+      setSupervisorRooms(result.updatedSupervisorRooms);
+      console.log("housekeeperRooms", result.updatedHousekeeperRooms);
+      console.log("supervisorRooms", result.updatedSupervisorRooms);
+      lastAssignedHSKRef.current = result.HSKnewLastAssigned;
+      lastAssignedSUPRef.current = result.SUPnewLastAssigned;
     });
 
     return () => unsubscribe();
