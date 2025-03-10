@@ -85,6 +85,8 @@ const AdminDashboard = () => {
                   acc.updatedHousekeeperRooms[originalHSK] = {};
                 }
                 acc.updatedHousekeeperRooms[originalHSK].previousRoom = room;
+                acc.updatedHousekeeperRooms[assignedtoHSK].currentRoom =
+                  undefined;
               }
             }
           }
@@ -104,6 +106,8 @@ const AdminDashboard = () => {
                   acc.updatedSupervisorRooms[originalSUP] = {};
                 }
                 acc.updatedSupervisorRooms[originalSUP].previousRoom = room;
+                acc.updatedSupervisorRooms[originalSUP].currentRoom =
+                  undefined;
               }
             }
           }
@@ -127,6 +131,10 @@ const AdminDashboard = () => {
         "housekeeperRooms",
         JSON.stringify(result.updatedHousekeeperRooms)
       );
+      sessionStorage.setItem(
+        "supervisorRooms",
+        JSON.stringify(result.updatedSupervisorRooms)
+      );      
       setStats({ dirtyRooms, cleanRooms, inspectedRooms });
       setHousekeeperRooms(result.updatedHousekeeperRooms);
       setSupervisorRooms(result.updatedSupervisorRooms);
