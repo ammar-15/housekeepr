@@ -17,15 +17,12 @@ export interface RoomData {
 type RoomAssignment = { previousRoom?: RoomData; currentRoom?: RoomData };
 
 const AdminDashboard = () => {
-  const [housekeeperRooms, setHousekeeperRooms] = useState<{
-    [hsk: string]: RoomAssignment;
-  }>(() => {
+  const [housekeeperRooms, setHousekeeperRooms] = useState<Record<string, RoomAssignment>>(() => {
     const HSKstoredData = sessionStorage.getItem("housekeeperRooms");
     return HSKstoredData ? JSON.parse(HSKstoredData) : {};
   });
-  const [supervisorRooms, setSupervisorRooms] = useState<{
-    [sup: string]: RoomAssignment;
-  }>(() =>{
+  
+  const [supervisorRooms, setSupervisorRooms] = useState<Record <string, RoomAssignment>>(() =>{
     const SUPstoredData = sessionStorage.getItem("supervisorRooms");
     return SUPstoredData ? JSON.parse(SUPstoredData) : {};
   });
