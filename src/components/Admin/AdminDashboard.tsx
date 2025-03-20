@@ -17,12 +17,16 @@ export interface RoomData {
 type RoomAssignment = { previousRoom?: RoomData; currentRoom?: RoomData };
 
 const AdminDashboard = () => {
-  const [housekeeperRooms, setHousekeeperRooms] = useState<Record<string, RoomAssignment>>(() => {
+  const [housekeeperRooms, setHousekeeperRooms] = useState<
+    Record<string, RoomAssignment>
+  >(() => {
     const HSKstoredData = sessionStorage.getItem("housekeeperRooms");
     return HSKstoredData ? JSON.parse(HSKstoredData) : {};
   });
-  
-  const [supervisorRooms, setSupervisorRooms] = useState<Record <string, RoomAssignment>>(() =>{
+
+  const [supervisorRooms, setSupervisorRooms] = useState<
+    Record<string, RoomAssignment>
+  >(() => {
     const SUPstoredData = sessionStorage.getItem("supervisorRooms");
     return SUPstoredData ? JSON.parse(SUPstoredData) : {};
   });
@@ -103,8 +107,7 @@ const AdminDashboard = () => {
                   acc.updatedSupervisorRooms[originalSUP] = {};
                 }
                 acc.updatedSupervisorRooms[originalSUP].previousRoom = room;
-                acc.updatedSupervisorRooms[originalSUP].currentRoom =
-                  undefined;
+                acc.updatedSupervisorRooms[originalSUP].currentRoom = undefined;
               }
             }
           }
@@ -120,7 +123,6 @@ const AdminDashboard = () => {
           ),
           HSKnewLastAssigned: { ...lastAssignedHSKRef.current },
           SUPnewLastAssigned: { ...lastAssignedSUPRef.current },
-
         }
       );
 
@@ -131,7 +133,7 @@ const AdminDashboard = () => {
       sessionStorage.setItem(
         "supervisorRooms",
         JSON.stringify(result.updatedSupervisorRooms)
-      );      
+      );
       setStats({ dirtyRooms, cleanRooms, inspectedRooms });
       setHousekeeperRooms(result.updatedHousekeeperRooms);
       setSupervisorRooms(result.updatedSupervisorRooms);
@@ -143,19 +145,19 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-11p px-10">
+    <div className="dashboard-container flex flex-col px-8 sm:px-6 md:px-10 py-11p">
       <div className="AdminNav">
         <AdminNavbar />
       </div>
-      <div className="dashboard-header flex justify-between items-center m-0 mb-10">
-        <h1 className="text-3xl text-wine">Dashboard</h1>
+      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
+        <h1 className="text-3xl sm:text-3xl text-wine">Dashboard</h1>
         <StatsHeader pagename="AdminDashboard" stats={stats} />
       </div>
 
       <div className="section-container">
-        <h2 className="housekeeperheader-admin text-lg pb-5">Housekeepers</h2>
+        <h2 className="housekeeperheader-admin text-lg pt-2 sm:pt-0 pb-2 text-wine">Housekeepers</h2>
         {Object.keys(housekeeperRooms).length > 0 ? (
-          <div className="housekeepers-container gap-5 flex pb-5">
+          <div className="housekeepers-container gap-5 flex flex-wrap pb-5">
             {Object.keys(housekeeperRooms).map((hskKey) => (
               <div
                 key={hskKey}
@@ -190,9 +192,9 @@ const AdminDashboard = () => {
         )}
       </div>
       <div className="section-container">
-        <h2 className="supervisorheader-admin text-lg pb-5">Supervisors</h2>
+        <h2 className="supervisorheader-admin text-lg pt-2 sm:pt-0 pb-2 text-wine">Supervisors</h2>
         {Object.keys(supervisorRooms).length > 0 ? (
-          <div className="supervisors-container gap-5 flex pb-5">
+          <div className="supervisors-container gap-5 flex flex-wrap pb-5">
             {Object.keys(supervisorRooms).map((supKey) => (
               <div
                 key={supKey}

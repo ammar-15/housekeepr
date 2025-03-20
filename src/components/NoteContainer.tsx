@@ -59,7 +59,7 @@ const NoteContainer = () => {
   };
 
   return (
-    <div className="notecontainer-wrapper w-full">
+    <div className="note-container flex flex-col ">
       <div className="noteheader-container flex justify-between items-center m-0 mb-4">
         <h2 className="text-3xl text-wine">Notes</h2>
         <SortButton
@@ -69,7 +69,7 @@ const NoteContainer = () => {
         />
       </div>
 
-      <div className="notes-container grid grid-cols-4 gap-4">
+      <div className="notes-container grid sm:grid-cols-4 grid-cols-2 gap-4">
         {sortedNotes.map((note) => (
           <Notes
             key={note.id}

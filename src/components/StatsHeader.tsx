@@ -16,7 +16,7 @@ interface StatsHeaderProps {
 
 const StatsHeader = ({ pagename, stats }: StatsHeaderProps) => {
   const adminDashboardStats = (
-    <div className="stats-dashoard flex bg-clay text-white rounded-md px-3 py-1.5">
+    <div className="stats-dashoard  flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2 ">
       <div className="stats-box px-2">
         <span>Dirty Rooms: {stats.dirtyRooms}</span>
       </div>
@@ -30,18 +30,18 @@ const StatsHeader = ({ pagename, stats }: StatsHeaderProps) => {
   );
 
   const adminHSKStats = (
-    <div className="stats-HSK flex bg-clay text-white rounded-md px-3 py-1.5">
-      <div className="stats-box px-2">
+    <div className="stats-HSK flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2 ">
+      <div className="stats-box sm:px-2">
         <span>Total Housekeepers: {stats.totalHousekeepers}</span>
       </div>
-      <div className="stats-box px-2">
+      <div className="stats-box sm:px-2">
         <span>Total Rooms to Clean: {stats.totalRoomsToClean}</span>
       </div>
     </div>
   );
 
   const adminSUPStats = (
-    <div className="stats-HSK flex bg-clay text-white rounded-md px-3 py-1.5">
+    <div className="stats-SUP flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2 ">
       <div className="stats-box px-2">
         <span>Total Supervisors: {stats.totalSupervisors}</span>
       </div>
@@ -52,19 +52,19 @@ const StatsHeader = ({ pagename, stats }: StatsHeaderProps) => {
   );
 
   const adminRoomsStats = (
-    <div className="stats-box flex bg-clay text-white rounded-md px-5 py-1.5">
+    <div className="stats-room flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2 ">
       <span>Total Rooms: {stats.totalRooms}</span>
     </div>
   );
 
   const hskFilterStats = (
-    <div className="stats-box flex bg-clay text-white rounded-md px-5 py-1.5">
+    <div className="stats-hskfilter flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2 ">
       <span>Total Rooms to Clean: {stats.totalRoomsToClean}</span>
     </div>
   );
 
   const supFilterStats = (
-    <div className="stats-box flex bg-clay text-white rounded-md px-5 py-1.5">
+    <div className="stats-hskfilter flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2 ">
       <span>Total Rooms to Inspect: {stats.totalRoomsToInspect}</span>
     </div>
   );
