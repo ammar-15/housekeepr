@@ -57,7 +57,7 @@ const AdminUserSwitch = () => {
   }, [isDropdownVisible]);
 
   return (
-    <div className="container w-10r">
+    <div className="container">
       <button
         onClick={toggleUserSwitch}
         className="user-switch-button focus:outline-none"
