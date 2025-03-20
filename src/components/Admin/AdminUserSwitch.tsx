@@ -57,7 +57,7 @@ const AdminUserSwitch = () => {
   }, [isDropdownVisible]);
 
   return (
-    <div className="container w-10r">
+    <div className="container">
       <button
         onClick={toggleUserSwitch}
         className="user-switch-button focus:outline-none"
@@ -70,25 +70,25 @@ const AdminUserSwitch = () => {
           className="absolute top-12 left-0 bg-white text-black shadow-lg rounded-md p-2 flex flex-col gap-2"
    
         >
-          <button onClick={handleAdminDashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleAdminDashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Admin
           </button>
-          <button onClick={handleHSK1dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleHSK1dashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Housekeeper 1
           </button>
-          <button onClick={handleHSK2dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleHSK2dashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Housekeeper 2
           </button>
-          <button onClick={handleHSK3dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleHSK3dashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Housekeeper 3
           </button>
-          <button onClick={handleSUP1dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleSUP1dashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Supervisor 1
           </button>
-          <button onClick={handleSUP2dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleSUP2dashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Supervisor 2
           </button>
-          <button onClick={handleSUP3dashboard} className="px-4 py-2 hover:bg-mistysky rounded-md text-sm">
+          <button onClick={handleSUP3dashboard} className="px-4 py-2 text-nowrap hover:bg-mistysky rounded-md text-sm">
             Supervisor 3
           </button>
         </div>

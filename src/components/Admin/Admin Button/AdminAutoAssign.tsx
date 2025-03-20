@@ -133,7 +133,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-30%">
+      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-96">
         <h2 className="text-xl mb-4">Auto Assign Rooms</h2>
         <div className="flex space-x-4">
           <div className="w-50%">

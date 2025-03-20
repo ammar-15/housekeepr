@@ -18,7 +18,7 @@ const SUPNavbar = ({ assignedtoSUP }: SUPNavbarProps) => {
   };
 
   return (
-    <nav className="navbar fixed z-10 px-10 py-2 top-0 left-0 right-0 flex justify-between items-center bg-chocolate text-white">
+    <nav className="navbar fixed z-10 top-0 left-0 right-0 bg-chocolate text-white px-8 md:px-10 py-2 flex justify-between items-center">
       <div className="relative">
         <AdminUserSwitch />
       </div>

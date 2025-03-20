@@ -82,9 +82,9 @@ const EditRoomContainer = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 cursor-default" onClick={(e) => e.stopPropagation()} >
-      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-35%" onClick={(e) => e.stopPropagation()} >
+      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-100" onClick={(e) => e.stopPropagation()} >
         <h2 className="text-xl mb-4">Update Room {roomNumber}</h2>
-        <div className="flex justify-between items-center mb-4">
+        <div className="grid grid-cols-1 sm:flex sm:flex-row justify-between items-center gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium">Room Status</label>
             <select
@@ -130,7 +130,7 @@ const EditRoomContainer = ({
             <select
               value={newAssignedto}
               onChange={(e) => {e.stopPropagation(); setNewAssignedto(e.target.value)}}
-              className="w-3r p-2 border rounded-md cursor-pointer"
+              className="w-5r sm:w-3r p-2 border rounded-md cursor-pointer"
             >
               <option value={assignedtoHSK}>{assignedtoHSK}</option>
               <option value={assignedtoSUP}>{assignedtoSUP}</option>

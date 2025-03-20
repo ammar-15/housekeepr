@@ -1,49 +1,100 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import AdminUserSwitch from "./AdminUserSwitch";
+import menuIcon from "../assets/menu.svg";
 
 const AdminNavbar = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleDashboard = () => {
-    navigate("../AdminDashboard");
-  };
-  const handleHousekeeper = () => {
-    navigate("../AdminHSK");
-  };
-  const handleSupervisor = () => {
-    navigate("../AdminSUP");
-  };
-  const handleRooms = () => {
-    navigate("../AdminRooms");
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
-  const handleNotes = () => {
-    navigate("../AdminNotes");
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setIsOpen(false);
   };
 
   return (
-    <nav className="navbar fixed z-10 px-10 py-2 top-0 left-0 right-0 flex justify-between items-center bg-chocolate text-white">
+    <nav className="navbar fixed z-10 top-0 left-0 right-0 bg-chocolate text-white px-8 md:px-10 py-2 flex justify-between items-center">
       <div className="relative">
-            <AdminUserSwitch />
+        <AdminUserSwitch />
       </div>
 
-      <div className="flex gap-5">
-        <button onClick={handleDashboard} className="hover:underline">
+      <div className="hidden md:flex gap-5">
+        <button
+          onClick={() => handleNavigate("../AdminDashboard")}
+          className="hover:underline"
+        >
           Dashboard
         </button>
-        <button onClick={handleHousekeeper} className="hover:underline">
+        <button
+          onClick={() => handleNavigate("../AdminHSK")}
+          className="hover:underline"
+        >
           Housekeeper
         </button>
-        <button onClick={handleSupervisor} className="hover:underline">
+        <button
+          onClick={() => handleNavigate("../AdminSUP")}
+          className="hover:underline"
+        >
           Supervisors
         </button>
-        <button onClick={handleRooms} className="hover:underline">
+        <button
+          onClick={() => handleNavigate("../AdminRooms")}
+          className="hover:underline"
+        >
           Rooms
         </button>
-        <button onClick={handleNotes} className="hover:underline">
+        <button
+          onClick={() => handleNavigate("../AdminNotes")}
+          className="hover:underline"
+        >
+          Notes
+        </button>
+      </div>
+
+      <div className="md:hidden">
+        <button onClick={toggleMenu}>
+          <img src={menuIcon} className="w-8 h-8 invert" alt="menu" />
+        </button>
+      </div>
+
+      {isOpen && (
+        <div className="absolute top-full right-10 mt-2 w-48 bg-chocolate text-white border border-white rounded-lg shadow-lg md:hidden flex flex-col gap-2 p-4 z-20">
+          <button
+            onClick={() => handleNavigate("../AdminDashboard")}
+            className="hover:underline text-left"
+          >
+            Dashboard
+          </button>
+          <button
+            onClick={() => handleNavigate("../AdminHSK")}
+            className="hover:underline text-left"
+          >
+            Housekeeper
+          </button>
+          <button
+            onClick={() => handleNavigate("../AdminSUP")}
+            className="hover:underline text-left"
+          >
+            Supervisors
+          </button>
+          <button
+            onClick={() => handleNavigate("../AdminRooms")}
+            className="hover:underline text-left"
+          >
+            Rooms
+          </button>
+          <button
+            onClick={() => handleNavigate("../AdminNotes")}
+            className="hover:underline text-left"
+          >
             Notes
           </button>
-      </div>
+        </div>
+      )}
     </nav>
   );
 };

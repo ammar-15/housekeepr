@@ -73,7 +73,7 @@ const SortButton = ({
   }, [isSortingVisible]);
 
   return (
-    <div className="sort-container flex justify-end relative" ref={dropdownRef}>
+    <div className="sort-container flex justify-end relative mb-2 sm:mb-0" ref={dropdownRef}>
       <button
         className="bg-transparent border-none cursor-pointer"
         onClick={toggleSorting}

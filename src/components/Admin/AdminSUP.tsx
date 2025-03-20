@@ -51,18 +51,18 @@ const AdminSUP = () => {
   }, []);
 
   return (
-    <div className="dashboard-container flex flex-col m-0 py-11p px-10">
+    <div className="dashboard-container flex flex-col px-8 sm:px-6 md:px-10 py-11p">
       <AdminNavbar />
-      <div className="dashboard-header flex justify-between items-center m-0 mb-4">
-        <h1 className="text-3xl text-wine">Supervisors</h1>
+      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
+        <h1 className="text-3xl sm:text-3xl text-wine">Supervisors</h1>
         <StatsHeader pagename="AdminSUP" stats={stats} />
       </div>
       <SortButton rooms={SUProoms} onSortedRooms={setSortedRooms} />
       <div className="room-header">
         <RoomHeader />
       </div>
-      <div className="section-container">
-        {SUProoms.length > 0 ? (
+      <div className="section-container grid grid-cols-2 sm:grid-cols-1 sm:gap-0 gap-x-4 gap-y-5 w-full">
+      {SUProoms.length > 0 ? (
           sortedRooms.map((room, index) => (
             <HSKRoomContainer key={index} room={room} />
           ))

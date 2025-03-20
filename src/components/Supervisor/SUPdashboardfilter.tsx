@@ -44,16 +44,16 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
 
   return (
     <>
-      <div className="dashboard-header flex justify-between items-center m-0 mb-4">
-        <h1 className="text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
+      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
+      <h1 className="text-3xl sm:text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
         <StatsHeader pagename="SUPfilter" stats={stats} />
       </div>
       <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
       <div className="room-header">
         <RoomHeader />
       </div>
-      <div className="section-container">
-        {sortedRooms.length > 0 ? (
+      <div className="section-container grid grid-cols-2 sm:grid-cols-1 sm:gap-0 gap-x-4 gap-y-5 w-full">
+      {sortedRooms.length > 0 ? (
           sortedRooms.map((room, index) => (
             <HSKRoomContainer key={index} room={room} />
           ))
