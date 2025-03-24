@@ -11,9 +11,9 @@ import RoomHeader from "./RoomHeader.tsx";
 const AdminSUP = () => {
   const [SUProoms, setSUProoms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
-  const [stats, setStats] = useState({
-    totalSupervisors: 0,
-    totalRoomsToInspect: 0,
+  const [stats, setStats] = useState<Record<string, number>>({
+    "Total Supervisors": 0,
+    "Total Rooms to Inspect": 0,
   });
 
 
@@ -37,13 +37,8 @@ const AdminSUP = () => {
       const SUPfilterrooms = allRooms.filter(
         (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
       ).length;
-
-      const updatedStats = {
-        totalSupervisors: maxSupervisor,
-        totalRoomsToInspect: SUPfilterrooms,
-      };
-
-      setStats(updatedStats);
+      
+      setStats({"Total Supervisors": maxSupervisor, "Total Rooms to Inspect": SUPfilterrooms});
       setSUProoms(cleanRooms);
       setSortedRooms(cleanRooms);
     });
@@ -55,7 +50,7 @@ const AdminSUP = () => {
       <AdminNavbar />
       <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
         <h1 className="text-3xl sm:text-3xl text-wine">Supervisors</h1>
-        <StatsHeader pagename="AdminSUP" stats={stats} />
+        <StatsHeader stats={stats} />
       </div>
       <SortButton rooms={SUProoms} onSortedRooms={setSortedRooms} />
       <div className="room-header">

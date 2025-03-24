@@ -13,8 +13,8 @@ interface HSKdashboardfilterProps {
 const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
-  const [stats, setStats] = useState({
-    totalRoomsToClean: 0,
+  const [stats, setStats] = useState<Record<string, number>>({
+    "Total Rooms to Clean": 0,
   });
 
 
@@ -32,11 +32,8 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
         ((room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE")
       ).length;
 
-      const updatedStats = {
-        totalRoomsToClean: HSKfilterrooms,
-      };
       
-      setStats(updatedStats);
+      setStats({ "Total Rooms to Clean": HSKfilterrooms });
       setFilteredRooms(assignedRooms);
       setSortedRooms(assignedRooms);
     });
@@ -48,7 +45,7 @@ const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
     <>
       <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
       <h1 className="text-3xl sm:text-3xl text-wine">{assignedtoHSK}-Dashboard</h1>
-      <StatsHeader pagename="HSKfilter" stats={stats} />
+      <StatsHeader stats={stats} />
     </div>
     <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
     <div className="room-header">

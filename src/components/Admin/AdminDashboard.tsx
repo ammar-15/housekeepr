@@ -30,10 +30,10 @@ const AdminDashboard = () => {
     const SUPstoredData = sessionStorage.getItem("supervisorRooms");
     return SUPstoredData ? JSON.parse(SUPstoredData) : {};
   });
-  const [stats, setStats] = useState({
-    dirtyRooms: 0,
-    cleanRooms: 0,
-    inspectedRooms: 0,
+  const [stats, setStats] = useState<Record<string, number>>({
+    "Dirty Rooms": 0,
+    "Clean Rooms": 0,
+    "Inspected Rooms": 0,
   });
 
   const lastAssignedHSKRef = useRef<Record<string, string>>({});
@@ -134,7 +134,7 @@ const AdminDashboard = () => {
         "supervisorRooms",
         JSON.stringify(result.updatedSupervisorRooms)
       );
-      setStats({ dirtyRooms, cleanRooms, inspectedRooms });
+      setStats({ "Dirty Rooms": dirtyRooms, "Clean Rooms": cleanRooms, "Inspected Rooms": inspectedRooms });
       setHousekeeperRooms(result.updatedHousekeeperRooms);
       setSupervisorRooms(result.updatedSupervisorRooms);
       lastAssignedHSKRef.current = result.HSKnewLastAssigned;
@@ -151,8 +151,8 @@ const AdminDashboard = () => {
       </div>
       <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
         <h1 className="text-3xl sm:text-3xl text-wine">Dashboard</h1>
-        <StatsHeader pagename="AdminDashboard" stats={stats} />
-      </div>
+        <StatsHeader stats={stats} />
+        </div>
 
       <div className="section-container">
         <h2 className="housekeeperheader-admin text-lg pt-2 sm:pt-0 pb-2 text-wine">Housekeepers</h2>

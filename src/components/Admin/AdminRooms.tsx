@@ -14,8 +14,8 @@ const AdminRooms = () => {
   const [allRooms, setAllRooms] = useState<any[]>([]);
   const [showClearModal, setShowClearModal] = useState(false);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
-  const [stats, setStats] = useState({
-    totalRooms: 0,
+  const [stats, setStats] = useState<Record<string, number>>({
+    "Total Rooms": 0,
   });
 
   useEffect(() => {
@@ -26,11 +26,8 @@ const AdminRooms = () => {
         ...doc.data(),
       }));
       const totalRooms = roomsData.length;
-      const updatedStats = {
-        totalRooms,
-      };
 
-      setStats(updatedStats);
+      setStats({ "Total Rooms": totalRooms });
       setAllRooms(roomsData);
       setSortedRooms(roomsData);
     });
@@ -67,7 +64,7 @@ const AdminRooms = () => {
           </div>
 
           <div className="order-1 sm:order-2 w-full sm:w-auto">
-            <StatsHeader pagename="AdminRooms" stats={stats} />
+            <StatsHeader stats={stats} />
           </div>
         </div>
       </div>
