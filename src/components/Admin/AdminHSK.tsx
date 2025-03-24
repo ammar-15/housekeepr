@@ -11,9 +11,9 @@ import RoomHeader from "./RoomHeader.tsx";
 const AdminHSK = () => {
   const [HSKrooms, setHSKrooms] = useState<any[]>([]);
   const [sortedRooms, setSortedRooms] = useState<any[]>([]);
-  const [stats, setStats] = useState({
-    totalHousekeepers: 0,
-    totalRoomsToClean: 0,
+  const [stats, setStats] = useState<Record<string, number>>({
+    "Total Housekeepers": 0,
+    "Total Rooms to Clean": 0,
   });
 
   useEffect(() => {
@@ -36,12 +36,7 @@ const AdminHSK = () => {
         ((room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE")
       ).length;
 
-      const updatedStats = {
-        totalHousekeepers: maxHousekeeper,
-        totalRoomsToClean: HSKfilterrooms,
-      };
-
-      setStats(updatedStats);
+      setStats({"Total Housekeepers":HSKfilterrooms, "Total Rooms to Clean": maxHousekeeper});
       setHSKrooms(dirtyRooms);
       setSortedRooms(dirtyRooms);
     });
@@ -53,7 +48,7 @@ const AdminHSK = () => {
       <AdminNavbar />
       <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
         <h1 className="text-3xl sm:text-3xl text-wine">Housekeepers</h1>
-        <StatsHeader pagename="AdminHSK" stats={stats} />
+        <StatsHeader stats={stats} />
       </div>
       <SortButton rooms={HSKrooms} onSortedRooms={setSortedRooms} />
       <div className="room-header">
