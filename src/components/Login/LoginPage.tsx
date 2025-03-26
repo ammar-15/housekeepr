@@ -48,8 +48,7 @@ const LoginPage = () => {
           <input
             className="bg-transparent rounded-md bg-pearl pl-1"
             type="text"
-            placeholder="Username"
-            value={username}
+            value={"admin"}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
@@ -58,8 +57,7 @@ const LoginPage = () => {
           <input
             className="bg-transparent rounded-md bg-pearl pl-1"
             type="text"
-            placeholder="Password"
-            value={password}
+            value={"admin"}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown}
           />
