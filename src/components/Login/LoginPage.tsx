@@ -4,8 +4,8 @@ import user_icon from "../assets/user_icon.svg";
 import password_icon from "../assets/password_icon.svg";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("admin");
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -48,7 +48,7 @@ const LoginPage = () => {
           <input
             className="bg-transparent rounded-md bg-pearl pl-1"
             type="text"
-            value={"admin"}
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
@@ -57,7 +57,7 @@ const LoginPage = () => {
           <input
             className="bg-transparent rounded-md bg-pearl pl-1"
             type="text"
-            value={"admin"}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown}
           />
