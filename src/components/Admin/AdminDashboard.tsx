@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import AdminNavbar from "./AdminNavbar";
@@ -12,133 +12,98 @@ export interface RoomData {
   roomType?: string;
   roomStatus?: string;
   coStatus?: string;
+  time_stamp?: string;
 }
 
-type RoomAssignment = { previousRoom?: RoomData; currentRoom?: RoomData };
+type RoomAssignment = {
+  currentRoom?: RoomData;
+  previousRoom?: RoomData;
+};
+
+type Stats = {
+  "Dirty Rooms": number;
+  "Clean Rooms": number;
+  "Inspected Rooms": number;
+};
 
 const AdminDashboard = () => {
   const [housekeeperRooms, setHousekeeperRooms] = useState<
     Record<string, RoomAssignment>
-  >(() => {
-    const HSKstoredData = sessionStorage.getItem("housekeeperRooms");
-    return HSKstoredData ? JSON.parse(HSKstoredData) : {};
-  });
-
+  >({});
   const [supervisorRooms, setSupervisorRooms] = useState<
     Record<string, RoomAssignment>
-  >(() => {
-    const SUPstoredData = sessionStorage.getItem("supervisorRooms");
-    return SUPstoredData ? JSON.parse(SUPstoredData) : {};
-  });
-  const [stats, setStats] = useState<Record<string, number>>({
+  >({});
+  const [stats, setStats] = useState<Stats>({
     "Dirty Rooms": 0,
     "Clean Rooms": 0,
     "Inspected Rooms": 0,
   });
 
-  const lastAssignedHSKRef = useRef<Record<string, string>>({});
-  const lastAssignedSUPRef = useRef<Record<string, string>>({});
-
   useEffect(() => {
-    const roomsCollectionRef = collection(db, "AdminHSK");
-    const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
-      const roomsData: RoomData[] = snapshot.docs.map((doc) => ({
-        assignedtoHSK: doc.data().assignedtoHSK || "",
-        assignedtoSUP: doc.data().assignedtoSUP || "",
-        roomNumber: doc.data().roomNumber || "",
-        roomType: doc.data().roomType || "",
-        roomStatus: doc.data().roomStatus || "",
-        coStatus: doc.data().coStatus || "",
-      }));
+    const unsubscribe = onSnapshot(collection(db, "AdminHSK"), (snapshot) => {
+      const rooms: RoomData[] = snapshot.docs.map(
+        (doc) => doc.data() as RoomData
+      );
+      const updatedHSK: Record<string, RoomAssignment> = {};
+      const updatedSUP: Record<string, RoomAssignment> = {};
 
-      const dirtyRooms = roomsData.filter(
-        (room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE"
-      ).length;
-      const cleanRooms = roomsData.filter(
-        (room) => room.roomStatus === "Clean" && room.coStatus !== "INSPECTED"
-      ).length;
-      const inspectedRooms = roomsData.filter(
-        (room) => room.coStatus === "INSPECTED"
-      ).length;
+      let dirty = 0,
+        clean = 0,
+        inspected = 0;
 
-      const result = roomsData.reduce(
-        (acc, room) => {
-          const {
-            assignedtoHSK,
-            assignedtoSUP,
-            roomStatus,
-            coStatus,
-            roomNumber,
-          } = room;
-
+        rooms.forEach((room) => {
+          const { assignedtoHSK, assignedtoSUP, roomStatus, coStatus, time_stamp } = room;
+          const timestamp = time_stamp ?? "0000-00-00T00:00:00.000Z";
+        
+          if (roomStatus === "Dirty" || roomStatus === "ON CHANGE") dirty++;
+          if (roomStatus === "Clean" && coStatus !== "INSPECTED") clean++;
+          if (roomStatus === "INSPECTED") inspected++;
+        
           if (assignedtoHSK) {
-            if (!acc.updatedHousekeeperRooms[assignedtoHSK]) {
-              acc.updatedHousekeeperRooms[assignedtoHSK] = {};
-            }
-
+            if (!updatedHSK[assignedtoHSK]) updatedHSK[assignedtoHSK] = {};
             if (roomStatus === "ON CHANGE") {
-              acc.updatedHousekeeperRooms[assignedtoHSK].currentRoom = room;
-              acc.HSKnewLastAssigned[roomNumber] = assignedtoHSK;
-            } else if (roomStatus === "Clean") {
-              const originalHSK = acc.HSKnewLastAssigned[roomNumber];
-              if (originalHSK) {
-                if (!acc.updatedHousekeeperRooms[originalHSK]) {
-                  acc.updatedHousekeeperRooms[originalHSK] = {};
-                }
-                acc.updatedHousekeeperRooms[originalHSK].previousRoom = room;
-                acc.updatedHousekeeperRooms[assignedtoHSK].currentRoom =
-                  undefined;
+              const current = updatedHSK[assignedtoHSK].currentRoom;
+              if (!current || (timestamp > (current.time_stamp ?? ""))) {
+                updatedHSK[assignedtoHSK].currentRoom = room;
+              }
+            }
+        
+            if (roomStatus === "Clean" && coStatus === "VACANT") {
+              const previous = updatedHSK[assignedtoHSK].previousRoom;
+              if (!previous || (timestamp > (previous.time_stamp ?? ""))) {
+                updatedHSK[assignedtoHSK].previousRoom = room;
               }
             }
           }
-
+        
           if (assignedtoSUP) {
-            if (!acc.updatedSupervisorRooms[assignedtoSUP]) {
-              acc.updatedSupervisorRooms[assignedtoSUP] = {};
+            if (!updatedSUP[assignedtoSUP]) updatedSUP[assignedtoSUP] = {};
+          
+            const current = updatedSUP[assignedtoSUP].currentRoom;
+            const previous = updatedSUP[assignedtoSUP].previousRoom;
+          
+            if (coStatus === "CHECK" && roomStatus === "Clean") {
+              if (!current || (timestamp > (current.time_stamp ?? ""))) {
+                updatedSUP[assignedtoSUP].currentRoom = room;
+              }
             }
-
-            if (roomStatus === "Clean" && coStatus !== "INSPECTED") {
-              acc.updatedSupervisorRooms[assignedtoSUP].currentRoom = room;
-              acc.SUPnewLastAssigned[roomNumber] = assignedtoSUP;
-            } else if (roomStatus === "Clean" && coStatus === "INSPECTED") {
-              const originalSUP = acc.SUPnewLastAssigned[roomNumber];
-              if (originalSUP) {
-                if (!acc.updatedSupervisorRooms[originalSUP]) {
-                  acc.updatedSupervisorRooms[originalSUP] = {};
-                }
-                acc.updatedSupervisorRooms[originalSUP].previousRoom = room;
-                acc.updatedSupervisorRooms[originalSUP].currentRoom = undefined;
+          
+            if (coStatus === "INSPECTED" && roomStatus === "Clean") {
+              if (!previous || (timestamp > (previous.time_stamp ?? ""))) {
+                updatedSUP[assignedtoSUP].previousRoom = room;
+                updatedSUP[assignedtoSUP].currentRoom = undefined;
               }
             }
           }
+        });
 
-          return acc;
-        },
-        {
-          updatedHousekeeperRooms: JSON.parse(
-            sessionStorage.getItem("housekeeperRooms") || "{}"
-          ),
-          updatedSupervisorRooms: JSON.parse(
-            sessionStorage.getItem("supervisorRooms") || "{}"
-          ),
-          HSKnewLastAssigned: { ...lastAssignedHSKRef.current },
-          SUPnewLastAssigned: { ...lastAssignedSUPRef.current },
-        }
-      );
-
-      sessionStorage.setItem(
-        "housekeeperRooms",
-        JSON.stringify(result.updatedHousekeeperRooms)
-      );
-      sessionStorage.setItem(
-        "supervisorRooms",
-        JSON.stringify(result.updatedSupervisorRooms)
-      );
-      setStats({ "Dirty Rooms": dirtyRooms, "Clean Rooms": cleanRooms, "Inspected Rooms": inspectedRooms });
-      setHousekeeperRooms(result.updatedHousekeeperRooms);
-      setSupervisorRooms(result.updatedSupervisorRooms);
-      lastAssignedHSKRef.current = result.HSKnewLastAssigned;
-      lastAssignedSUPRef.current = result.SUPnewLastAssigned;
+      setHousekeeperRooms(updatedHSK);
+      setSupervisorRooms(updatedSUP);
+      setStats({
+        "Dirty Rooms": dirty,
+        "Clean Rooms": clean,
+        "Inspected Rooms": inspected,
+      });
     });
 
     return () => unsubscribe();
@@ -146,88 +111,72 @@ const AdminDashboard = () => {
 
   return (
     <div className="dashboard-container flex flex-col px-8 sm:px-6 md:px-10 py-11p">
-      <div className="AdminNav">
-        <AdminNavbar />
-      </div>
-      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
-        <h1 className="text-3xl sm:text-3xl text-wine">Dashboard</h1>
+      <AdminNavbar />
+      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center gap-4">
+        <h1 className="text-3xl text-wine">Dashboard</h1>
         <StatsHeader stats={stats} />
-        </div>
+      </div>
 
       <div className="section-container">
-        <h2 className="housekeeperheader-admin text-lg pt-2 sm:pt-0 pb-2 text-wine">Housekeepers</h2>
-        {Object.keys(housekeeperRooms).length > 0 ? (
-          <div className="housekeepers-container gap-5 flex flex-wrap pb-5">
-            {Object.keys(housekeeperRooms).map((hskKey) => (
-              <div
-                key={hskKey}
-                className="hsk-container p-4 bg-pearl rounded-md shadow-md w-40"
-              >
-                <h2 className="text-lg font-bold text-center">{hskKey}</h2>
-                <div className="hsk-details text-center">
-                  <p className="text-sm">Previous Room</p>
-                  {housekeeperRooms[hskKey].previousRoom ? (
-                    <p className="font-semibold">
-                      {housekeeperRooms[hskKey].previousRoom?.roomNumber} -{" "}
-                      {housekeeperRooms[hskKey].previousRoom?.roomType}
-                    </p>
-                  ) : (
-                    <p className="text-dustyblue">None</p>
-                  )}
-                  <p className="text-sm mt-3">Current Room</p>
-                  {housekeeperRooms[hskKey].currentRoom ? (
-                    <p className="font-semibold">
-                      {housekeeperRooms[hskKey].currentRoom?.roomNumber} -{" "}
-                      {housekeeperRooms[hskKey].currentRoom?.roomType}
-                    </p>
-                  ) : (
-                    <p className="text-dustyblue">None</p>
-                  )}
-                </div>
+        <h2 className="text-lg pt-2 pb-2 text-wine">Housekeepers</h2>
+        <div className="flex flex-wrap gap-5 pb-5">
+          {Object.entries(housekeeperRooms).map(([hsk, data]) => (
+            <div key={hsk} className="p-4 bg-pearl rounded-md shadow-md w-40">
+              <h2 className="text-lg font-bold text-center">{hsk}</h2>
+              <div className="text-center">
+                <p className="text-sm">Previous Room</p>
+                {data.previousRoom ? (
+                  <p className="font-semibold">
+                    {data.previousRoom.roomNumber} -{" "}
+                    {data.previousRoom.roomType}
+                  </p>
+                ) : (
+                  <p className="text-dustyblue">None</p>
+                )}
+                <p className="text-sm mt-3">Current Room</p>
+                {data.currentRoom ? (
+                  <p className="font-semibold">
+                    {data.currentRoom.roomNumber} - {data.currentRoom.roomType}
+                  </p>
+                ) : (
+                  <p className="text-dustyblue">None</p>
+                )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-left text-gray text-lg mb-5">No rooms</div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
+
       <div className="section-container">
-        <h2 className="supervisorheader-admin text-lg pt-2 sm:pt-0 pb-2 text-wine">Supervisors</h2>
-        {Object.keys(supervisorRooms).length > 0 ? (
-          <div className="supervisors-container gap-5 flex flex-wrap pb-5">
-            {Object.keys(supervisorRooms).map((supKey) => (
-              <div
-                key={supKey}
-                className="sup-container p-4 bg-pearl rounded-md shadow-md w-40"
-              >
-                <h2 className="text-lg font-bold text-center">{supKey}</h2>
-                <div className="sup-details text-center">
-                  <p className="text-sm">Previous Room</p>
-                  {supervisorRooms[supKey].previousRoom ? (
-                    <p className="font-semibold">
-                      {supervisorRooms[supKey].previousRoom?.roomNumber} -{" "}
-                      {supervisorRooms[supKey].previousRoom?.roomType}
-                    </p>
-                  ) : (
-                    <p className="text-dustyblue">None</p>
-                  )}
-                  <p className="text-sm mt-3">Current Room</p>
-                  {supervisorRooms[supKey].currentRoom ? (
-                    <p className="font-semibold">
-                      {supervisorRooms[supKey].currentRoom?.roomNumber} -{" "}
-                      {supervisorRooms[supKey].currentRoom?.roomType}
-                    </p>
-                  ) : (
-                    <p className="text-dustyblue">None</p>
-                  )}
-                </div>
+        <h2 className="text-lg pt-2 pb-2 text-wine">Supervisors</h2>
+        <div className="flex flex-wrap gap-5 pb-5">
+          {Object.entries(supervisorRooms).map(([sup, data]) => (
+            <div key={sup} className="p-4 bg-pearl rounded-md shadow-md w-40">
+              <h2 className="text-lg font-bold text-center">{sup}</h2>
+              <div className="text-center">
+                <p className="text-sm">Previous Room</p>
+                {data.previousRoom ? (
+                  <p className="font-semibold">
+                    {data.previousRoom.roomNumber} -{" "}
+                    {data.previousRoom.roomType}
+                  </p>
+                ) : (
+                  <p className="text-dustyblue">None</p>
+                )}
+                <p className="text-sm mt-3">Current Room</p>
+                {data.currentRoom ? (
+                  <p className="font-semibold">
+                    {data.currentRoom.roomNumber} - {data.currentRoom.roomType}
+                  </p>
+                ) : (
+                  <p className="text-dustyblue">None</p>
+                )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-left text-gray text-lg mb-3">No rooms</div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
+
       <AdminStart />
     </div>
   );
