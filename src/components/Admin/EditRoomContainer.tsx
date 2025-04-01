@@ -67,6 +67,7 @@ const EditRoomContainer = ({
         assignedtoHSK: updatedassignedtoHSK,
         assignedtoSUP: updatedassignedtoSUP,
         coStatus: updatedCoStatus,
+        time_stamp: new Date().toISOString(),
       });
       console.log(
         `Room ${roomNumber} updated to Status: ${newRoomStatus}, CO: ${updatedCoStatus}, Assigned to: ${newAssignedto}`
@@ -121,6 +122,7 @@ const EditRoomContainer = ({
               <option value="DUE">DUE</option>
               <option value="OUT">OUT</option>
               <option value="VACANT">VACANT</option>
+              <option value="CHECK">CHECK</option>
               <option value="INSPECTED">INSPECTED</option>
               <option value="STAYOVER">STAYOVER</option>
             </select>

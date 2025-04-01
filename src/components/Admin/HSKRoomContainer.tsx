@@ -57,6 +57,8 @@ const HSKRoomContainer = ({ room }: HSKRoomContainerProps) => {
               ? "bg-lightyellow text-black"
               : room.coStatus === "VACANT"
               ? "bg-yellow text-black"
+              : room.coStatus === "CHECK"
+              ? "bg-lightgreen text-black"
               : room.coStatus === "INSPECTED"
               ? "bg-lightblue text-black"
               : room.coStatus === "STAYOVER"

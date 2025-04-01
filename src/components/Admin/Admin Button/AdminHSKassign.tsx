@@ -61,13 +61,14 @@ const AdminHSKassign = ({
       };
 
       if (assignedto.startsWith("HSK")) {
-        updatedRoom = { ...updatedRoom, assignedtoHSK: assignedto };
+        updatedRoom = { ...updatedRoom, assignedtoHSK: assignedto, assignedtoSUP: "SUP1", };
         if (onassignedtoHSK) onassignedtoHSK(assignedto);
+        if (onassignedtoSUP) onassignedtoSUP("SUP1");
       } else if (assignedto.startsWith("SUP")) {
-        updatedRoom = { ...updatedRoom, assignedtoSUP: assignedto };
+        updatedRoom = { ...updatedRoom, assignedtoSUP: assignedto, assignedtoHSK: "N/A", };
         if (onassignedtoSUP) onassignedtoSUP(assignedto);
       } else {
-        console.error("Invalid assignment! Must start with 'HSK' or 'SUP'.");
+        console.error("Invalid assignment! Must start with 'HSK'.");
         return;
       }
 

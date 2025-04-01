@@ -22,7 +22,7 @@ const AdminSUP = () => {
     const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
       const allRooms = snapshot.docs.map((doc) => doc.data());
       const cleanRooms = allRooms.filter(
-        (room) => room.roomStatus === "Clean" || room.coStatus === "INSPECTED"
+        (room) => room.roomStatus === "Clean" || room.roomStatus === "CHECK" || room.coStatus === "INSPECTED"
       );
       const maxSupervisor = cleanRooms.reduce((max, room) => {
         if (room.assignedtoSUP && room.assignedtoSUP.startsWith("SUP")) {
