@@ -76,4 +76,4 @@ If you find a bug, have feedback, or want to share some fun tricks, please reach
 
 ## 🙌 Thanks for checking out Housekeepr!
 
-Made by Ammar Faruqui
+Made by [Ammar Faruqui](https://www.linkedin.com/in/ammarfaruqui/)
