@@ -4,6 +4,7 @@
 
 **Housekeepr** is a housekeeping task management web app built using **React with TypeScript**, **Tailwind CSS**, and **Firebase**. It’s designed to streamline communication between housekeeping teams — a follow-up to [Roomer v1](https://github.com/ammar-15/Roomer-demo).
 
+[![Watch the video](https://github.com/user-attachments/assets/7b8fbdfa-1a14-4ae7-b516-e9ff426ce4eb)](https://youtu.be/8UImUDJrb6k)
 ---
 
 ## ✨ Why I Made It
@@ -18,7 +19,7 @@ Housekeepr is built with better structure, component-based design, and a complet
 
 Housekeepr helps hotel teams:
 
-- ✅ View, assign, and manage rooms for cleaning (Checked-Out, Stayovers, Late Check-Outs)
+- ✅ View, assign, and manage rooms for cleaning.
 - 📋 Add internal notes per room to share special cleaning instructions or updates
 - 🧠 Use **Smart Add** to automatically assign 100+ rooms across all available staff
 - 📈 Track progress of each employee’s assigned tasks
