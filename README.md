@@ -4,7 +4,7 @@
 
 **Housekeepr** is a housekeeping task management web app built using **React with TypeScript**, **Tailwind CSS**, and **Firebase**. It’s designed to streamline communication between housekeeping teams — a follow-up to [Roomer v1](https://github.com/ammar-15/Roomer-demo).
 
-[![Watch the video](https://github.com/user-attachments/assets/7b8fbdfa-1a14-4ae7-b516-e9ff426ce4eb)](https://youtu.be/8UImUDJrb6k)
+[![Watch the video](https://github.com/user-attachments/assets/7b8fbdfa-1a14-4ae7-b516-e9ff426ce4eb)](https://youtu.be/axb5VvdVWJw)
 ---
 
 ## ✨ Why I Made It
