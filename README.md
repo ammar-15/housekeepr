@@ -1,6 +1,6 @@
 # 🧹 Housekeepr
 
-[Deployment](https://github.com/ammar-15/housekeepr)
+[Deployment](https://housekeepr.vercel.app/)
 
 **Housekeepr** is an employee management web app built using **React with TypeScript**, **Tailwind CSS**, and **Firebase**. It’s designed to streamline communication between housekeeping teams — a follow-up to [Roomer v1](https://github.com/ammar-15/Roomer-demo).
 
