@@ -9,11 +9,20 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import Notes from "./Note";
-import SortButton from "../components/SortButton";
+import SortButton from "./SortButton";
+import { PageHeader } from "./ui/Page";
+import { Plus } from "./ui/icons";
+import { SortOption, sortItems } from "../lib/rooms";
+
+interface NoteData {
+  id: string;
+  content: string;
+  createdAt: Date;
+}
 
 const NoteContainer = () => {
-  const [notes, setNotes] = useState<any[]>([]);
-  const [sortedNotes, setSortedNotes] = useState<any[]>([]);
+  const [notes, setNotes] = useState<NoteData[]>([]);
+  const [sortOption, setSortOption] = useState<SortOption>("recent");
 
   useEffect(() => {
     loadNotes();
@@ -23,67 +32,53 @@ const NoteContainer = () => {
     const notesSnapshot = await getDocs(collection(db, "notes"));
     const notesList = notesSnapshot.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt
-        ? doc.data().createdAt.toDate()
-        : new Date(),
+      content: doc.data().content ?? "",
+      createdAt: doc.data().createdAt ? doc.data().createdAt.toDate() : new Date(),
     }));
     setNotes(notesList);
-    setSortedNotes(notesList); 
   };
 
   const addNote = async () => {
     const newNote = { content: "", createdAt: new Date() };
     const docRef = await addDoc(collection(db, "notes"), newNote);
-    const updatedNotes = [...notes, { ...newNote, id: docRef.id }];
-    setNotes(updatedNotes);
-    setSortedNotes(updatedNotes);
+    setNotes((current) => [...current, { ...newNote, id: docRef.id }]);
   };
 
   const updateNote = async (id: string, newContent: string) => {
-    const noteRef = doc(db, "notes", id);
-    await updateDoc(noteRef, { content: newContent });
-    const updatedNotes = notes.map((note) =>
-      note.id === id ? { ...note, content: newContent } : note
+    await updateDoc(doc(db, "notes", id), { content: newContent });
+    setNotes((current) =>
+      current.map((note) => (note.id === id ? { ...note, content: newContent } : note))
     );
-    setNotes(updatedNotes);
-    setSortedNotes(updatedNotes);
   };
 
   const deleteNote = async (id: string) => {
-    const noteRef = doc(db, "notes", id);
-    await deleteDoc(noteRef);
-    const updatedNotes = notes.filter((note) => note.id !== id);
-    setNotes(updatedNotes);
-    setSortedNotes(updatedNotes);
+    await deleteDoc(doc(db, "notes", id));
+    setNotes((current) => current.filter((note) => note.id !== id));
   };
 
-  return (
-    <div className="note-container flex flex-col ">
-      <div className="noteheader-container flex justify-between items-center m-0 mb-4">
-        <h2 className="text-3xl text-wine">Notes</h2>
-        <SortButton
-          rooms={notes}
-          onSortedRooms={setSortedNotes}
-          sortProps={["recent", "oldest"]}
-        />
-      </div>
+  const sortedNotes = sortItems(notes, sortOption);
 
-      <div className="notes-container grid sm:grid-cols-4 grid-cols-2 gap-4">
-        {sortedNotes.map((note) => (
-          <Notes
-            key={note.id}
-            note={note}
-            updateNote={updateNote}
-            deleteNote={deleteNote}
-          />
-        ))}
+  return (
+    <div className="note-container flex flex-col">
+      <PageHeader
+        title="Notes"
+        actions={
+          <SortButton value={sortOption} onChange={setSortOption} options={["recent", "oldest"]} />
+        }
+      />
+
+      <div className="notes-container mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <button
-          className="add-notes rounded-full py-10 bg-wine text-darkpurple text-3xl w-40 font-bold"
+          type="button"
+          aria-label="Add note"
+          className="add-notes flex min-h-[11rem] items-center justify-center rounded-lg border border-dashed border-dustyblue text-chocolate/60 transition-colors hover:border-wine hover:bg-white hover:text-wine"
           onClick={addNote}
         >
-          +
+          <Plus width={24} height={24} />
         </button>
+        {sortedNotes.map((note) => (
+          <Notes key={note.id} note={note} updateNote={updateNote} deleteNote={deleteNote} />
+        ))}
       </div>
     </div>
   );

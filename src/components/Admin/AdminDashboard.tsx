@@ -1,184 +1,153 @@
-import { useEffect, useState } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { useMemo } from "react";
 import AdminNavbar from "./AdminNavbar";
 import AdminStart from "./Admin Button/AdminStart";
+import DayProgress from "./DayProgress";
 import StatsHeader from "../StatsHeader";
+import { PageHeader, PageShell } from "../ui/Page";
+import { Room, isInspected, isStaffCode, useRooms } from "../../lib/rooms";
+import { percent } from "../../lib/format";
 
-export interface RoomData {
-  assignedtoHSK?: string;
-  assignedtoSUP?: string;
-  roomNumber: string;
-  roomType?: string;
-  roomStatus?: string;
-  coStatus?: string;
-  time_stamp?: string;
-}
-
-type RoomAssignment = {
-  currentRoom?: RoomData;
-  previousRoom?: RoomData;
+type StaffSummary = {
+  code: string;
+  currentRoom?: Room;
+  previousRoom?: Room;
+  total: number;
+  done: number;
 };
 
-type Stats = {
-  "Dirty Rooms": number;
-  "Clean Rooms": number;
-  "Inspected Rooms": number;
-};
+const newer = (room: Room, than?: Room) =>
+  !than || (room.time_stamp ?? "") > (than.time_stamp ?? "");
 
-const AdminDashboard = () => {
-  const [housekeeperRooms, setHousekeeperRooms] = useState<
-    Record<string, RoomAssignment>
-  >({});
-  const [supervisorRooms, setSupervisorRooms] = useState<
-    Record<string, RoomAssignment>
-  >({});
-  const [stats, setStats] = useState<Stats>({
-    "Dirty Rooms": 0,
-    "Clean Rooms": 0,
-    "Inspected Rooms": 0,
+const byStaffNumber = (a: StaffSummary, b: StaffSummary) =>
+  parseInt(a.code.slice(3), 10) - parseInt(b.code.slice(3), 10);
+
+const summarise = (rooms: Room[]) => {
+  const housekeepers: Record<string, StaffSummary> = {};
+  const supervisors: Record<string, StaffSummary> = {};
+
+  rooms.forEach((room) => {
+    const { assignedtoHSK, assignedtoSUP, roomStatus, coStatus } = room;
+
+    if (isStaffCode(assignedtoHSK, "HSK")) {
+      const hsk = (housekeepers[assignedtoHSK] ??= { code: assignedtoHSK, total: 0, done: 0 });
+      hsk.total++;
+      if (roomStatus === "Clean") hsk.done++;
+      if (roomStatus === "ON CHANGE" && newer(room, hsk.currentRoom)) hsk.currentRoom = room;
+      if (roomStatus === "Clean" && coStatus === "VACANT" && newer(room, hsk.previousRoom)) {
+        hsk.previousRoom = room;
+      }
+    }
+
+    if (isStaffCode(assignedtoSUP, "SUP")) {
+      const sup = (supervisors[assignedtoSUP] ??= { code: assignedtoSUP, total: 0, done: 0 });
+      sup.total++;
+      if (isInspected(room)) sup.done++;
+      if (roomStatus === "Clean" && coStatus === "CHECK" && newer(room, sup.currentRoom)) {
+        sup.currentRoom = room;
+      }
+      if (roomStatus === "Clean" && coStatus === "INSPECTED" && newer(room, sup.previousRoom)) {
+        sup.previousRoom = room;
+      }
+    }
   });
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "AdminHSK"), (snapshot) => {
-      const rooms: RoomData[] = snapshot.docs.map(
-        (doc) => doc.data() as RoomData
-      );
-      const updatedHSK: Record<string, RoomAssignment> = {};
-      const updatedSUP: Record<string, RoomAssignment> = {};
+  // A supervisor who has signed off a room more recently than they started
+  // checking one is between rooms.
+  Object.values(supervisors).forEach((sup) => {
+    if (sup.currentRoom && sup.previousRoom && !newer(sup.currentRoom, sup.previousRoom)) {
+      sup.currentRoom = undefined;
+    }
+  });
 
-      let dirty = 0,
-        clean = 0,
-        inspected = 0;
+  return {
+    housekeepers: Object.values(housekeepers).sort(byStaffNumber),
+    supervisors: Object.values(supervisors).sort(byStaffNumber),
+  };
+};
 
-        rooms.forEach((room) => {
-          const { assignedtoHSK, assignedtoSUP, roomStatus, coStatus, time_stamp } = room;
-          const timestamp = time_stamp ?? "0000-00-00T00:00:00.000Z";
-        
-          if (roomStatus === "Dirty" || roomStatus === "ON CHANGE") dirty++;
-          if (roomStatus === "Clean" && coStatus !== "INSPECTED") clean++;
-          if (roomStatus === "INSPECTED") inspected++;
-        
-          if (assignedtoHSK) {
-            if (!updatedHSK[assignedtoHSK]) updatedHSK[assignedtoHSK] = {};
-            if (roomStatus === "ON CHANGE") {
-              const current = updatedHSK[assignedtoHSK].currentRoom;
-              if (!current || (timestamp > (current.time_stamp ?? ""))) {
-                updatedHSK[assignedtoHSK].currentRoom = room;
-              }
-            }
-        
-            if (roomStatus === "Clean" && coStatus === "VACANT") {
-              const previous = updatedHSK[assignedtoHSK].previousRoom;
-              if (!previous || (timestamp > (previous.time_stamp ?? ""))) {
-                updatedHSK[assignedtoHSK].previousRoom = room;
-              }
-            }
-          }
-        
-          if (assignedtoSUP) {
-            if (!updatedSUP[assignedtoSUP]) updatedSUP[assignedtoSUP] = {};
-          
-            const current = updatedSUP[assignedtoSUP].currentRoom;
-            const previous = updatedSUP[assignedtoSUP].previousRoom;
-          
-            if (coStatus === "CHECK" && roomStatus === "Clean") {
-              if (!current || (timestamp > (current.time_stamp ?? ""))) {
-                updatedSUP[assignedtoSUP].currentRoom = room;
-              }
-            }
-          
-            if (coStatus === "INSPECTED" && roomStatus === "Clean") {
-              if (!previous || (timestamp > (previous.time_stamp ?? ""))) {
-                updatedSUP[assignedtoSUP].previousRoom = room;
-                updatedSUP[assignedtoSUP].currentRoom = undefined;
-              }
-            }
-          }
-        });
+const RoomRef = ({ room }: { room?: Room }) =>
+  room ? (
+    <p className="font-semibold">
+      {room.roomNumber} - {room.roomType}
+    </p>
+  ) : (
+    <p className="text-dustyblue">None</p>
+  );
 
-      setHousekeeperRooms(updatedHSK);
-      setSupervisorRooms(updatedSUP);
-      setStats({
-        "Dirty Rooms": dirty,
-        "Clean Rooms": clean,
-        "Inspected Rooms": inspected,
-      });
+const StaffCard = ({ staff }: { staff: StaffSummary }) => (
+  <div className="flex flex-col rounded-md border border-line bg-pearl p-4 text-center">
+    <h3 className="text-lg font-bold">{staff.code}</h3>
+    <p className="mt-2 text-sm">Previous Room</p>
+    <RoomRef room={staff.previousRoom} />
+    <p className="mt-3 text-sm">Current Room</p>
+    <RoomRef room={staff.currentRoom} />
+    <div className="mt-4 text-xs text-chocolate/60">
+      {staff.done}/{staff.total}
+    </div>
+    <div className="mt-1 h-1 overflow-hidden rounded-full bg-white">
+      <div
+        className="h-full rounded-full bg-clay transition-[width] duration-500"
+        style={{ width: `${percent(staff.done, staff.total)}%` }}
+      />
+    </div>
+  </div>
+);
+
+const StaffSection = ({ title, staff }: { title: string; staff: StaffSummary[] }) => (
+  <section className="section-container">
+    <h2 className="mb-3 text-lg text-wine">{title}</h2>
+    {staff.length > 0 ? (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {staff.map((member) => (
+          <StaffCard key={member.code} staff={member} />
+        ))}
+      </div>
+    ) : (
+      <p className="text-sm text-dustyblue">None</p>
+    )}
+  </section>
+);
+
+const AdminDashboard = () => {
+  const { rooms, loaded } = useRooms();
+
+  const counts = useMemo(() => {
+    let dirty = 0,
+      onChange = 0,
+      clean = 0,
+      inspected = 0;
+    rooms.forEach((room) => {
+      if (isInspected(room)) inspected++;
+      else if (room.roomStatus === "Dirty") dirty++;
+      else if (room.roomStatus === "ON CHANGE") onChange++;
+      else if (room.roomStatus === "Clean") clean++;
     });
+    return { dirty, onChange, clean, inspected };
+  }, [rooms]);
 
-    return () => unsubscribe();
-  }, []);
+  const { housekeepers, supervisors } = useMemo(() => summarise(rooms), [rooms]);
+
+  const stats = {
+    "Dirty Rooms": counts.dirty + counts.onChange,
+    "Clean Rooms": counts.clean,
+    "Inspected Rooms": counts.inspected,
+  };
 
   return (
-    <div className="dashboard-container flex flex-col px-8 sm:px-6 md:px-10 py-11p">
-      <AdminNavbar />
-      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl text-wine">Dashboard</h1>
-        <StatsHeader stats={stats} />
-      </div>
+    <PageShell nav={<AdminNavbar />}>
+      <PageHeader
+        title="Dashboard"
+        actions={<StatsHeader stats={stats} />}
+      />
 
-      <div className="section-container">
-        <h2 className="text-lg pt-2 pb-2 text-wine">Housekeepers</h2>
-        <div className="flex flex-wrap gap-5 pb-5">
-          {Object.entries(housekeeperRooms).map(([hsk, data]) => (
-            <div key={hsk} className="p-4 bg-pearl rounded-md shadow-md w-40">
-              <h2 className="text-lg font-bold text-center">{hsk}</h2>
-              <div className="text-center">
-                <p className="text-sm">Previous Room</p>
-                {data.previousRoom ? (
-                  <p className="font-semibold">
-                    {data.previousRoom.roomNumber} -{" "}
-                    {data.previousRoom.roomType}
-                  </p>
-                ) : (
-                  <p className="text-dustyblue">None</p>
-                )}
-                <p className="text-sm mt-3">Current Room</p>
-                {data.currentRoom ? (
-                  <p className="font-semibold">
-                    {data.currentRoom.roomNumber} - {data.currentRoom.roomType}
-                  </p>
-                ) : (
-                  <p className="text-dustyblue">None</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="section-container">
-        <h2 className="text-lg pt-2 pb-2 text-wine">Supervisors</h2>
-        <div className="flex flex-wrap gap-5 pb-5">
-          {Object.entries(supervisorRooms).map(([sup, data]) => (
-            <div key={sup} className="p-4 bg-pearl rounded-md shadow-md w-40">
-              <h2 className="text-lg font-bold text-center">{sup}</h2>
-              <div className="text-center">
-                <p className="text-sm">Previous Room</p>
-                {data.previousRoom ? (
-                  <p className="font-semibold">
-                    {data.previousRoom.roomNumber} -{" "}
-                    {data.previousRoom.roomType}
-                  </p>
-                ) : (
-                  <p className="text-dustyblue">None</p>
-                )}
-                <p className="text-sm mt-3">Current Room</p>
-                {data.currentRoom ? (
-                  <p className="font-semibold">
-                    {data.currentRoom.roomNumber} - {data.currentRoom.roomType}
-                  </p>
-                ) : (
-                  <p className="text-dustyblue">None</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="mt-6 flex flex-col gap-8">
+        <DayProgress loaded={loaded} {...counts} />
+        <StaffSection title="Housekeepers" staff={housekeepers} />
+        <StaffSection title="Supervisors" staff={supervisors} />
       </div>
 
       <AdminStart />
-    </div>
+    </PageShell>
   );
 };
 

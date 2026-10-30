@@ -1,6 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+import Modal from "../ui/Modal";
+import Segmented from "../ui/Segmented";
+import { ROOM_STATUS_TONE } from "../ui/tones";
+import { buttonGhost, buttonPrimary, inputClass, labelClass } from "../ui/form";
 
 interface EditRoomContainerProps {
   roomNumber: string;
@@ -10,6 +14,14 @@ interface EditRoomContainerProps {
   assignedtoSUP: string;
   onClose: () => void;
 }
+
+const ROOM_STATUSES = [
+  { value: "Dirty", label: "Dirty", tone: ROOM_STATUS_TONE.Dirty },
+  { value: "ON CHANGE", label: "ON CHANGE", tone: ROOM_STATUS_TONE["ON CHANGE"] },
+  { value: "Clean", label: "Clean", tone: ROOM_STATUS_TONE.Clean },
+];
+
+const CO_STATUSES = ["DUE", "OUT", "VACANT", "CHECK", "INSPECTED", "STAYOVER"];
 
 const EditRoomContainer = ({
   roomNumber,
@@ -22,139 +34,134 @@ const EditRoomContainer = ({
   const [newRoomStatus, setNewRoomStatus] = useState(initialRoomStatus);
   const [newCoStatus, setNewCoStatus] = useState(initialCoStatus);
   const [newAssignedto, setNewAssignedto] = useState("");
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        handleClose();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleClose = () => {
-    onClose?.();
-    console.log("Edit Room modal closed");
+  const handleRoomStatusChange = (selectedStatus: string) => {
+    setNewRoomStatus(selectedStatus);
+    if (
+      (selectedStatus === "Clean" || selectedStatus === "ON CHANGE") &&
+      newCoStatus !== "STAYOVER"
+    ) {
+      setNewCoStatus("VACANT");
+    }
   };
 
   const handleStatusChange = async () => {
-    try {
-      let updatedCoStatus = newCoStatus;
-      const roomRef = doc(db, "AdminHSK", roomNumber);
+    const reassignTo = newAssignedto.trim().toUpperCase();
+    let updatedassignedtoHSK = assignedtoHSK;
+    let updatedassignedtoSUP = assignedtoSUP;
 
-      let updatedassignedtoHSK = assignedtoHSK;
-      let updatedassignedtoSUP = assignedtoSUP;
-
-      if (newAssignedto.trim() !== "") {
-        if (newAssignedto.startsWith("HSK")) {
-          updatedassignedtoHSK = newAssignedto;
-        } else if (newAssignedto.startsWith("SUP")) {
-          updatedassignedtoSUP = newAssignedto;
-        } else {
-          console.error("Invalid. Please enter assignment correctly");
-          return;
-        }
+    if (reassignTo !== "") {
+      if (/^HSK\d+$/.test(reassignTo)) {
+        updatedassignedtoHSK = reassignTo;
+      } else if (/^SUP\d+$/.test(reassignTo)) {
+        updatedassignedtoSUP = reassignTo;
+      } else {
+        setError("Invalid. Please enter assignment correctly.");
+        return;
       }
+    }
 
-      await updateDoc(roomRef, {
+    setSaving(true);
+    try {
+      await updateDoc(doc(db, "AdminHSK", roomNumber), {
         roomStatus: newRoomStatus,
         assignedtoHSK: updatedassignedtoHSK,
         assignedtoSUP: updatedassignedtoSUP,
-        coStatus: updatedCoStatus,
+        coStatus: newCoStatus,
         time_stamp: new Date().toISOString(),
       });
-      console.log(
-        `Room ${roomNumber} updated to Status: ${newRoomStatus}, CO: ${updatedCoStatus}, Assigned to: ${newAssignedto}`
-      );
-
-      setNewAssignedto("");
       onClose();
     } catch (error) {
       console.error("Error updating room status:", error);
+      setError("Error updating room status.");
+      setSaving(false);
     }
-    handleClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10 cursor-default" onClick={(e) => e.stopPropagation()} >
-      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-100" onClick={(e) => e.stopPropagation()} >
-        <h2 className="text-xl mb-4">Update Room {roomNumber}</h2>
-        <div className="grid grid-cols-1 sm:flex sm:flex-row justify-between items-center gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium">Room Status</label>
-            <select
-              value={newRoomStatus}
-              onChange={(e) => {
-                e.stopPropagation();
-                const selectedStatus = e.target.value;
-                setNewRoomStatus(selectedStatus);
-                if (selectedStatus === "Clean" && newCoStatus !== "STAYOVER") {
-                  setNewCoStatus("VACANT");
-                } else if (
-                  selectedStatus === "ON CHANGE" &&
-                  newCoStatus !== "STAYOVER"
-                ) {
-                  setNewCoStatus("VACANT");
-                }
-              }}
-              className="w-full p-2 border rounded-md cursor-pointer"
-            >
-              <option value="Clean">Clean</option>
-              <option value="ON CHANGE">ON CHANGE</option>
-              <option value="Dirty">Dirty</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium">
-              Check Out Status
-            </label>
-            <select
-              value={newCoStatus}
-              onChange={(e) => {e.stopPropagation(); setNewCoStatus(e.target.value)}}
-              className="w-full p-2 border rounded-md cursor-pointer"
-            >
-              <option value="DUE">DUE</option>
-              <option value="OUT">OUT</option>
-              <option value="VACANT">VACANT</option>
-              <option value="CHECK">CHECK</option>
-              <option value="INSPECTED">INSPECTED</option>
-              <option value="STAYOVER">STAYOVER</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Assigned To</label>
-            <select
-              value={newAssignedto}
-              onChange={(e) => {e.stopPropagation(); setNewAssignedto(e.target.value)}}
-              className="w-5r sm:w-3r p-2 border rounded-md cursor-pointer"
-            >
-              <option value={assignedtoHSK}>{assignedtoHSK}</option>
-              <option value={assignedtoSUP}>{assignedtoSUP}</option>
-            </select>
-          </div>
-        </div>
-        <div className="flex justify-end">
-          <button
-            onClick={onClose}
-            className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2"
-          >
+    <Modal
+      title={`Update Room ${roomNumber}`}
+      onClose={onClose}
+      size="lg"
+      footer={
+        <>
+          <button type="button" onClick={onClose} className={buttonGhost}>
             Cancel
           </button>
           <button
-            onClick={handleStatusChange}
-            className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
+            type="submit"
+            form="edit-room-form"
+            disabled={saving}
+            className={buttonPrimary}
           >
-            Update
+            {saving ? "Saving..." : "Update"}
           </button>
+        </>
+      }
+    >
+      <form
+        id="edit-room-form"
+        className="flex flex-col gap-5"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleStatusChange();
+        }}
+      >
+
+        <div>
+          <span className={labelClass}>Room Status</span>
+          <Segmented
+            label="Room status"
+            value={newRoomStatus}
+            options={ROOM_STATUSES}
+            onChange={handleRoomStatusChange}
+          />
         </div>
-      </div>
-    </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="co-status" className={labelClass}>
+              Check Out Status
+            </label>
+            <select
+              id="co-status"
+              value={newCoStatus}
+              onChange={(e) => setNewCoStatus(e.target.value)}
+              className={`${inputClass} cursor-pointer`}
+            >
+              {CO_STATUSES.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="reassign" className={labelClass}>
+              Assigned To
+            </label>
+            <input
+              id="reassign"
+              value={newAssignedto}
+              onChange={(e) => {
+                setNewAssignedto(e.target.value);
+                setError(null);
+              }}
+              placeholder={[assignedtoHSK, assignedtoSUP].filter(Boolean).join(" / ")}
+              className={`${inputClass} uppercase placeholder:normal-case`}
+            />
+          </div>
+        </div>
+
+        {error && (
+          <p role="alert" className="rounded-md bg-lightred/40 px-3 py-2 text-sm text-chocolate">
+            {error}
+          </p>
+        )}
+      </form>
+    </Modal>
   );
 };
 

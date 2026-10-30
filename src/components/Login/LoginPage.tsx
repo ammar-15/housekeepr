@@ -1,75 +1,69 @@
-import React, { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import user_icon from "../assets/user_icon.svg";
-import password_icon from "../assets/password_icon.svg";
+import { buttonPrimary, inputClass } from "../ui/form";
+import { Lock, User } from "../ui/icons";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("admin");
   const [password, setPassword] = useState("admin");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = (e: FormEvent) => {
+    e.preventDefault();
     if (username === "admin" && password === "admin") {
       navigate("/AdminDashboard");
     } else {
-      alert("Invalid credentials. Please try again.");
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleLogin();
+      setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <div className="
-    loginpagecontainer
-    flex 
-    mt-40
-    max-lg:mt-80
-    max-sm:mt-80 
-    p-2r
-    max-lg:p-1r
-    flex-col
-    justify-self-center
-    gap-3 
-    rounded-lg
-    drop-shadow-lg
-    bg-white
-    "
-    >
-      <div className="header mb-4">
-        <div className="text text-3xl text-wine">Housekeepr</div>
-      </div>
-      <div className="inputs flex flex-col">
-        <div className="input flex m-2 outline outline-1 outline-lightgrey p-1 rounded-lg">
-          <img src={user_icon} alt="User Icon" />
+    <div className="flex min-h-screen items-center justify-center bg-paper px-4">
+      <form
+        onSubmit={handleLogin}
+        className="loginpagecontainer flex w-full max-w-sm flex-col gap-3 rounded-lg border border-line bg-white p-10 shadow-lg"
+      >
+        <h1 className="mb-4 text-3xl text-wine">Housekeepr</h1>
+
+        <div className="relative">
+          <User className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-chocolate/40" />
           <input
-            className="bg-transparent rounded-md bg-pearl pl-1"
-            type="text"
+            aria-label="Username"
+            autoComplete="username"
+            className={`${inputClass} pl-9`}
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setError(null);
+            }}
           />
         </div>
-        <div className="input flex m-2 outline outline-1 outline-lightgrey p-1 rounded-lg">
-          <img src={password_icon} alt="Password Icon" />
+        <div className="relative">
+          <Lock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-chocolate/40" />
           <input
-            className="bg-transparent rounded-md bg-pearl pl-1"
-            type="text"
+            aria-label="Password"
+            type="password"
+            autoComplete="current-password"
+            className={`${inputClass} pl-9`}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError(null);
+            }}
           />
         </div>
-      </div>
-      <div className="submit-container flex self-center justify-center bg-wine text-white hover:bg-dustyblue rounded-lg p-1 w-20">
-        <div className="submit">
-          <button className="login-button" onClick={handleLogin}>
-            Log In
-          </button>
-        </div>
-      </div>
+
+        {error && (
+          <p role="alert" className="text-sm text-wine">
+            {error}
+          </p>
+        )}
+
+        <button type="submit" className={`${buttonPrimary} login-button mt-3`}>
+          Log In
+        </button>
+      </form>
     </div>
   );
 };

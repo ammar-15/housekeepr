@@ -1,65 +1,85 @@
 import { useState, useEffect, useRef } from "react";
 import AdminAutoAssign from "./AdminAutoAssign";
 import AdminHSKassign from "./AdminHSKassign";
+import { Plus } from "../../ui/icons";
 
 interface AdminStartProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
   onAddSUProom?: (SUProom: string) => void;
 }
 
+const ACTIONS = [
+  { key: "HSK" as const, title: "Assign Room" },
+  { key: "AUTO" as const, title: "Start The day" },
+];
+
 const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
   const [showOptions, setShowOptions] = useState(false);
   const [activeModal, setActiveModal] = useState<"HSK" | "AUTO" | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleOptions = () => setShowOptions(!showOptions);
-
   useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target as Node)
-        ) {
-          setShowOptions(false);
-        }
-      };
-  
-      if (showOptions) {
-        document.addEventListener("mousedown", handleClickOutside);
-      } else {
-        document.removeEventListener("mousedown", handleClickOutside);
+    if (!showOptions) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
       }
-  
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [setShowOptions]);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowOptions(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showOptions]);
 
   return (
-    <div className="fixed bottom-5 right-5">
-      <button
-        onClick={toggleOptions}
-        className="text-xl bg-chocolate text-white rounded-full px-5 py-3 hover:bg-wine"
+    <>
+      <div
+        ref={dropdownRef}
+        className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 print:hidden"
       >
-        +
-      </button>
-
-      {showOptions && (
-        <div ref={dropdownRef} className="absolute bottom-16 right-0 flex flex-col space-y-2">
-          <button
-            onClick={() => setActiveModal("HSK")}
-            className="bg-white w-40 px-4 py-2 rounded-md shadow hover:bg-mistysky"
+        {showOptions && (
+          <div
+            role="menu"
+            className="w-44 animate-modal-in overflow-hidden rounded-lg border border-line bg-white shadow-lg"
           >
-            Assign Room
-          </button>
-          <button
-            onClick={() => setActiveModal("AUTO")}
-            className="bg-white w-40 px-4 py-2 rounded-md shadow hover:bg-mistysky"
-          >
-            Start The day
-          </button>
-        </div>
-      )}
+            {ACTIONS.map((action) => (
+              <button
+                key={action.key}
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setActiveModal(action.key);
+                  setShowOptions(false);
+                }}
+                className="block w-full border-b border-line px-4 py-2.5 text-left text-sm last:border-b-0 hover:bg-pearl"
+              >
+                {action.title}
+              </button>
+            ))}
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() => setShowOptions((open) => !open)}
+          aria-label={showOptions ? "Close actions" : "Open actions"}
+          aria-expanded={showOptions}
+          className="grid h-14 w-14 place-items-center rounded-full bg-chocolate text-pearl shadow-[0_8px_24px_-8px_rgba(64,27,27,0.6)] transition-colors hover:bg-wine"
+        >
+          <Plus
+            width={22}
+            height={22}
+            strokeWidth={2}
+            className={`transition-transform duration-200 ${showOptions ? "rotate-45" : ""}`}
+          />
+        </button>
+      </div>
 
       {activeModal === "HSK" && (
         <AdminHSKassign
@@ -67,14 +87,12 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
             if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
             setActiveModal(null);
           }}
-          onClose={() => setActiveModal(null)} 
+          onClose={() => setActiveModal(null)}
         />
       )}
 
-      {activeModal === "AUTO" && (
-        <AdminAutoAssign onClose={() => setActiveModal(null)} />
-      )}
-    </div>
+      {activeModal === "AUTO" && <AdminAutoAssign onClose={() => setActiveModal(null)} />}
+    </>
   );
 };
 

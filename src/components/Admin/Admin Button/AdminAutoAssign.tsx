@@ -1,7 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData";
+import Modal from "../../ui/Modal";
+import { buttonGhost, buttonPrimary, inputClass, labelClass } from "../../ui/form";
+import { Minus, Plus } from "../../ui/icons";
 
 interface Room {
   roomNumber: string;
@@ -15,28 +18,101 @@ interface AdminAutoAssignProps {
   onClose?: () => void;
 }
 
+const knownRoomNumbers = new Set(RoomData.map((room) => room.roomNumber));
+
+const parseRoomList = (value: string) =>
+  value.split(/[\s,]+/).map((room) => room.trim()).filter(Boolean);
+
+const RoomListField = ({
+  id,
+  label,
+  value,
+  list,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  list: string[];
+  onChange: (value: string) => void;
+}) => {
+  const unknown = list.filter((room) => !knownRoomNumbers.has(room));
+  return (
+    <div>
+      <label htmlFor={id} className={labelClass}>
+        {label}
+      </label>
+      <textarea
+        id={id}
+        rows={3}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="(Comma separated)"
+        className={`${inputClass} resize-none`}
+      />
+      {unknown.length > 0 && (
+        <p className="mt-1 text-sm text-wine">Not found: {unknown.join(", ")}</p>
+      )}
+    </div>
+  );
+};
+
+const Stepper = ({
+  label,
+  value,
+  onChange,
+  min = 1,
+  max = 20,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+}) => (
+  <div>
+    <span className={labelClass}>{label}</span>
+    <div className="inline-flex items-center rounded-md border border-line bg-white">
+      <button
+        type="button"
+        aria-label="Decrease"
+        disabled={value <= min}
+        onClick={() => onChange(value - 1)}
+        className="grid h-9 w-9 place-items-center text-chocolate/70 hover:bg-pearl disabled:opacity-30"
+      >
+        <Minus />
+      </button>
+      <span className="w-10 text-center text-sm tabular-nums" aria-live="polite">
+        {value}
+      </span>
+      <button
+        type="button"
+        aria-label="Increase"
+        disabled={value >= max}
+        onClick={() => onChange(value + 1)}
+        className="grid h-9 w-9 place-items-center text-chocolate/70 hover:bg-pearl disabled:opacity-30"
+      >
+        <Plus />
+      </button>
+    </div>
+  </div>
+);
+
 const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
   const [checkOutRoomNumbers, setCheckOutRoomNumbers] = useState("");
   const [stayOverRoomNumbers, setStayOverRoomNumbers] = useState("");
   const [housekeepers, setHousekeepers] = useState<number>(1);
   const [supervisors, setSupervisors] = useState<number>(1);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        handleClose();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const checkoutList = useMemo(() => parseRoomList(checkOutRoomNumbers), [checkOutRoomNumbers]);
+  const stayoverList = useMemo(() => parseRoomList(stayOverRoomNumbers), [stayOverRoomNumbers]);
+  const totalRooms = new Set(
+    [...checkoutList, ...stayoverList].filter((room) => knownRoomNumbers.has(room))
+  ).size;
 
   const handleClose = () => {
     onClose?.();
-    console.log("Auto Assign modal closed");
   };
 
   const parseFloor = (roomNumber: string): number => parseInt(roomNumber[0]);
@@ -55,7 +131,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
     const sortedRooms = sortRoomsSequentially(rooms);
 
     const assignments = Array.from({ length: assigneesCount }, (_, i) => ({
-      assignee: `${prefix}${i + 1}`, 
+      assignee: `${prefix}${i + 1}`,
       rooms: [] as Room[],
       workload: 0,
     }));
@@ -74,9 +150,6 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
   };
 
   const handleSubmit = async () => {
-    const checkoutList = checkOutRoomNumbers.split(",").map((room) => room.trim());
-    const stayoverList = stayOverRoomNumbers.split(",").map((room) => room.trim());
-  
     const allRooms: Room[] = [...checkoutList, ...stayoverList]
       .map((roomNumber) => {
         const room = RoomData.find((room) => room.roomNumber === roomNumber);
@@ -84,32 +157,33 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
           ? {
               ...room,
               workload: parseFloat(room.workload),
-              coStatus: stayoverList.includes(roomNumber) ? "STAYOVER" : room.coStatus, 
+              coStatus: stayoverList.includes(roomNumber) ? "STAYOVER" : room.coStatus,
             }
           : null;
       })
       .filter((room) => room !== null) as Room[];
-  
+
+    setSubmitting(true);
     const housekeeperAssignments = smartAssign(allRooms, housekeepers, "HSK");
     const supervisorAssignments = smartAssign(allRooms, supervisors, "SUP");
     const currentTime = new Date().toISOString();
-  
+
     const assignmentPromises = housekeeperAssignments.flatMap((hskAssignment) =>
       hskAssignment.rooms.map(async (room) => {
         const roomRef = doc(db, "AdminHSK", room.roomNumber);
-  
+
         const assignedSupervisor = supervisorAssignments.find((sup) =>
           sup.rooms.some((r) => r.roomNumber === room.roomNumber)
         )?.assignee;
-  
+
         const updatedRoom = {
           ...room,
           assignedtoHSK: hskAssignment.assignee,
           assignedtoSUP: assignedSupervisor || "",
-          coStatus: stayoverList.includes(room.roomNumber) ? "STAYOVER" : room.coStatus, 
+          coStatus: stayoverList.includes(room.roomNumber) ? "STAYOVER" : room.coStatus,
           time_stamp: currentTime,
         };
-  
+
         try {
           const docSnapshot = await getDoc(roomRef);
           return docSnapshot.exists()
@@ -120,78 +194,57 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
         }
       })
     );
-  
+
     await Promise.all(assignmentPromises);
     handleClose();
-  
-    setCheckOutRoomNumbers("");
-    setStayOverRoomNumbers("");
-    setHousekeepers(1);
-    setSupervisors(1);
-    console.log("Auto assign completed.");
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-96">
-        <h2 className="text-xl mb-4">Auto Assign Rooms</h2>
-        <div className="flex space-x-4">
-          <div className="w-50%">
-            <h3 className="text-md mb-2">Check-Out Rooms</h3>
-            <input
-              type="text"
-              placeholder="(Comma separated)"
-              value={checkOutRoomNumbers}
-              onChange={(e) => setCheckOutRoomNumbers(e.target.value)}
-              className="w-full mb-3 p-2 border rounded-md"
-            />
-          </div>
-          <div className="w-50%">
-            <h3 className="text-md mb-2">Stayover Rooms</h3>
-            <input
-              type="text"
-              placeholder="(Comma separated)"
-              value={stayOverRoomNumbers}
-              onChange={(e) => setStayOverRoomNumbers(e.target.value)}
-              className="w-full mb-3 p-2 border rounded-md"
-            />
-          </div>
-        </div>
-        <div className="flex space-x-4 mt-3">
-          <div className="w-50%">
-            <h3 className="text-md mb-2">Number of Housekeepers</h3>
-            <input
-              type="number"
-              placeholder="Enter number of housekeepers"
-              value={housekeepers}
-              onChange={(e) => setHousekeepers(Number(e.target.value))}
-              className="w-full mb-3 p-2 border rounded-md"
-              min={1}
-            />
-          </div>
-          <div className="w-50%">
-            <h3 className="text-md mb-2">Number of Supervisors</h3>
-            <input
-              type="number"
-              placeholder="Enter number of supervisors"
-              value={supervisors}
-              onChange={(e) => setSupervisors(Number(e.target.value))}
-              className="w-full mb-3 p-2 border rounded-md"
-              min={1}
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end">
-          <button onClick={handleClose} className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2">
+    <Modal
+      title="Auto Assign Rooms"
+      onClose={handleClose}
+      size="lg"
+      footer={
+        <>
+          <button type="button" onClick={handleClose} className={buttonGhost}>
             Cancel
           </button>
-          <button onClick={handleSubmit} className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine">
-            Auto Assign
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={totalRooms === 0 || submitting}
+            className={buttonPrimary}
+          >
+            {submitting ? "Assigning..." : "Auto Assign"}
           </button>
+        </>
+      }
+    >
+      <div className="flex flex-col gap-5">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <RoomListField
+            id="checkout-rooms"
+            label="Check-Out Rooms"
+            value={checkOutRoomNumbers}
+            list={checkoutList}
+            onChange={setCheckOutRoomNumbers}
+          />
+          <RoomListField
+            id="stayover-rooms"
+            label="Stayover Rooms"
+            value={stayOverRoomNumbers}
+            list={stayoverList}
+            onChange={setStayOverRoomNumbers}
+          />
         </div>
+
+        <div className="flex flex-wrap gap-6">
+          <Stepper label="Number of Housekeepers" value={housekeepers} onChange={setHousekeepers} />
+          <Stepper label="Number of Supervisors" value={supervisors} onChange={setSupervisors} />
+        </div>
+
       </div>
-    </div>
+    </Modal>
   );
 };
 

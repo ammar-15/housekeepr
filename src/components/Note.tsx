@@ -1,8 +1,11 @@
 import { useState } from "react";
-import trashIcon from "./assets/trashicon.svg";
+import Modal from "./ui/Modal";
+import { buttonGhost, buttonPrimary } from "./ui/form";
+import { Trash } from "./ui/icons";
+import { formatNoteDate } from "../lib/format";
 
 interface NotesProps {
-  note: { id: string; content: string };
+  note: { id: string; content: string; createdAt?: Date };
   updateNote: (id: string, newContent: string) => void;
   deleteNote: (id: string) => void;
 }
@@ -12,11 +15,7 @@ const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleUpdate = () => {
-    updateNote(note.id, content);
-  };
-
-  const handleDelete = () => {
-    setShowDeleteModal(true);
+    if (content !== note.content) updateNote(note.id, content);
   };
 
   const confirmDelete = () => {
@@ -24,56 +23,49 @@ const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
     setShowDeleteModal(false);
   };
 
-  const handleModalClose = () => {
-    setShowDeleteModal(false);
-  };
-
   return (
-    <div className="note">
-      <div className="note-container flex items-start justify-between p-4 bg-pearl rounded-md shadow-md mb-2">
-        <textarea
-          className="w-full h-24 bg-pearl resize-none focus:outline-none"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          onBlur={handleUpdate}
-          placeholder="Empty Note"
-        />
-        <div className="top-2 right-2">
-          <button onClick={handleDelete} className="hover">
-            <img src={trashIcon} alt="Delete" className="w-5 h-5 hover:bg-white" />
-          </button>
-        </div>
-      </div>
-      {showDeleteModal && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-          onClick={handleModalClose}
+    <article className="note group flex min-h-[11rem] flex-col rounded-lg border border-line bg-pearl transition-colors focus-within:border-dustyblue">
+      <textarea
+        aria-label="Note"
+        className="flex-1 resize-none bg-transparent p-4 text-sm leading-relaxed text-chocolate placeholder:text-chocolate/35 focus:outline-none"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        onBlur={handleUpdate}
+        placeholder="Empty Note"
+      />
+      <footer className="flex items-center justify-between border-t border-line/80 px-4 py-2 text-xs text-chocolate/50">
+        <time dateTime={note.createdAt?.toISOString()}>{formatNoteDate(note.createdAt)}</time>
+        <button
+          type="button"
+          onClick={() => setShowDeleteModal(true)}
+          aria-label="Delete note"
+          className="rounded p-1 text-chocolate/50 transition hover:bg-lightred/60 hover:text-chocolate focus-visible:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
         >
-          <div
-            className="bg-white p-6 rounded-md shadow-lg w-68"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-center mb-4">
-              Are you sure you want to delete this note?
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={handleModalClose}
-                className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2"
-              >
+          <Trash width={14} height={14} />
+        </button>
+      </footer>
+
+      {showDeleteModal && (
+        <Modal
+          tone="danger"
+          title="Delete Note"
+          size="sm"
+          onClose={() => setShowDeleteModal(false)}
+          footer={
+            <>
+              <button type="button" onClick={() => setShowDeleteModal(false)} className={buttonGhost}>
                 Cancel
               </button>
-              <button
-                onClick={confirmDelete}
-                className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
-              >
+              <button type="button" onClick={confirmDelete} className={buttonPrimary}>
                 Delete
               </button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        >
+          <p>Are you sure you want to delete this note?</p>
+        </Modal>
       )}
-    </div>
+    </article>
   );
 };
 

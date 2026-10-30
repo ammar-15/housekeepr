@@ -1,7 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData";
+import Modal from "../../ui/Modal";
+import Segmented from "../../ui/Segmented";
+import { ROOM_STATUS_TONE } from "../../ui/tones";
+import { buttonGhost, buttonPrimary, inputClass, labelClass } from "../../ui/form";
 
 interface AdminHSKassignProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
@@ -19,117 +23,135 @@ const AdminHSKassign = ({
   const [HSKroomNumber, setHSKRoomNumber] = useState("");
   const [assignedto, setAssignedto] = useState("");
   const [statusOption, setStatusOption] = useState("Dirty");
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        handleClose();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
+  const roomNumber = HSKroomNumber.trim();
+  const assignee = assignedto.trim().toUpperCase();
+  const room = RoomData.find((r) => r.roomNumber === roomNumber);
+  const assigneeValid = /^(HSK|SUP)\d+$/.test(assignee);
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-      console.log("hskassign closed");
-    }
+    onClose?.();
   };
 
   const handleSave = async () => {
-    console.log("room sent to Firebase");
-
-    if (HSKroomNumber.trim() !== "" && assignedto.trim() !== "") {
-      const room = RoomData.find((r) => r.roomNumber === HSKroomNumber);
-
-      if (!room) {
-        console.error("room not found in RoomData.");
-        return;
-      }
-
-      const currentTime = new Date().toISOString();
-      const roomRef = doc(db, "AdminHSK", HSKroomNumber);
-      let updatedRoom = {
-        ...room,
-        roomStatus: statusOption,
-        coStatus: statusOption === "Clean" ? "VACANT" : room.coStatus, 
-        time_stamp: currentTime,
-      };
-
-      if (assignedto.startsWith("HSK")) {
-        updatedRoom = { ...updatedRoom, assignedtoHSK: assignedto, assignedtoSUP: "SUP1", };
-        if (onassignedtoHSK) onassignedtoHSK(assignedto);
-        if (onassignedtoSUP) onassignedtoSUP("SUP1");
-      } else if (assignedto.startsWith("SUP")) {
-        updatedRoom = { ...updatedRoom, assignedtoSUP: assignedto, assignedtoHSK: "N/A", };
-        if (onassignedtoSUP) onassignedtoSUP(assignedto);
-      } else {
-        console.error("Invalid assignment! Must start with 'HSK'.");
-        return;
-      }
-
-      try {
-        await setDoc(roomRef, updatedRoom);
-        console.log(`Room ${HSKroomNumber} assigned to ${assignedto} and saved to Firebase.`);
-
-        if (onAddHSKroom) onAddHSKroom(HSKroomNumber);
-        setHSKRoomNumber("");
-        setAssignedto("");
-      } catch (error) {
-        console.error("Firebase room error", error);
-      }
-    } else {
-      console.error("Room Number and Assignment cannot be empty.");
+    if (!room) {
+      setError("Room not found.");
+      return;
     }
-    handleClose();
+    if (!assigneeValid) {
+      setError("Invalid assignment. Use HSK# or SUP#.");
+      return;
+    }
+
+    const roomRef = doc(db, "AdminHSK", roomNumber);
+    let updatedRoom = {
+      ...room,
+      roomStatus: statusOption,
+      coStatus: statusOption === "Clean" ? "VACANT" : room.coStatus,
+      time_stamp: new Date().toISOString(),
+    };
+
+    if (assignee.startsWith("HSK")) {
+      updatedRoom = { ...updatedRoom, assignedtoHSK: assignee, assignedtoSUP: "SUP1" };
+      if (onassignedtoHSK) onassignedtoHSK(assignee);
+      if (onassignedtoSUP) onassignedtoSUP("SUP1");
+    } else {
+      updatedRoom = { ...updatedRoom, assignedtoSUP: assignee, assignedtoHSK: "N/A" };
+      if (onassignedtoSUP) onassignedtoSUP(assignee);
+    }
+
+    setSaving(true);
+    try {
+      await setDoc(roomRef, updatedRoom);
+      if (onAddHSKroom) onAddHSKroom(roomNumber);
+      handleClose();
+    } catch (error) {
+      console.error("Firebase room error", error);
+      setError("Error saving room.");
+      setSaving(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div ref={modalRef} className="bg-white p-6 rounded-md shadow-lg w-96">
-        <h2 className="text-xl mb-4">Assign Room</h2>
-        <input
-          type="text"
-          placeholder="Room Number"
-          value={HSKroomNumber}
-          onChange={(e) => setHSKRoomNumber(e.target.value)}
-          className="w-full mb-3 p-2 border rounded-md"
-        />
-        <input
-          type="text"
-          placeholder="Assigned To (HSK# or SUP#)"
-          value={assignedto}
-          onChange={(e) => setAssignedto(e.target.value)}
-          className="w-full mb-3 p-2 border rounded-md"
-        />
-        <select
-          value={statusOption}
-          onChange={(e) => setStatusOption(e.target.value)}
-          className="w-full mb-3 p-2 border rounded-md"
-        >
-          <option value="Dirty">Dirty</option>
-          <option value="Clean">Clean</option>
-        </select>
-        <div className="flex justify-end">
-          <button
-            onClick={handleClose}
-            className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2"
-          >
+    <Modal
+      title="Assign Room"
+      onClose={handleClose}
+      footer={
+        <>
+          <button type="button" onClick={handleClose} className={buttonGhost}>
             Cancel
           </button>
-          <button
-            onClick={handleSave}
-            className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
-          >
-            Save
+          <button type="submit" form="assign-room-form" disabled={saving} className={buttonPrimary}>
+            {saving ? "Saving..." : "Save"}
           </button>
+        </>
+      }
+    >
+      <form
+        id="assign-room-form"
+        className="flex flex-col gap-5"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSave();
+        }}
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="assign-room-number" className={labelClass}>
+              Room Number
+            </label>
+            <input
+              id="assign-room-number"
+              autoFocus
+              inputMode="numeric"
+              value={HSKroomNumber}
+              onChange={(e) => {
+                setHSKRoomNumber(e.target.value);
+                setError(null);
+              }}
+              placeholder="Room Number"
+              className={`${inputClass}`}
+            />
+          </div>
+          <div>
+            <label htmlFor="assign-to" className={labelClass}>
+              Assigned To
+            </label>
+            <input
+              id="assign-to"
+              value={assignedto}
+              onChange={(e) => {
+                setAssignedto(e.target.value);
+                setError(null);
+              }}
+              placeholder="Assigned To (HSK# or SUP#)"
+              className={`${inputClass} uppercase placeholder:normal-case`}
+            />
+          </div>
         </div>
-      </div>
-    </div>
+
+        <div>
+          <span className={labelClass}>Status</span>
+          <Segmented
+            label="Status"
+            value={statusOption}
+            onChange={setStatusOption}
+            options={[
+              { value: "Dirty", label: "Dirty", tone: ROOM_STATUS_TONE.Dirty },
+              { value: "Clean", label: "Clean", tone: ROOM_STATUS_TONE.Clean },
+            ]}
+          />
+        </div>
+
+        {error && (
+          <p role="alert" className="rounded-md bg-lightred/40 px-3 py-2 text-sm text-chocolate">
+            {error}
+          </p>
+        )}
+      </form>
+    </Modal>
   );
 };
 
