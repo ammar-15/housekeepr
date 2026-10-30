@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { formatTime, formatToday } from "../../lib/format";
 
 export const PageShell = ({ nav, children }: { nav: ReactNode; children: ReactNode }) => (
   <div className="min-h-screen bg-paper">
@@ -12,32 +11,13 @@ export const PageShell = ({ nav, children }: { nav: ReactNode; children: ReactNo
 
 interface PageHeaderProps {
   title: string;
-  eyebrow?: string;
-  meta?: ReactNode;
   actions?: ReactNode;
 }
 
-export const PageHeader = ({ title, eyebrow, meta, actions }: PageHeaderProps) => (
-  <div className="dashboard-header flex flex-col gap-5 border-b border-line pb-6 md:flex-row md:items-end md:justify-between">
-    <div>
-      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-clay">
-        {eyebrow ?? formatToday()}
-      </p>
-      <h1 className="mt-1.5 font-display text-4xl font-medium tracking-tight text-wine">
-        {title}
-      </h1>
-      {meta && <div className="mt-2 text-sm text-chocolate/55">{meta}</div>}
-    </div>
+export const PageHeader = ({ title, actions }: PageHeaderProps) => (
+  <div className="dashboard-header flex flex-col gap-4 border-b border-line pb-5 md:flex-row md:items-center md:justify-between">
+    <h1 className="text-3xl text-wine">{title}</h1>
     {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
   </div>
 );
 
-export const SyncStatus = ({ syncedAt }: { syncedAt: Date | null }) => (
-  <span className="inline-flex items-center gap-2">
-    <span
-      className={`h-1.5 w-1.5 rounded-full ${syncedAt ? "bg-green" : "bg-dustyblue"}`}
-      aria-hidden
-    />
-    {syncedAt ? `Live · updated ${formatTime(syncedAt)}` : "Connecting…"}
-  </span>
-);

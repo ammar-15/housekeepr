@@ -4,7 +4,7 @@ import { db } from "../../../firebase";
 import Modal from "../ui/Modal";
 import { buttonGhost, buttonPrimary } from "../ui/form";
 
-// The public demo shares one database, so wiping it is switched off.
+// Clearing is off for the public demo.
 const DEMO_MODE = true;
 
 interface ClearRoomsProps {
@@ -37,14 +37,13 @@ const ClearRooms = ({ onClose }: ClearRoomsProps) => {
   return (
     <Modal
       tone="danger"
-      eyebrow="End of day"
-      title="Clear today's board?"
+      title="End of Day"
       size="sm"
       onClose={onClose}
       footer={
         <>
           <button type="button" className={buttonGhost} onClick={onClose} disabled={loading}>
-            Keep rooms
+            No
           </button>
           <button
             type="button"
@@ -53,18 +52,15 @@ const ClearRooms = ({ onClose }: ClearRoomsProps) => {
             disabled={DEMO_MODE || loading}
             title={DEMO_MODE ? "Disabled in the demo" : undefined}
           >
-            {loading ? "Clearing…" : "Clear all rooms"}
+            {loading ? "Clearing..." : "Yes"}
           </button>
         </>
       }
     >
-      <p className="text-sm leading-relaxed text-chocolate/80">
-        Every room, status and assignment is removed so tomorrow starts empty. This can't be
-        undone.
-      </p>
+      <p>Are you sure you want to clear all rooms from the day?</p>
       {DEMO_MODE && (
-        <p className="mt-3 rounded-md bg-pearl px-3 py-2 text-xs text-chocolate/60">
-          Clearing is turned off in this demo so the board stays explorable.
+        <p className="mt-2 text-xs italic">
+          there would be a 'yes' button to clear the rooms but for now just explore the site
         </p>
       )}
     </Modal>

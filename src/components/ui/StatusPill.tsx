@@ -11,9 +11,9 @@ const StatusPill = ({ value, kind }: StatusPillProps) => {
 
   return (
     <span
-      className={`inline-flex min-w-[5.75rem] items-center justify-center rounded px-2 py-1 text-[11px] font-semibold uppercase leading-none tracking-[0.06em] text-chocolate ${tone}`}
+      className={`inline-block min-w-[100px] rounded-md px-3 py-1 text-center text-sm text-black ${tone}`}
     >
-      {value || "Unknown"}
+      {value}
     </span>
   );
 };

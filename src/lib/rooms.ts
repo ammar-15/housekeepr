@@ -70,10 +70,10 @@ export const floorOf = (roomNumber: string) => roomNumber.slice(0, -2) || "0";
 export type SortOption = "recent" | "oldest" | "ascending" | "descending";
 
 export const SORT_LABELS: Record<SortOption, string> = {
-  recent: "Newest first",
-  oldest: "Oldest first",
-  ascending: "Room number, low to high",
-  descending: "Room number, high to low",
+  recent: "Recent",
+  oldest: "Oldest",
+  ascending: "Ascending",
+  descending: "Descending",
 };
 
 type Sortable = { roomNumber?: string; time_stamp?: string; createdAt?: Date };

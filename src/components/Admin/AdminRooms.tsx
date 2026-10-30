@@ -3,26 +3,23 @@ import AdminNavbar from "./AdminNavbar.tsx";
 import ClearRooms from "./ClearRooms.tsx";
 import StatsHeader from "../StatsHeader.tsx";
 import RoomList from "../RoomList.tsx";
-import { PageHeader, PageShell, SyncStatus } from "../ui/Page.tsx";
+import { PageHeader, PageShell } from "../ui/Page.tsx";
 import { buttonOutline } from "../ui/form.ts";
 import { Moon, Printer } from "../ui/icons.tsx";
-import { isInspected, needsCleaning, useRooms } from "../../lib/rooms.ts";
+import { useRooms } from "../../lib/rooms.ts";
 
 const AdminRooms = () => {
-  const { rooms, loaded, syncedAt } = useRooms();
+  const { rooms, loaded } = useRooms();
   const [showClearModal, setShowClearModal] = useState(false);
 
   const stats = {
-    "Total rooms": rooms.length,
-    Outstanding: rooms.filter(needsCleaning).length,
-    Inspected: rooms.filter(isInspected).length,
+    "Total Rooms": rooms.length,
   };
 
   return (
     <PageShell nav={<AdminNavbar />}>
       <PageHeader
         title="Rooms"
-        meta={<SyncStatus syncedAt={syncedAt} />}
         actions={
           <>
             <div className="flex gap-2 print:hidden">
@@ -36,7 +33,7 @@ const AdminRooms = () => {
                 onClick={() => setShowClearModal(true)}
               >
                 <Moon className="text-chocolate/60" />
-                End day
+                Clear Rooms
               </button>
             </div>
             <StatsHeader stats={stats} />
@@ -46,8 +43,6 @@ const AdminRooms = () => {
       <RoomList
         rooms={rooms}
         loaded={loaded}
-        emptyLabel="The board is empty"
-        emptyHint="Start the day from the dashboard to load check-outs and stayovers."
       />
       {showClearModal && <ClearRooms onClose={() => setShowClearModal(false)} />}
     </PageShell>

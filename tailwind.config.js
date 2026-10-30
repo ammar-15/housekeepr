@@ -3,11 +3,6 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        display: ["Fraunces", "Georgia", "serif"],
-        sans: ['"Hanken Grotesk"', "system-ui", "sans-serif"],
-        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
-      },
       keyframes: {
         "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
         "modal-in": {

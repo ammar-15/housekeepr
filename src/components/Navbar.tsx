@@ -21,7 +21,7 @@ const Navbar = ({ role, items }: NavbarProps) => {
     <header className="navbar sticky top-0 z-30 bg-chocolate text-pearl print:hidden">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
-          <span className="font-display text-xl tracking-tight">Housekeepr</span>
+          <span className="text-xl tracking-tight">Housekeepr</span>
           <span className="h-6 w-px bg-pearl/15" aria-hidden />
           <AdminUserSwitch current={role} />
         </div>

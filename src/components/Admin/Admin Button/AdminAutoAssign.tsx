@@ -3,7 +3,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 import RoomData from "../../RoomData";
 import Modal from "../../ui/Modal";
-import { buttonGhost, buttonPrimary, hintClass, inputClass, labelClass } from "../../ui/form";
+import { buttonGhost, buttonPrimary, inputClass, labelClass } from "../../ui/form";
 import { Minus, Plus } from "../../ui/icons";
 
 interface Room {
@@ -47,15 +47,12 @@ const RoomListField = ({
         rows={3}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="101, 102, 215"
-        className={`${inputClass} resize-none font-mono`}
+        placeholder="(Comma separated)"
+        className={`${inputClass} resize-none`}
       />
-      <p className={hintClass}>
-        <span className="font-mono tabular-nums">{list.length - unknown.length}</span> rooms
-        {unknown.length > 0 && (
-          <span className="text-wine"> · not found: {unknown.join(", ")}</span>
-        )}
-      </p>
+      {unknown.length > 0 && (
+        <p className="mt-1 text-sm text-wine">Not found: {unknown.join(", ")}</p>
+      )}
     </div>
   );
 };
@@ -78,19 +75,19 @@ const Stepper = ({
     <div className="inline-flex items-center rounded-md border border-line bg-white">
       <button
         type="button"
-        aria-label={`Fewer ${label.toLowerCase()}`}
+        aria-label="Decrease"
         disabled={value <= min}
         onClick={() => onChange(value - 1)}
         className="grid h-9 w-9 place-items-center text-chocolate/70 hover:bg-pearl disabled:opacity-30"
       >
         <Minus />
       </button>
-      <span className="w-10 text-center font-mono text-sm tabular-nums" aria-live="polite">
+      <span className="w-10 text-center text-sm tabular-nums" aria-live="polite">
         {value}
       </span>
       <button
         type="button"
-        aria-label={`More ${label.toLowerCase()}`}
+        aria-label="Increase"
         disabled={value >= max}
         onClick={() => onChange(value + 1)}
         className="grid h-9 w-9 place-items-center text-chocolate/70 hover:bg-pearl disabled:opacity-30"
@@ -204,8 +201,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
 
   return (
     <Modal
-      eyebrow="Smart add"
-      title="Start the day"
+      title="Auto Assign Rooms"
       onClose={handleClose}
       size="lg"
       footer={
@@ -219,7 +215,7 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
             disabled={totalRooms === 0 || submitting}
             className={buttonPrimary}
           >
-            {submitting ? "Assigning…" : totalRooms > 0 ? `Assign ${totalRooms} rooms` : "Assign rooms"}
+            {submitting ? "Assigning..." : "Auto Assign"}
           </button>
         </>
       }
@@ -228,14 +224,14 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
         <div className="grid gap-4 sm:grid-cols-2">
           <RoomListField
             id="checkout-rooms"
-            label="Check-out rooms"
+            label="Check-Out Rooms"
             value={checkOutRoomNumbers}
             list={checkoutList}
             onChange={setCheckOutRoomNumbers}
           />
           <RoomListField
             id="stayover-rooms"
-            label="Stayover rooms"
+            label="Stayover Rooms"
             value={stayOverRoomNumbers}
             list={stayoverList}
             onChange={setStayOverRoomNumbers}
@@ -243,23 +239,10 @@ const AdminAutoAssign = ({ onClose }: AdminAutoAssignProps): JSX.Element => {
         </div>
 
         <div className="flex flex-wrap gap-6">
-          <Stepper label="Housekeepers" value={housekeepers} onChange={setHousekeepers} />
-          <Stepper label="Supervisors" value={supervisors} onChange={setSupervisors} />
+          <Stepper label="Number of Housekeepers" value={housekeepers} onChange={setHousekeepers} />
+          <Stepper label="Number of Supervisors" value={supervisors} onChange={setSupervisors} />
         </div>
 
-        <p className="rounded-md bg-pearl px-4 py-3 text-sm leading-relaxed text-chocolate/75">
-          {totalRooms > 0 ? (
-            <>
-              About <strong className="font-mono font-semibold text-chocolate">{Math.ceil(totalRooms / housekeepers)}</strong>{" "}
-              rooms per housekeeper and{" "}
-              <strong className="font-mono font-semibold text-chocolate">{Math.ceil(totalRooms / supervisors)}</strong>{" "}
-              per supervisor. Rooms are split in floor order, so each person covers as few
-              floors as possible.
-            </>
-          ) : (
-            "Paste room numbers separated by commas or spaces. Unknown numbers are skipped."
-          )}
-        </p>
       </div>
     </Modal>
   );

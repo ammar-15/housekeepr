@@ -9,16 +9,8 @@ interface AdminStartProps {
 }
 
 const ACTIONS = [
-  {
-    key: "AUTO" as const,
-    title: "Start the day",
-    body: "Load check-outs and stayovers and split them across staff",
-  },
-  {
-    key: "HSK" as const,
-    title: "Assign a room",
-    body: "Add or reassign a single room",
-  },
+  { key: "HSK" as const, title: "Assign Room" },
+  { key: "AUTO" as const, title: "Start The day" },
 ];
 
 const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
@@ -55,7 +47,7 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
         {showOptions && (
           <div
             role="menu"
-            className="w-72 animate-modal-in overflow-hidden rounded-lg border border-line bg-white shadow-lg"
+            className="w-44 animate-modal-in overflow-hidden rounded-lg border border-line bg-white shadow-lg"
           >
             {ACTIONS.map((action) => (
               <button
@@ -66,10 +58,9 @@ const AdminStart = ({ onAddHSKroom }: AdminStartProps) => {
                   setActiveModal(action.key);
                   setShowOptions(false);
                 }}
-                className="block w-full border-b border-line px-4 py-3 text-left last:border-b-0 hover:bg-pearl"
+                className="block w-full border-b border-line px-4 py-2.5 text-left text-sm last:border-b-0 hover:bg-pearl"
               >
-                <span className="block text-sm font-medium">{action.title}</span>
-                <span className="block text-xs text-chocolate/55">{action.body}</span>
+                {action.title}
               </button>
             ))}
           </div>

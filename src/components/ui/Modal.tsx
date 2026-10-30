@@ -4,7 +4,6 @@ import { X } from "./icons";
 
 interface ModalProps {
   title: string;
-  eyebrow?: string;
   onClose: () => void;
   children: ReactNode;
   footer?: ReactNode;
@@ -16,7 +15,6 @@ const SIZES = { sm: "sm:max-w-sm", md: "sm:max-w-md", lg: "sm:max-w-lg" };
 
 const Modal = ({
   title,
-  eyebrow,
   onClose,
   children,
   footer,
@@ -54,12 +52,7 @@ const Modal = ({
         {tone === "danger" && <div className="h-1 shrink-0 bg-lightred" />}
         <div className="flex items-start justify-between gap-4 px-6 pt-5">
           <div>
-            {eyebrow && (
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-clay">
-                {eyebrow}
-              </p>
-            )}
-            <h2 id={titleId} className="font-display text-xl text-chocolate">
+            <h2 id={titleId} className="text-xl text-chocolate">
               {title}
             </h2>
           </div>

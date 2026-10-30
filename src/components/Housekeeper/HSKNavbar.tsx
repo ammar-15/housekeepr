@@ -8,7 +8,7 @@ const HSKNavbar = ({ assignedtoHSK }: HSKNavbarProps) => (
   <Navbar
     role={assignedtoHSK}
     items={[
-      { label: "My rooms", to: `/${assignedtoHSK}dashboard` },
+      { label: "Rooms", to: `/${assignedtoHSK}dashboard` },
       {
         label: "Notes",
         to: "/HSKNotes",

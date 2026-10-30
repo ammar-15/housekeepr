@@ -22,7 +22,6 @@ interface NoteData {
 
 const NoteContainer = () => {
   const [notes, setNotes] = useState<NoteData[]>([]);
-  const [loaded, setLoaded] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>("recent");
 
   useEffect(() => {
@@ -37,7 +36,6 @@ const NoteContainer = () => {
       createdAt: doc.data().createdAt ? doc.data().createdAt.toDate() : new Date(),
     }));
     setNotes(notesList);
-    setLoaded(true);
   };
 
   const addNote = async () => {
@@ -64,11 +62,6 @@ const NoteContainer = () => {
     <div className="note-container flex flex-col">
       <PageHeader
         title="Notes"
-        meta={
-          loaded
-            ? `${notes.length} ${notes.length === 1 ? "note" : "notes"} · visible to every role`
-            : "Loading…"
-        }
         actions={
           <SortButton value={sortOption} onChange={setSortOption} options={["recent", "oldest"]} />
         }
@@ -77,11 +70,11 @@ const NoteContainer = () => {
       <div className="notes-container mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <button
           type="button"
-          className="add-notes flex min-h-[11rem] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-dustyblue text-sm text-chocolate/60 transition-colors hover:border-wine hover:bg-white hover:text-wine"
+          aria-label="Add note"
+          className="add-notes flex min-h-[11rem] items-center justify-center rounded-lg border border-dashed border-dustyblue text-chocolate/60 transition-colors hover:border-wine hover:bg-white hover:text-wine"
           onClick={addNote}
         >
-          <Plus width={20} height={20} />
-          New note
+          <Plus width={24} height={24} />
         </button>
         {sortedNotes.map((note) => (
           <Notes key={note.id} note={note} updateNote={updateNote} deleteNote={deleteNote} />

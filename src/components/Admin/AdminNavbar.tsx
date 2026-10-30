@@ -2,7 +2,7 @@ import Navbar from "../Navbar";
 
 const ADMIN_LINKS = [
   { label: "Dashboard", to: "/AdminDashboard" },
-  { label: "Housekeepers", to: "/AdminHSK" },
+  { label: "Housekeeper", to: "/AdminHSK" },
   { label: "Supervisors", to: "/AdminSUP" },
   { label: "Rooms", to: "/AdminRooms" },
   { label: "Notes", to: "/AdminNotes" },

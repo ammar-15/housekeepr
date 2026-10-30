@@ -3,8 +3,8 @@ import AdminNavbar from "./AdminNavbar";
 import AdminStart from "./Admin Button/AdminStart";
 import DayProgress from "./DayProgress";
 import StatsHeader from "../StatsHeader";
-import { PageHeader, PageShell, SyncStatus } from "../ui/Page";
-import { Room, isInspected, isStaffCode, staffLabel, useRooms } from "../../lib/rooms";
+import { PageHeader, PageShell } from "../ui/Page";
+import { Room, isInspected, isStaffCode, useRooms } from "../../lib/rooms";
 import { percent } from "../../lib/format";
 
 type StaffSummary = {
@@ -67,110 +67,49 @@ const summarise = (rooms: Room[]) => {
 
 const RoomRef = ({ room }: { room?: Room }) =>
   room ? (
-    <span>
-      <span className="font-mono font-semibold tabular-nums">{room.roomNumber}</span>
-      <span className="ml-1.5 font-mono text-xs text-chocolate/50">{room.roomType}</span>
-    </span>
+    <p className="font-semibold">
+      {room.roomNumber} - {room.roomType}
+    </p>
   ) : (
-    <span className="text-chocolate/35">—</span>
+    <p className="text-dustyblue">None</p>
   );
 
-const StaffCard = ({
-  staff,
-  activeLabel,
-  activeTone,
-  doneLabel,
-}: {
-  staff: StaffSummary;
-  activeLabel: string;
-  activeTone: string;
-  doneLabel: string;
-}) => {
-  const progress = percent(staff.done, staff.total);
-
-  return (
-    <article className="flex flex-col rounded-lg border border-line bg-pearl p-4">
-      <header className="flex items-start justify-between gap-3">
-        <div>
-          <p className="font-mono text-[11px] text-chocolate/45">{staff.code}</p>
-          <h3 className="font-medium">{staffLabel(staff.code)}</h3>
-        </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2 py-0.5 text-xs text-chocolate/75 ring-1 ring-line">
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${staff.currentRoom ? activeTone : "bg-dustyblue"}`}
-            aria-hidden
-          />
-          {staff.currentRoom ? `${activeLabel} ${staff.currentRoom.roomNumber}` : "Between rooms"}
-        </span>
-      </header>
-
-      <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <dt className="text-[11px] uppercase tracking-[0.1em] text-chocolate/50">Previous</dt>
-          <dd className="mt-0.5">
-            <RoomRef room={staff.previousRoom} />
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[11px] uppercase tracking-[0.1em] text-chocolate/50">Current</dt>
-          <dd className="mt-0.5">
-            <RoomRef room={staff.currentRoom} />
-          </dd>
-        </div>
-      </dl>
-
-      <footer className="mt-auto pt-4">
-        <div className="flex justify-between text-xs text-chocolate/60">
-          <span>
-            {staff.done} of {staff.total} {doneLabel}
-          </span>
-          <span className="font-mono tabular-nums">{progress}%</span>
-        </div>
-        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white">
-          <div
-            className="h-full rounded-full bg-clay transition-[width] duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </footer>
-    </article>
-  );
-};
-
-const StaffSection = ({
-  title,
-  staff,
-  empty,
-  ...cardProps
-}: {
-  title: string;
-  staff: StaffSummary[];
-  empty: string;
-  activeLabel: string;
-  activeTone: string;
-  doneLabel: string;
-}) => (
-  <section className="section-container">
-    <div className="mb-3 flex items-baseline justify-between">
-      <h2 className="font-display text-xl text-wine">{title}</h2>
-      <span className="font-mono text-xs text-chocolate/45">{staff.length} on shift</span>
+const StaffCard = ({ staff }: { staff: StaffSummary }) => (
+  <div className="flex flex-col rounded-md border border-line bg-pearl p-4 text-center">
+    <h3 className="text-lg font-bold">{staff.code}</h3>
+    <p className="mt-2 text-sm">Previous Room</p>
+    <RoomRef room={staff.previousRoom} />
+    <p className="mt-3 text-sm">Current Room</p>
+    <RoomRef room={staff.currentRoom} />
+    <div className="mt-4 text-xs text-chocolate/60">
+      {staff.done}/{staff.total}
     </div>
+    <div className="mt-1 h-1 overflow-hidden rounded-full bg-white">
+      <div
+        className="h-full rounded-full bg-clay transition-[width] duration-500"
+        style={{ width: `${percent(staff.done, staff.total)}%` }}
+      />
+    </div>
+  </div>
+);
+
+const StaffSection = ({ title, staff }: { title: string; staff: StaffSummary[] }) => (
+  <section className="section-container">
+    <h2 className="mb-3 text-lg text-wine">{title}</h2>
     {staff.length > 0 ? (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {staff.map((member) => (
-          <StaffCard key={member.code} staff={member} {...cardProps} />
+          <StaffCard key={member.code} staff={member} />
         ))}
       </div>
     ) : (
-      <p className="rounded-lg border border-dashed border-line px-4 py-6 text-center text-sm text-chocolate/55">
-        {empty}
-      </p>
+      <p className="text-sm text-dustyblue">None</p>
     )}
   </section>
 );
 
 const AdminDashboard = () => {
-  const { rooms, loaded, syncedAt } = useRooms();
+  const { rooms, loaded } = useRooms();
 
   const counts = useMemo(() => {
     let dirty = 0,
@@ -189,37 +128,22 @@ const AdminDashboard = () => {
   const { housekeepers, supervisors } = useMemo(() => summarise(rooms), [rooms]);
 
   const stats = {
-    Dirty: counts.dirty + counts.onChange,
-    Clean: counts.clean,
-    Inspected: counts.inspected,
+    "Dirty Rooms": counts.dirty + counts.onChange,
+    "Clean Rooms": counts.clean,
+    "Inspected Rooms": counts.inspected,
   };
 
   return (
     <PageShell nav={<AdminNavbar />}>
       <PageHeader
         title="Dashboard"
-        meta={<SyncStatus syncedAt={syncedAt} />}
         actions={<StatsHeader stats={stats} />}
       />
 
-      <div className="mt-6 flex flex-col gap-10">
+      <div className="mt-6 flex flex-col gap-8">
         <DayProgress loaded={loaded} {...counts} />
-        <StaffSection
-          title="Housekeepers"
-          staff={housekeepers}
-          empty="No housekeepers have rooms yet."
-          activeLabel="In"
-          activeTone="bg-orange"
-          doneLabel="cleaned"
-        />
-        <StaffSection
-          title="Supervisors"
-          staff={supervisors}
-          empty="No supervisors have rooms yet."
-          activeLabel="Checking"
-          activeTone="bg-lightgreen"
-          doneLabel="inspected"
-        />
+        <StaffSection title="Housekeepers" staff={housekeepers} />
+        <StaffSection title="Supervisors" staff={supervisors} />
       </div>
 
       <AdminStart />

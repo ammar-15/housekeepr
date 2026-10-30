@@ -8,7 +8,7 @@ const SUPNavbar = ({ assignedtoSUP }: SUPNavbarProps) => (
   <Navbar
     role={assignedtoSUP}
     items={[
-      { label: "Inspections", to: `/${assignedtoSUP}dashboard` },
+      { label: "Rooms", to: `/${assignedtoSUP}dashboard` },
       {
         label: "Notes",
         to: "/SUPNotes",

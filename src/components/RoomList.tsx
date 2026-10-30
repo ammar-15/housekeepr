@@ -9,8 +9,6 @@ import { Room, SortOption, floorOf, sortItems } from "../lib/rooms";
 interface RoomListProps {
   rooms: Room[];
   loaded: boolean;
-  emptyLabel?: string;
-  emptyHint?: string;
 }
 
 const STATUS_FILTERS = [
@@ -21,9 +19,9 @@ const STATUS_FILTERS = [
 
 // Shared by the header and every row so the columns line up.
 const COLUMNS =
-  "lg:grid lg:grid-cols-[4.5rem_4.5rem_7rem_7rem_minmax(0,1fr)_5.5rem_5.5rem_1rem] lg:items-center lg:gap-4";
+  "lg:grid lg:grid-cols-[6.5rem_6rem_8rem_8rem_minmax(0,1fr)_6.5rem_6.5rem_1rem] lg:items-center lg:gap-4";
 
-const assigneeText = (code?: string) => (code && code !== "N/A" ? code : "—");
+const assigneeText = (code?: string) => code ?? "";
 
 const FilterChip = ({
   active,
@@ -47,7 +45,7 @@ const FilterChip = ({
     }`}
   >
     {label}
-    <span className={`font-mono text-xs tabular-nums ${active ? "text-pearl/70" : "text-chocolate/40"}`}>
+    <span className={`text-xs tabular-nums ${active ? "text-pearl/70" : "text-chocolate/40"}`}>
       {count}
     </span>
   </button>
@@ -56,8 +54,6 @@ const FilterChip = ({
 const RoomList = ({
   rooms,
   loaded,
-  emptyLabel = "No rooms",
-  emptyHint,
 }: RoomListProps) => {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -138,7 +134,7 @@ const RoomList = ({
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Room, type or staff code"
+              placeholder="Search"
               className={`${inputClass} pl-8 pr-8`}
             />
             {query && (
@@ -158,12 +154,12 @@ const RoomList = ({
 
       <div className="overflow-hidden rounded-lg border border-line bg-white">
         <div
-          className={`room-header hidden border-b border-line bg-pearl px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.1em] text-chocolate/50 ${COLUMNS}`}
+          className={`room-header hidden border-b border-line bg-pearl px-4 py-2.5 text-sm text-chocolate/50 ${COLUMNS}`}
         >
-          <span>Room</span>
-          <span>Type</span>
-          <span>Status</span>
-          <span>Check-out</span>
+          <span>Room Number</span>
+          <span>Room Type</span>
+          <span>Room Status</span>
+          <span>C/O Status</span>
           <span>Extras</span>
           <span>Housekeeper</span>
           <span>Supervisor</span>
@@ -182,15 +178,10 @@ const RoomList = ({
             ))}
           </div>
         ) : rooms.length === 0 ? (
-          <div className="px-6 py-14 text-center">
-            <p className="font-display text-lg text-chocolate">{emptyLabel}</p>
-            {emptyHint && <p className="mt-1 text-sm text-chocolate/55">{emptyHint}</p>}
-          </div>
+          <p className="px-6 py-14 text-center text-lg text-chocolate/60">No rooms</p>
         ) : visibleRooms.length === 0 ? (
           <div className="px-6 py-14 text-center">
-            <p className="text-sm text-chocolate/70">
-              No rooms match{query ? ` “${query}”` : " this filter"}.
-            </p>
+            <p className="text-sm text-chocolate/70">No rooms found</p>
             <button
               type="button"
               onClick={clearFilters}
@@ -204,12 +195,7 @@ const RoomList = ({
             <div key={group.key}>
               {group.label && (
                 <div className="flex items-center justify-between border-b border-line bg-pearl/60 px-4 py-2 [&:not(:first-child)]:border-t">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-chocolate/70">
-                    {group.label}
-                  </span>
-                  <span className="font-mono text-[11px] text-chocolate/45">
-                    {group.rooms.length} {group.rooms.length === 1 ? "room" : "rooms"}
-                  </span>
+                  <span className="text-sm font-medium text-chocolate/70">{group.label}</span>
                 </div>
               )}
               <ul className="divide-y divide-line">
@@ -220,10 +206,10 @@ const RoomList = ({
                       onClick={() => setSelected(room)}
                       className={`group flex w-full flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 text-left transition-colors hover:bg-pearl/70 focus-visible:bg-pearl focus-visible:ring-inset ${COLUMNS}`}
                     >
-                      <span className="font-mono text-[15px] font-semibold tabular-nums">
+                      <span className="text-[15px] font-semibold tabular-nums">
                         {room.roomNumber}
                       </span>
-                      <span className="font-mono text-xs text-chocolate/60">{room.roomType}</span>
+                      <span className="text-xs text-chocolate/60">{room.roomType}</span>
                       <span className="ml-auto lg:ml-0">
                         <StatusPill kind="room" value={room.roomStatus} />
                       </span>
@@ -238,12 +224,10 @@ const RoomList = ({
                       >
                         {room.extras}
                       </span>
-                      <span className="font-mono text-xs text-chocolate/70 lg:text-[13px]">
-                        <span className="lg:hidden text-chocolate/40">HSK </span>
+                      <span className="text-xs text-chocolate/70 lg:text-[13px]">
                         {assigneeText(room.assignedtoHSK)}
                       </span>
-                      <span className="font-mono text-xs text-chocolate/70 lg:text-[13px]">
-                        <span className="lg:hidden text-chocolate/40">SUP </span>
+                      <span className="text-xs text-chocolate/70 lg:text-[13px]">
                         {assigneeText(room.assignedtoSUP)}
                       </span>
                       <ChevronRight className="ml-auto text-chocolate/25 transition-colors group-hover:text-clay lg:ml-0 print:hidden" />
@@ -259,7 +243,6 @@ const RoomList = ({
       {selected && (
         <EditRoomContainer
           roomNumber={selected.roomNumber}
-          roomType={selected.roomType}
           initialRoomStatus={selected.roomStatus}
           initialCoStatus={selected.coStatus}
           assignedtoHSK={selected.assignedtoHSK}

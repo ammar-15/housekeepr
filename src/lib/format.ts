@@ -1,13 +1,3 @@
-export const formatToday = () =>
-  new Date().toLocaleDateString(undefined, {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-
-export const formatTime = (date: Date) =>
-  date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-
 export const formatNoteDate = (date?: Date) =>
   date
     ? date.toLocaleString(undefined, {

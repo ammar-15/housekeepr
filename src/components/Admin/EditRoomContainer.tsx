@@ -4,12 +4,10 @@ import { db } from "../../../firebase";
 import Modal from "../ui/Modal";
 import Segmented from "../ui/Segmented";
 import { ROOM_STATUS_TONE } from "../ui/tones";
-import { buttonGhost, buttonPrimary, hintClass, inputClass, labelClass } from "../ui/form";
-import { staffLabel } from "../../lib/rooms";
+import { buttonGhost, buttonPrimary, inputClass, labelClass } from "../ui/form";
 
 interface EditRoomContainerProps {
   roomNumber: string;
-  roomType?: string;
   initialRoomStatus: string;
   initialCoStatus: string;
   assignedtoHSK: string;
@@ -19,7 +17,7 @@ interface EditRoomContainerProps {
 
 const ROOM_STATUSES = [
   { value: "Dirty", label: "Dirty", tone: ROOM_STATUS_TONE.Dirty },
-  { value: "ON CHANGE", label: "On change", tone: ROOM_STATUS_TONE["ON CHANGE"] },
+  { value: "ON CHANGE", label: "ON CHANGE", tone: ROOM_STATUS_TONE["ON CHANGE"] },
   { value: "Clean", label: "Clean", tone: ROOM_STATUS_TONE.Clean },
 ];
 
@@ -27,7 +25,6 @@ const CO_STATUSES = ["DUE", "OUT", "VACANT", "CHECK", "INSPECTED", "STAYOVER"];
 
 const EditRoomContainer = ({
   roomNumber,
-  roomType,
   initialRoomStatus,
   initialCoStatus,
   assignedtoHSK,
@@ -61,7 +58,7 @@ const EditRoomContainer = ({
       } else if (/^SUP\d+$/.test(reassignTo)) {
         updatedassignedtoSUP = reassignTo;
       } else {
-        setError("Use a staff code like HSK2 or SUP1.");
+        setError("Invalid. Please enter assignment correctly.");
         return;
       }
     }
@@ -78,15 +75,14 @@ const EditRoomContainer = ({
       onClose();
     } catch (error) {
       console.error("Error updating room status:", error);
-      setError("Couldn't save the room. Check your connection and try again.");
+      setError("Error updating room status.");
       setSaving(false);
     }
   };
 
   return (
     <Modal
-      eyebrow={roomType ? `Room type ${roomType}` : undefined}
-      title={`Room ${roomNumber}`}
+      title={`Update Room ${roomNumber}`}
       onClose={onClose}
       size="lg"
       footer={
@@ -100,7 +96,7 @@ const EditRoomContainer = ({
             disabled={saving}
             className={buttonPrimary}
           >
-            {saving ? "Saving…" : "Update room"}
+            {saving ? "Saving..." : "Update"}
           </button>
         </>
       }
@@ -113,19 +109,9 @@ const EditRoomContainer = ({
           handleStatusChange();
         }}
       >
-        <dl className="grid grid-cols-2 gap-3 rounded-md bg-pearl px-4 py-3 text-sm">
-          <div>
-            <dt className="text-[11px] uppercase tracking-[0.1em] text-chocolate/50">Housekeeper</dt>
-            <dd className="mt-0.5">{assignedtoHSK && assignedtoHSK !== "N/A" ? staffLabel(assignedtoHSK) : "Unassigned"}</dd>
-          </div>
-          <div>
-            <dt className="text-[11px] uppercase tracking-[0.1em] text-chocolate/50">Supervisor</dt>
-            <dd className="mt-0.5">{assignedtoSUP ? staffLabel(assignedtoSUP) : "Unassigned"}</dd>
-          </div>
-        </dl>
 
         <div>
-          <span className={labelClass}>Room status</span>
+          <span className={labelClass}>Room Status</span>
           <Segmented
             label="Room status"
             value={newRoomStatus}
@@ -137,7 +123,7 @@ const EditRoomContainer = ({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="co-status" className={labelClass}>
-              Check-out status
+              Check Out Status
             </label>
             <select
               id="co-status"
@@ -154,7 +140,7 @@ const EditRoomContainer = ({
           </div>
           <div>
             <label htmlFor="reassign" className={labelClass}>
-              Reassign to
+              Assigned To
             </label>
             <input
               id="reassign"
@@ -163,10 +149,9 @@ const EditRoomContainer = ({
                 setNewAssignedto(e.target.value);
                 setError(null);
               }}
-              placeholder="HSK2 or SUP1"
-              className={`${inputClass} font-mono uppercase placeholder:normal-case`}
+              placeholder={[assignedtoHSK, assignedtoSUP].filter(Boolean).join(" / ")}
+              className={`${inputClass} uppercase placeholder:normal-case`}
             />
-            <p className={hintClass}>Optional. Leave blank to keep current staff.</p>
           </div>
         </div>
 

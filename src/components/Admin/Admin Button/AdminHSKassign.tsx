@@ -5,8 +5,7 @@ import RoomData from "../../RoomData";
 import Modal from "../../ui/Modal";
 import Segmented from "../../ui/Segmented";
 import { ROOM_STATUS_TONE } from "../../ui/tones";
-import { buttonGhost, buttonPrimary, hintClass, inputClass, labelClass } from "../../ui/form";
-import { staffLabel } from "../../../lib/rooms";
+import { buttonGhost, buttonPrimary, inputClass, labelClass } from "../../ui/form";
 
 interface AdminHSKassignProps {
   onAddHSKroom?: (HSKroomNumber: string) => void;
@@ -38,11 +37,11 @@ const AdminHSKassign = ({
 
   const handleSave = async () => {
     if (!room) {
-      setError(roomNumber ? `Room ${roomNumber} isn't in the room list.` : "Enter a room number.");
+      setError("Room not found.");
       return;
     }
     if (!assigneeValid) {
-      setError("Assign to a staff code like HSK1 or SUP2.");
+      setError("Invalid assignment. Use HSK# or SUP#.");
       return;
     }
 
@@ -70,26 +69,14 @@ const AdminHSKassign = ({
       handleClose();
     } catch (error) {
       console.error("Firebase room error", error);
-      setError("Couldn't save the room. Check your connection and try again.");
+      setError("Error saving room.");
       setSaving(false);
     }
   };
 
-  const roomHint = room
-    ? [
-        `Type ${room.roomType}`,
-        `workload ${room.workload}`,
-        room.nearElevator === "YES" && "near elevator",
-      ]
-        .filter(Boolean)
-        .join(" · ")
-    : roomNumber
-    ? "Not in the room list"
-    : "Three-digit room number, e.g. 214";
-
   return (
     <Modal
-      title="Assign a room"
+      title="Assign Room"
       onClose={handleClose}
       footer={
         <>
@@ -97,7 +84,7 @@ const AdminHSKassign = ({
             Cancel
           </button>
           <button type="submit" form="assign-room-form" disabled={saving} className={buttonPrimary}>
-            {saving ? "Saving…" : "Save"}
+            {saving ? "Saving..." : "Save"}
           </button>
         </>
       }
@@ -113,7 +100,7 @@ const AdminHSKassign = ({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="assign-room-number" className={labelClass}>
-              Room
+              Room Number
             </label>
             <input
               id="assign-room-number"
@@ -124,14 +111,13 @@ const AdminHSKassign = ({
                 setHSKRoomNumber(e.target.value);
                 setError(null);
               }}
-              placeholder="214"
-              className={`${inputClass} font-mono`}
+              placeholder="Room Number"
+              className={`${inputClass}`}
             />
-            <p className={`${hintClass} ${roomNumber && !room ? "text-wine" : ""}`}>{roomHint}</p>
           </div>
           <div>
             <label htmlFor="assign-to" className={labelClass}>
-              Assign to
+              Assigned To
             </label>
             <input
               id="assign-to"
@@ -140,12 +126,9 @@ const AdminHSKassign = ({
                 setAssignedto(e.target.value);
                 setError(null);
               }}
-              placeholder="HSK1 or SUP1"
-              className={`${inputClass} font-mono uppercase placeholder:normal-case`}
+              placeholder="Assigned To (HSK# or SUP#)"
+              className={`${inputClass} uppercase placeholder:normal-case`}
             />
-            <p className={hintClass}>
-              {assigneeValid ? staffLabel(assignee) : "HSK# for housekeepers, SUP# for supervisors"}
-            </p>
           </div>
         </div>
 

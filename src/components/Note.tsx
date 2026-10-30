@@ -31,7 +31,7 @@ const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         onBlur={handleUpdate}
-        placeholder="Write a note for the team…"
+        placeholder="Empty Note"
       />
       <footer className="flex items-center justify-between border-t border-line/80 px-4 py-2 text-xs text-chocolate/50">
         <time dateTime={note.createdAt?.toISOString()}>{formatNoteDate(note.createdAt)}</time>
@@ -48,7 +48,7 @@ const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
       {showDeleteModal && (
         <Modal
           tone="danger"
-          title="Delete this note?"
+          title="Delete Note"
           size="sm"
           onClose={() => setShowDeleteModal(false)}
           footer={
@@ -62,9 +62,7 @@ const Notes = ({ note, updateNote, deleteNote }: NotesProps) => {
             </>
           }
         >
-          <p className="text-sm text-chocolate/80">
-            It's removed for everyone on the team and can't be recovered.
-          </p>
+          <p>Are you sure you want to delete this note?</p>
         </Modal>
       )}
     </article>

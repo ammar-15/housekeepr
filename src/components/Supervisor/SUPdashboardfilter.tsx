@@ -2,16 +2,15 @@ import { useMemo } from "react";
 import SUPNavbar from "./SUPNavbar";
 import RoomList from "../RoomList.tsx";
 import StatsHeader from "../StatsHeader.tsx";
-import { PageHeader, PageShell, SyncStatus } from "../ui/Page.tsx";
-import { isInspected, staffLabel, useRooms } from "../../lib/rooms.ts";
-import { formatToday } from "../../lib/format.ts";
+import { PageHeader, PageShell } from "../ui/Page.tsx";
+import { isInspected, useRooms } from "../../lib/rooms.ts";
 
 interface SUPdashboardfilterProps {
   assignedtoSUP: string;
 }
 
 const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
-  const { rooms, loaded, syncedAt } = useRooms();
+  const { rooms, loaded } = useRooms();
 
   const assignedRooms = useMemo(
     () =>
@@ -23,23 +22,18 @@ const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
   const inspected = assignedRooms.filter(isInspected).length;
 
   const stats = {
-    "To inspect": assignedRooms.length - inspected,
-    Inspected: inspected,
+    "Total Rooms to Inspect": assignedRooms.length - inspected,
   };
 
   return (
     <PageShell nav={<SUPNavbar assignedtoSUP={assignedtoSUP} />}>
       <PageHeader
-        eyebrow={`${staffLabel(assignedtoSUP)} · ${formatToday()}`}
-        title="Inspections"
-        meta={<SyncStatus syncedAt={syncedAt} />}
+        title={`${assignedtoSUP}-Dashboard`}
         actions={<StatsHeader stats={stats} />}
       />
       <RoomList
         rooms={assignedRooms}
         loaded={loaded}
-        emptyLabel="No rooms ready for inspection"
-        emptyHint="Rooms show up here once your housekeepers mark them clean."
       />
     </PageShell>
   );
