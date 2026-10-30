@@ -1,68 +1,50 @@
-import { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase";
-import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
-import SortButton from "../SortButton.tsx";
+import { useMemo } from "react";
+import HSKNavbar from "./HSKNavbar";
+import RoomList from "../RoomList.tsx";
 import StatsHeader from "../StatsHeader.tsx";
-import RoomHeader from "../Admin/RoomHeader.tsx";
+import { PageHeader, PageShell, SyncStatus } from "../ui/Page.tsx";
+import { needsCleaning, staffLabel, useRooms } from "../../lib/rooms.ts";
+import { formatToday } from "../../lib/format.ts";
 
 interface HSKdashboardfilterProps {
   assignedtoHSK: string;
 }
 
 const HSKdashboardfilter = ({ assignedtoHSK }: HSKdashboardfilterProps) => {
-  const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
-  const [sortedRooms, setSortedRooms] = useState<any[]>([]);
-  const [stats, setStats] = useState<Record<string, number>>({
-    "Total Rooms to Clean": 0,
-  });
+  const { rooms, loaded, syncedAt } = useRooms();
 
+  const assignedRooms = useMemo(
+    () => rooms.filter((room) => room.assignedtoHSK === assignedtoHSK),
+    [rooms, assignedtoHSK]
+  );
+  const toClean = useMemo(() => assignedRooms.filter(needsCleaning), [assignedRooms]);
 
-  useEffect(() => {
-    const roomsCollectionRef = collection(db, "AdminHSK");
-    const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
-      const allRooms = snapshot.docs.map((doc) => doc.data());
+  const workload = toClean.reduce(
+    (sum, room) => sum + (parseFloat(String(room.workload ?? 0)) || 0),
+    0
+  );
 
-      const assignedRooms = allRooms.filter(
-        (room) =>
-          (room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE") &&
-          room.assignedtoHSK === assignedtoHSK
-      );
-      const HSKfilterrooms = assignedRooms.filter(
-        ((room) => room.roomStatus === "Dirty" || room.roomStatus === "ON CHANGE")
-      ).length;
-
-      
-      setStats({ "Total Rooms to Clean": HSKfilterrooms });
-      setFilteredRooms(assignedRooms);
-      setSortedRooms(assignedRooms);
-    });
-
-    return () => unsubscribe();
-  }, [assignedtoHSK]);
+  const stats = {
+    "To clean": toClean.length,
+    Done: assignedRooms.length - toClean.length,
+    Workload: workload.toFixed(1),
+  };
 
   return (
-    <>
-      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
-      <h1 className="text-3xl sm:text-3xl text-wine">{assignedtoHSK}-Dashboard</h1>
-      <StatsHeader stats={stats} />
-    </div>
-    <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
-    <div className="room-header">
-      <RoomHeader />
-    </div>
-    <div className="section-container grid grid-cols-2 sm:grid-cols-1 sm:gap-0 gap-x-4 gap-y-5 w-full">
-    {sortedRooms.length > 0 ? (
-        sortedRooms.map((room, index) => (
-          <HSKRoomContainer key={index} room={room} />
-        ))
-      ) : (
-        <div className="text-center text-gray text-lg mt-10 animate-bounce">
-          No rooms
-        </div>
-      )}
-    </div>
-  </>
+    <PageShell nav={<HSKNavbar assignedtoHSK={assignedtoHSK} />}>
+      <PageHeader
+        eyebrow={`${staffLabel(assignedtoHSK)} · ${formatToday()}`}
+        title="My rooms"
+        meta={<SyncStatus syncedAt={syncedAt} />}
+        actions={<StatsHeader stats={stats} />}
+      />
+      <RoomList
+        rooms={toClean}
+        loaded={loaded}
+        emptyLabel="Nothing left to clean"
+        emptyHint="New rooms appear here as soon as they're assigned to you."
+      />
+    </PageShell>
   );
 };
 

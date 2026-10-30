@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase";
+import Modal from "../ui/Modal";
+import { buttonGhost, buttonPrimary } from "../ui/form";
+
+// The public demo shares one database, so wiping it is switched off.
+const DEMO_MODE = true;
 
 interface ClearRoomsProps {
   onClose: () => void;
@@ -8,27 +13,19 @@ interface ClearRoomsProps {
 
 const ClearRooms = ({ onClose }: ClearRoomsProps) => {
   const [loading, setLoading] = useState(false);
+
   const handleClearRooms = async () => {
     setLoading(true);
 
     try {
-      const collectionName = "AdminHSK";
-      const collectionRef = collection(db, collectionName);
+      const collectionRef = collection(db, "AdminHSK");
       const snapshot = await getDocs(collectionRef);
 
-      if (snapshot.empty) {
-        console.log("No rooms found in AdminHSK.");
-        setLoading(false);
-        onClose();
-        return;
+      if (!snapshot.empty) {
+        await Promise.all(
+          snapshot.docs.map((roomDoc) => deleteDoc(doc(collectionRef, roomDoc.id)))
+        );
       }
-
-      console.log(`Clearing all rooms`);
-      const deletePromises = snapshot.docs.map(async (roomDoc) => {
-        await deleteDoc(doc(collectionRef, roomDoc.id));
-      });
-      await Promise.all(deletePromises);
-      console.log(`Successfully cleared all rooms`);
       onClose();
     } catch (error) {
       console.error("Error clearing rooms:", error);
@@ -38,32 +35,39 @@ const ClearRooms = ({ onClose }: ClearRoomsProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-lightred p-6 rounded-md shadow-lg w-96">
-        <h2 className="text-xl mb-4 text-red-600">End of Day</h2>
-        <p>Are you sure you want to clear all rooms from the day?</p>
-        <p className="text-xs italic">there would be a 'yes' button to clear the rooms but for now just explore the site</p>
-        <div className="flex justify-end mt-5">
-          <button
-            className="text-black px-4 py-2 rounded-md hover:bg-dustyblue mr-2"
-            onClick={onClose}
-            disabled={loading}
-          >
-            No
+    <Modal
+      tone="danger"
+      eyebrow="End of day"
+      title="Clear today's board?"
+      size="sm"
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className={buttonGhost} onClick={onClose} disabled={loading}>
+            Keep rooms
           </button>
-            {/* <p
-            className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine"
-            onClick={handleClearRooms}
-            disabled={loading}
-            >
-            {loading ? "Clearing..." : "Yes"}
-            </p> */}
-            <p className="text-white bg-chocolate px-4 py-2 rounded-md hover:bg-wine">
-              'Yes'
-            </p>
-        </div>
-      </div>
-    </div>
+          <button
+            type="button"
+            className={buttonPrimary}
+            onClick={DEMO_MODE ? undefined : handleClearRooms}
+            disabled={DEMO_MODE || loading}
+            title={DEMO_MODE ? "Disabled in the demo" : undefined}
+          >
+            {loading ? "Clearing…" : "Clear all rooms"}
+          </button>
+        </>
+      }
+    >
+      <p className="text-sm leading-relaxed text-chocolate/80">
+        Every room, status and assignment is removed so tomorrow starts empty. This can't be
+        undone.
+      </p>
+      {DEMO_MODE && (
+        <p className="mt-3 rounded-md bg-pearl px-3 py-2 text-xs text-chocolate/60">
+          Clearing is turned off in this demo so the board stays explorable.
+        </p>
+      )}
+    </Modal>
   );
 };
 

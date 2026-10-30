@@ -1,18 +1,21 @@
 interface StatsHeaderProps {
-  stats: Record<string, number>;
+  stats: Record<string, number | string>;
 }
 
 const StatsHeader = ({ stats }: StatsHeaderProps) => {
   return (
-    <div className="dashboard-stats">
-      <div className="stats-header flex flex-col items-center sm:flex-row sm:bg-clay sm:text-white text-clay rounded-md sm:px-3 sm:py-1.5 gap-2">
-        {Object.entries(stats).map(([key, value]) => (
-          <div className="stats-box px-2" key={key}>
-            <span>{key}: {value}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <dl className="dashboard-stats inline-flex divide-x divide-white/20 overflow-hidden rounded-md bg-clay text-white">
+      {Object.entries(stats).map(([key, value]) => (
+        <div className="stats-box flex flex-col-reverse px-4 py-2" key={key}>
+          <dt className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/75">
+            {key}
+          </dt>
+          <dd className="font-mono text-lg font-medium leading-tight tabular-nums">
+            {value}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 };
 

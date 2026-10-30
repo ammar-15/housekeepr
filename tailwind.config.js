@@ -3,6 +3,22 @@ export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        display: ["Fraunces", "Georgia", "serif"],
+        sans: ['"Hanken Grotesk"', "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
+      },
+      keyframes: {
+        "fade-in": { from: { opacity: "0" }, to: { opacity: "1" } },
+        "modal-in": {
+          from: { opacity: "0", transform: "translateY(8px) scale(0.98)" },
+          to: { opacity: "1", transform: "none" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 120ms ease-out",
+        "modal-in": "modal-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+      },
       spacing: {
         "1r": "3.25rem",
         "2r": "5.75rem",
@@ -49,6 +65,8 @@ export default {
     colors: {
       transparent: "transparent",
       white: "#ffffff",
+      paper: "#faf8f3",
+      line: "#e6e1d6",
       pearl: "#f2f2eb",
       mistysky: "#d2dce6",
       dustyblue: "#9cabb4",

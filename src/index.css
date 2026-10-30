@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-paper font-sans text-chocolate antialiased;
+  }
+
+  ::selection {
+    @apply bg-mistysky text-chocolate;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-clay/40 ring-offset-1 ring-offset-paper;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+}

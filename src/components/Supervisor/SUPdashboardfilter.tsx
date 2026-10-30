@@ -1,65 +1,47 @@
-import { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase";
-import HSKRoomContainer from "../Admin/HSKRoomContainer.tsx";
-import SortButton from "../SortButton.tsx";
+import { useMemo } from "react";
+import SUPNavbar from "./SUPNavbar";
+import RoomList from "../RoomList.tsx";
 import StatsHeader from "../StatsHeader.tsx";
-import RoomHeader from "../Admin/RoomHeader.tsx";
+import { PageHeader, PageShell, SyncStatus } from "../ui/Page.tsx";
+import { isInspected, staffLabel, useRooms } from "../../lib/rooms.ts";
+import { formatToday } from "../../lib/format.ts";
 
 interface SUPdashboardfilterProps {
   assignedtoSUP: string;
 }
 
 const SUPdashboardfilter = ({ assignedtoSUP }: SUPdashboardfilterProps) => {
-  const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
-  const [sortedRooms, setSortedRooms] = useState<any[]>([]);
-  const [stats, setStats] = useState<Record<string, number>>({
-    "Total Rooms to Inspect": 0,
-  });
+  const { rooms, loaded, syncedAt } = useRooms();
 
-  useEffect(() => {
-    const roomsCollectionRef = collection(db, "AdminHSK");
-    const unsubscribe = onSnapshot(roomsCollectionRef, (snapshot) => {
-      const allRooms = snapshot.docs.map((doc) => doc.data());
+  const assignedRooms = useMemo(
+    () =>
+      rooms.filter(
+        (room) => room.roomStatus === "Clean" && room.assignedtoSUP === assignedtoSUP
+      ),
+    [rooms, assignedtoSUP]
+  );
+  const inspected = assignedRooms.filter(isInspected).length;
 
-      const assignedRooms = allRooms.filter(
-        (room) =>
-          room.roomStatus === "Clean" && room.assignedtoSUP === assignedtoSUP
-      );
-      const SUPfilterrooms = assignedRooms.filter(
-        ((room) => room.roomStatus === "Clean")
-      ).length;
-
-      setStats({ "Total Rooms to Inspect": SUPfilterrooms });
-      setFilteredRooms(assignedRooms);
-      setSortedRooms(assignedRooms);
-    });
-
-    return () => unsubscribe();
-  }, [assignedtoSUP]);
+  const stats = {
+    "To inspect": assignedRooms.length - inspected,
+    Inspected: inspected,
+  };
 
   return (
-    <>
-      <div className="dashboard-header flex flex-col md:flex-row justify-between items-center md:items-center sm:mb-6 gap-4">
-      <h1 className="text-3xl sm:text-3xl text-wine">{assignedtoSUP}-Dashboard</h1>
-        <StatsHeader stats={stats} />
-      </div>
-      <SortButton rooms={filteredRooms} onSortedRooms={setSortedRooms} />
-      <div className="room-header">
-        <RoomHeader />
-      </div>
-      <div className="section-container grid grid-cols-2 sm:grid-cols-1 sm:gap-0 gap-x-4 gap-y-5 w-full">
-      {sortedRooms.length > 0 ? (
-          sortedRooms.map((room, index) => (
-            <HSKRoomContainer key={index} room={room} />
-          ))
-        ) : (
-          <div className="text-center text-gray text-lg mt-10 animate-bounce">
-            No rooms
-          </div>
-        )}
-      </div>
-    </>
+    <PageShell nav={<SUPNavbar assignedtoSUP={assignedtoSUP} />}>
+      <PageHeader
+        eyebrow={`${staffLabel(assignedtoSUP)} · ${formatToday()}`}
+        title="Inspections"
+        meta={<SyncStatus syncedAt={syncedAt} />}
+        actions={<StatsHeader stats={stats} />}
+      />
+      <RoomList
+        rooms={assignedRooms}
+        loaded={loaded}
+        emptyLabel="No rooms ready for inspection"
+        emptyHint="Rooms show up here once your housekeepers mark them clean."
+      />
+    </PageShell>
   );
 };
 
